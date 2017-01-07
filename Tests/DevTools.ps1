@@ -37,29 +37,3 @@ if ($provision.action -ne [Action]::Development) { return }
 $provision.report('The Test Environment is redy.')
 
 . $provision.entryPoint
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
