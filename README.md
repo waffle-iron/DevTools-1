@@ -126,3 +126,20 @@ $provision.report('The Test Environment is redy.')
 . $provision.entryPoint
 
 ```
+
+To run the script use:
+There is no need to enter the entire word for the `Action` modifier.<br>
+The tools will try to cast the type automatically from the partial keyword
+
+```shell
+powershell -NoProfile .\Tests\DevTools.ps1
+# or
+powershell -NoProfile .\Tests\DevTools.ps1 -action Development
+# or
+powershell -NoProfile .\Tests\DevTools.ps1 -action Dev
+
+powershell -NoProfile .\Tests\DevTools.ps1 -action Shortcuts
+or 
+powershell -NoProfile .\Tests\DevTools.ps1 -action S
+```
+
