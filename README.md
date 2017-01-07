@@ -1,4 +1,4 @@
-# DevTools
+# <img src="/Docs/Logo/orange.png" alt="Logo" width="48" align="left"/>  DevTools
 
 [![Powershellgallery Badge][psgallery-badge]][psgallery-status]
 
@@ -12,7 +12,7 @@ PS> Install-Module DevTools
 ```
 
 When developing the Powershell modules we need to test them, in order to do this,<br>
-they should be installed in the system. 
+they should be installed in the system.
 
 The easiest way to install the module - is to copy its contents to the PS modules directory or to<br>
 create a `junction link` to it.
@@ -69,13 +69,13 @@ You can control which part to increment or set the new version manually.
 
 ```
 # {Major}.{Minor}.{Build}
-# [DevTools.VersionComponent]::Major 
+# [DevTools.VersionComponent]::Major
 # [DevTools.VersionComponent]::Minor
 # [DevTools.VersionComponent]::Build
 $nextVersion = $version.next([DevTools.VersionComponent]::Build)
 ```
 ## entryPoint:
- 
+
  After the test environment is ready, the script will launch a:<br>
 `ProjectName\Tests\ProjectName.Test.ps1`<br>
 In this file, you can do whatever you want to test and debug your app.
@@ -137,9 +137,9 @@ powershell -NoProfile .\Tests\DevTools.ps1 -action Development
 powershell -NoProfile .\Tests\DevTools.ps1 -action Dev
 
 powershell -NoProfile .\Tests\DevTools.ps1 -action Shortcuts
-# or 
+# or
 powershell -NoProfile .\Tests\DevTools.ps1 -action S
 ```
 
-[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.1-green.svg
-[psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.0.1
+[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.2-green.svg
+[psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.0.2
