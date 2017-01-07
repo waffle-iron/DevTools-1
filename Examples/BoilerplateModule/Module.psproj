@@ -1,0 +1,24 @@
+﻿<Project>
+  <Version>2.0</Version>
+  <FileID>NewGuid</FileID>
+  <ProjectType>2</ProjectType>
+  <Folders>
+    <Folder>Src</Folder>
+    <Folder>Tests\Integration</Folder>
+    <Folder>Tests</Folder>
+    <Folder>Tests\Unit</Folder>
+  </Folders>
+  <Files>
+    <File Build="2">ModuleName.psd1</File>
+    <File Build="2">ModuleName.psm1</File>
+    <File Build="2">Tests\EntyPoint.ps1</File>
+    <File Build="2">Tests\Integration\WorkFlow.ps1</File>
+    <File Build="2">Tests\Unit\SuiteOne.Tests.ps1</File>
+    <File Build="2">README.md</File>
+    <File Build="2">appveyor.yml</File>
+    <File Build="2">.gitattributes</File>
+    <File Build="2">.gitignore</File>
+  </Files>
+  <DeployMode>Project</DeployMode>
+  <PrimaryFile>Tests\Integration\WorkFlow.ps1</PrimaryFile>
+</Project>

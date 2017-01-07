@@ -1,0 +1,33 @@
+﻿<Project>
+  <Version>2.0</Version>
+  <FileID>886114cd-737d-400c-a827-4073f0bbaefd</FileID>
+  <ProjectType>2</ProjectType>
+  <Folders>
+    <Folder>Src</Folder>
+    <Folder>Tests\Integration</Folder>
+    <Folder>Tests</Folder>
+    <Folder>Tests\Unit</Folder>
+    <Folder>Examples</Folder>
+  </Folders>
+  <Files>
+    <File Build="2">DevTools.psd1</File>
+    <File Build="2">DevTools.psm1</File>
+    <File Build="2">Src\AppVeyorManager.psm1</File>
+    <File Build="2">Src\DynamicConfig.psm1</File>
+    <File Build="2">Src\DynamicParameter.psm1</File>
+    <File Build="2">Src\ModuleManager.psm1</File>
+    <File Build="2">Src\ProvisionManager.psm1</File>
+    <File Build="2">Src\Types.psm1</File>
+    <File Build="2">Src\VersionManager.psm1</File>
+    <File Build="2" Shared="False">Tests\Integration\WorkFlow.ps1</File>
+    <File Build="2" Shared="False">Tests\EntyPoint.ps1</File>
+    <File Build="2" Shared="False">Examples\API.ps1</File>
+    <File Build="2">appveyor.yml</File>
+    <File Build="2">README.md</File>
+    <File Build="2">.gitattributes</File>
+    <File Build="2">.gitignore</File>
+    <File Build="2" Shared="False">Tests\Unit\Module.Tests.ps1</File>
+  </Files>
+  <DeployMode>Project</DeployMode>
+  <PrimaryFile>Tests\Integration\WorkFlow.ps1</PrimaryFile>
+</Project>

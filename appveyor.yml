@@ -1,0 +1,41 @@
+version: '{build}'
+
+skip_commits:
+  message: /(readme|docs)/
+  
+platform:
+  - x64
+  
+init:
+  - ps: $psVersionTable.psVersion
+  - WhoAmI
+  
+install:
+  - ps: Install-PackageProvider NuGet -Force | Out-Null
+  - ps: Install-Module Pester -RequiredVersion 3.4.3 -Force
+
+before_build:
+  - cmd: set PS_PROFILE=%userprofile%\Documents\WindowsPowerShell\Modules\%APPVEYOR_PROJECT_NAME%
+  - cmd: mklink /J %PS_PROFILE% %APPVEYOR_BUILD_FOLDER%
+  - ps: dt Install
+
+build_script:
+  - ps: dt Build
+
+test_script:
+  - ps: dt Test
+  
+after_test:
+  - ps: dt Cleanup
+
+deploy:
+  release: $(APPVEYOR_REPO_TAG_NAME)
+  description: $(APPVEYOR_PROJECT_NAME) release $(APPVEYOR_REPO_TAG_NAME)
+  provider: GitHub
+  auth_token:
+    secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
+  artifact: $(APPVEYOR_PROJECT_NAME)
+  draft: false
+  prerelease: false
+  on:
+    appveyor_repo_tag: true
