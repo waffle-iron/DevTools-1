@@ -51,12 +51,12 @@ class VersionManager
         Set-Content $this.psd
     }
 
-    [Void]updateBadge($nextVersion, $readme)
+    [Void]updateBadge($nextVersion, $readme, $projectName)
     {
         $rm = Get-Content $readme | Out-String
 
         $badge = 'PowerShell_Gallery-{0}-green.svg'
-        $link = '/packages/Parser/{0}'
+        $link = "/packages/$projectName/{0}"
         
         $rm = $rm -replace ($badge -f '(.+)'), ($badge -f $nextVersion)
         $rm = $rm -replace ($link -f '(.+)'), ($link -f $nextVersion)

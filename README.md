@@ -141,5 +141,5 @@ powershell -NoProfile .\Tests\DevTools.ps1 -action Shortcuts
 powershell -NoProfile .\Tests\DevTools.ps1 -action S
 ```
 
-[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.0-green.svg
-[psgallery-status]: https://www.powershellgallery.com/packages/Parser/1.0.0
+[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.1-green.svg
+[psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.0.1

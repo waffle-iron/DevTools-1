@@ -97,7 +97,7 @@ class ProvisionManager
     {
         $this.report('Bump version to:{0}' -f $nextVersion)
         $version.apply($nextVersion)
-        $version.updateBadge($nextVersion, $this.readme)
+        $version.updateBadge($nextVersion, $this.readme, $this.projectName)
     }
     
     [Void]publish()
