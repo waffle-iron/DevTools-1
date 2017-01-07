@@ -1,4 +1,4 @@
-# <img src="/Docs/Logo/orange.png" alt="Logo" width="48" align="left"/>  DevTools
+# <img src="/Docs/Logo/dt.png" alt="Logo" width="48" align="left"/>  DevTools
 
 [![Powershellgallery Badge][psgallery-badge]][psgallery-status]
 
@@ -141,5 +141,5 @@ powershell -NoProfile .\Tests\DevTools.ps1 -action Shortcuts
 powershell -NoProfile .\Tests\DevTools.ps1 -action S
 ```
 
-[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.2-green.svg
-[psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.0.2
+[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.3-green.svg
+[psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.0.3

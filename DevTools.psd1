@@ -1,6 +1,6 @@
 @{
     RootModule = 'DevTools.psm1'
-    ModuleVersion = '1.0.2'
+    ModuleVersion = '1.0.3'
     GUID = '6db91827-46cb-40b5-8843-ed393f350132'
     Author = 'G8t Guy'
     CompanyName = 'Unknown'
@@ -15,7 +15,7 @@
             Tags = @('deploy', 'build', 'provision', 'dev', 'tools')
             LicenseUri = 'https://github.com/g8tguy/DevTools/blob/master/LICENSE'
             ProjectUri = 'https://github.com/g8tguy/DevTools'
-            IconUri = 'https://raw.githubusercontent.com/g8tguy/DevTools/master/Docs/Logo/orange.png'
+            IconUri = 'https://raw.githubusercontent.com/g8tguy/DevTools/master/Docs/Logo/dt.png'
             ReleaseNotes = '
 Check out the project site for more information:
 https://github.com/g8tguy/DevTools'
