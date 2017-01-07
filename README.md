@@ -1,5 +1,7 @@
 # DevTools
 
+[![Powershellgallery Badge][psgallery-badge]][psgallery-status]
+
 A set of tools for the rapid PS modules development.
 
 
@@ -62,15 +64,15 @@ $provision.dependencies = (
 
 ## Next Version:
 
-`$version.next([VersionComponent]::Build)` Will increment the specified part of the version by one.<br>
+`$version.next([DevTools.VersionComponent]::Build)` Will increment the specified part of the version by one.<br>
 You can control which part to increment or set the new version manually.
 
 ```
 # {Major}.{Minor}.{Build}
-# [VersionComponent]::Major 
-# [VersionComponent]::Minor
-# [VersionComponent]::Build
-$nextVersion = $version.next([VersionComponent]::Build)
+# [DevTools.VersionComponent]::Major 
+# [DevTools.VersionComponent]::Minor
+# [DevTools.VersionComponent]::Build
+$nextVersion = $version.next([DevTools.VersionComponent]::Build)
 ```
 ## entryPoint:
  
@@ -83,35 +85,31 @@ So the simple deploy script could look like this:
 ```powershell
 using module DevTools
 
-param ($action = [Action]::Development)
+param ($action = [DevTools.Action]::Development)
 
-$provision = [DevTools.ProvisionManager]@{ action = $action; root = $PSScriptRoot}
+$provision = [DevTools.ProvisionManager]@{ action = $action; root = $PSScriptRoot }
 $version = [DevTools.VersionManager]@{ psd = $provision.psd }
 
 $provision.dependencies = (
 @{
     deploy = $true
     name = $provision.projectName
-},
-@{
-    deploy = $false
-    name = 'ColoredText'
 }
 )
 
 $provision.report('Version:{0}' -f [String]$version.version)
 $provision.report('Action:{0}' -f $provision.action)
 
-$nextVersion = $version.next([VersionComponent]::Build)
+$nextVersion = $version.next([DevTools.VersionComponent]::Build)
 
 switch ($provision.action)
 {
-    ([Action]::Cleanup) { $provision.cleanup() }
-    ([Action]::Shortcuts) { $provision.shortcuts() }
-    ([Action]::Copy) { $provision.copy() }
-    ([Action]::BumpVersion) { $provision.bumpVersion($version, $nextVersion) }
-    ([Action]::Publish) { $provision.publish() }
-    ([Action]::Deploy)
+    ([DevTools.Action]::Cleanup) { $provision.cleanup() }
+    ([DevTools.Action]::Shortcuts) { $provision.shortcuts() }
+    ([DevTools.Action]::Copy) { $provision.copy() }
+    ([DevTools.Action]::BumpVersion) { $provision.bumpVersion($version, $nextVersion) }
+    ([DevTools.Action]::Publish) { $provision.publish() }
+    ([DevTools.Action]::Deploy)
     {
         $provision.bumpVersion($version, $nextVersion)
         $provision.publish()
@@ -119,12 +117,11 @@ switch ($provision.action)
     default { }
 }
 
-if ($provision.action -ne [Action]::Development) { return }
+if ($provision.action -ne [DevTools.Action]::Development) { return }
 
 $provision.report('The Test Environment is redy.')
 
 . $provision.entryPoint
-
 ```
 
 ## Execution:
@@ -140,7 +137,9 @@ powershell -NoProfile .\Tests\DevTools.ps1 -action Development
 powershell -NoProfile .\Tests\DevTools.ps1 -action Dev
 
 powershell -NoProfile .\Tests\DevTools.ps1 -action Shortcuts
-or 
+# or 
 powershell -NoProfile .\Tests\DevTools.ps1 -action S
 ```
 
+[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.0-green.svg
+[psgallery-status]: https://www.powershellgallery.com/packages/Parser/1.0.0
