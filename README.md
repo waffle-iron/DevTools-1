@@ -127,9 +127,10 @@ $provision.report('The Test Environment is redy.')
 
 ```
 
+## Execution:
+
 There is no need to enter the entire word for the `Action` modifier.
 The tools will try to cast the type automatically from the partial keyword<br>
-To run the script use:
 
 ```shell
 powershell -NoProfile .\Tests\DevTools.ps1
