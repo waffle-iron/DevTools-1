@@ -61,6 +61,12 @@ $provision.dependencies = (
 }
 )
 ```
+## API key
+
+Use `$env:USERPROFILE` to find current profile location.
+In order to deploy to PowerShell Gallery you'll need to save your API key<br>
+to User's Profile `.nu_get_api_key`
+
 
 ## Next Version:
 
