@@ -79,11 +79,11 @@ DevTools = @{
 
 ## Usage:
 
-| Parameter | Description |
-| --------- | ----------- |
--Project    | Project Name
--Action     | Actions from the aforementioned table.
--VersionType| {Major}.{Minor}.{Build} By default, the tools will increment the Build part of the version, but you can easily change that with this optional optional parameter
+| Parameter  | Description |
+| ---------- | ----------- |
+-Project     | Project Name
+-Action      | Actions from the aforementioned table.
+-VersionType | {Major}.{Minor}.{Build} By default, the tools will increment the Build part<br>of the version, but you can easily change that with this optional optional parameter
 
 The DevTools module is pretty smart! it has sophisticated autocompletion functionality.
 
