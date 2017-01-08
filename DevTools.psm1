@@ -19,7 +19,13 @@ $sync.projects = {
 function Use-DevTools
 {
     [CmdletBinding()]
-    param ()
+    param
+    (
+        [Parameter(ValueFromRemainingArguments = $true, Position = 3)]
+        [ValidateSet('Major', 'Minor', 'Build')]
+        [VersionComponent]$VersionType = [VersionComponent]::Build,
+        $CustomVersion = $false
+    )
     
     DynamicParam
     {
@@ -93,6 +99,7 @@ function Use-DevTools
     
     process
     {
+        
         $root = '{0}\{1}\Tests' -f $sync.config.projectsPath, $project
         
         $provision = [ProvisionManager]@{ root = $root }
@@ -103,7 +110,11 @@ function Use-DevTools
         $provision.report('Version:{0}' -f [String]$version.version)
         $provision.report('Action:{0}' -f $action)
         
-        $nextVersion = $version.next([VersionComponent]::Build)
+        $nextVersion = switch ([Boolean]$customVersion)
+        {
+            True { $customVersion }
+            Default { $version.next($VersionType) }
+        }
         
         $projectConfig = Import-PowerShellDataFile $provision.psd
         
@@ -114,7 +125,7 @@ function Use-DevTools
             }
         )
         
-        $provision.dependencies += $projectConfig.DevTools.Dependencies
+        $provision.dependencies += $projectConfig.PrivateData.DevTools.Dependencies
         
         switch ($action)
         {

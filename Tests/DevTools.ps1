@@ -16,7 +16,7 @@ $provision.dependencies = (
     }
 )
 
-$provision.dependencies += $projectConfig.DevTools.Dependencies
+$provision.dependencies += $projectConfig.PrivateData.DevTools.Dependencies
 
 $provision.report('Version:{0}' -f [String]$version.version)
 $provision.report('Action:{0}' -f $action)
