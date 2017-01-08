@@ -25,7 +25,6 @@ In order to these tools to work the project, should have the following structure
 ```
 + ProjectName
   + Tests
-    - DevTools.ps1
     - ProjectName.Test.ps1
   - ProjectName.psm1
   - ProjectName.psd1
@@ -80,7 +79,7 @@ DevTools = @{
 
 ## Usage:
 
-| Parameters| Description |
+| Parameter | Description |
 | --------- | ----------- |
 -Project    | Project Name
 -Action     | Actions from the aforementioned table.
@@ -90,11 +89,11 @@ The DevTools module is pretty smart! it has sophisticated autocompletion functio
 The parameters a positional, so no need to specify them, just hit the "tab" for the autocompletion!
 
 **Notice that the parameters order is different:**
-In project directory, it is 
+In project directory, it is:
 - `-Action` default action `[DevTools.Action]::Development`
 - `-Project` default to current project.
 
-everywhere else it's swapped for convenience reasons
+Everywhere else it's swapped for convenience reasons:
 - `-Project` - Mandatory!
 - `-Action` - default action `[DevTools.Action]::Development`
 
@@ -115,8 +114,14 @@ cd ..
 dt SomeModule Deploy
 dt SomeModule Shortcuts
 ```
+If you want to implement your own automation script with the DevTools functionality,<br>
+use the [DevTools.ps1](Tests/DevTools.ps1) as an example.<br>
+The custom DevTools script sould be located at `ProjectName\Tests\DevTools.ps1`
 
-## Next Version:
+## API
+Brief explanation of the core API:
+
+### Next Version:
 
 `$version.next([DevTools.VersionComponent]::Build)` Will increment the specified part of the version by one.<br>
 You can control which part to increment or set the new version manually.
@@ -181,18 +186,12 @@ $provision.report('The Test Environment is redy.')
 ## Execution:
 
 There is no need to enter the entire word for the `Action` modifier.<br>
-The tools will try to cast the type automatically from the partial keyword
+The tools will try to cast the type automatically from the partial keyword!
 
 ```shell
 powershell -NoProfile .\Tests\DevTools.ps1
-# or
-powershell -NoProfile .\Tests\DevTools.ps1 -action Development
-# or
-powershell -NoProfile .\Tests\DevTools.ps1 -action Dev
-
-powershell -NoProfile .\Tests\DevTools.ps1 -action Shortcuts
-# or
-powershell -NoProfile .\Tests\DevTools.ps1 -action S
+powershell -NoProfile .\Tests\DevTools.ps1 -Action Development
+powershell -NoProfile .\Tests\DevTools.ps1 -Action Shortcuts
 ```
 
 [psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.4-green.svg
