@@ -43,7 +43,7 @@ Publish     | Publish project to PowerShell gallery
 Deploy      | Update the project version and deploy it to PowerShell gallery
 
 ## Config
-Use `$env:USERPROFILE` to find current profile location.
+Use `$env:USERPROFILE` to find the current profile location.
 
 Set `projectsPath` to the directory where store the developed modules and their dependencies
 
