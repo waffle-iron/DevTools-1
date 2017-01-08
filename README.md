@@ -98,18 +98,18 @@ Everywhere else it's swapped for convenience reasons:
 - `-Action`  Default action `[DevTools.Action]::Development`
 
 ```shell
-# If you are in a project directory just call:
+# If you are in the project directory just call:
 cd SomeModule
 dt Cleanup
 dt Shortcuts
 dt Deploy
 # etc.
-# If being in project directory you want to manipulate another 
-# project add the project name as the second parameter:
+# If, while being inside the project directory you'll want to manipulate another 
+# project - add that project name as the second parameter:
 dt BumpVersion AnotherProject
 dt Cleanup AnotherProject
 
-# any other folder
+# Any other folder:
 cd ..
 dt SomeModule Deploy
 dt SomeModule Shortcuts
@@ -133,7 +133,7 @@ You can control which part to increment or set the new version manually.
 # [DevTools.VersionComponent]::Build
 $nextVersion = $version.next([DevTools.VersionComponent]::Build)
 ```
-## entryPoint:
+### Entry Point:
 
  After the test environment is ready, the script will launch a:<br>
 `ProjectName\Tests\ProjectName.Test.ps1`<br>
@@ -183,7 +183,7 @@ $provision.report('The Test Environment is redy.')
 . $provision.entryPoint
 ```
 
-## Execution:
+### Custom Script Execution:
 
 There is no need to enter the entire word for the `Action` modifier.<br>
 The tools will try to cast the type automatically from the partial keyword!
