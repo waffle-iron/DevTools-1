@@ -33,7 +33,7 @@ In order to these tools to work the project, should have the following structure
 
 ## Core Features:
 
-| Command   | Description |
+| Action    | Description |
 | --------- | ----------- |
 Cleanup     | Remove project and it's dependencies from the UserScope
 Shortcuts   | Create shortcuts to the project and it's dependencies in the UserScope
@@ -83,6 +83,7 @@ DevTools = @{
 | --------- | ----------- |
 -Project    | Project Name
 -Action     | Actions from the aforementioned table.
+-VersionType| {Major}.{Minor}.{Build} By default, the tools will increment the Build part of the version, but you can easily change that with this optional optional parameter
 
 The DevTools module is pretty smart! it has sophisticated autocompletion functionality.
 
