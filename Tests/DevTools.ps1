@@ -2,22 +2,28 @@ using module DevTools
 
 param ($action = [DevTools.Action]::Development)
 
-$provision = [DevTools.ProvisionManager]@{ action = $action; root = $PSScriptRoot }
+[DevTools.Action]$action = $action
+
+$provision = [DevTools.ProvisionManager]@{ root = $PSScriptRoot }
 $version = [DevTools.VersionManager]@{ psd = $provision.psd }
 
+$projectConfig = Import-PowerShellDataFile $provision.psd
+
 $provision.dependencies = (
-@{
-    deploy = $true
-    name = $provision.projectName
-}
+    @{
+        deploy = $true
+        name = $provision.projectName
+    }
 )
 
+$provision.dependencies += $projectConfig.DevTools.Dependencies
+
 $provision.report('Version:{0}' -f [String]$version.version)
-$provision.report('Action:{0}' -f $provision.action)
+$provision.report('Action:{0}' -f $action)
 
 $nextVersion = $version.next([DevTools.VersionComponent]::Build)
 
-switch ($provision.action)
+switch ($action)
 {
     ([DevTools.Action]::Cleanup) { $provision.cleanup() }
     ([DevTools.Action]::Shortcuts) { $provision.shortcuts() }
@@ -32,7 +38,7 @@ switch ($provision.action)
     default { }
 }
 
-if ($provision.action -ne [Action]::Development) { return }
+if ($action -ne [DevTools.Action]::Development) { return }
 
 $provision.report('The Test Environment is redy.')
 

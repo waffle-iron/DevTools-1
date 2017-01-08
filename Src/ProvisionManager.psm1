@@ -1,5 +1,4 @@
 enum Action {
-    Production
     Development
     Shortcuts
     Copy
@@ -16,17 +15,14 @@ class ProvisionManager
     $project
     [String]$psd = '{0}\{1}\{1}.psd1'
     [String]$entryPoint = '{0}\{1}\Tests\{1}.Test.ps1'
-    [Action]$action
     [String]$modules = 'Documents'
     [String]$repository
     [String]$projectName
     [Array]$dependencies
     [String]$readme = '{0}\README.md'
     
-    
     ProvisionManager($data)
     {
-        $this.action = $data.action
         $this.root = $data.root
         $this.modules = $Env:PSModulePath.Split(';') | Where-Object { $_ -match $this.modules }
         
@@ -45,27 +41,27 @@ class ProvisionManager
     [Void]processDependencies([Scriptblock]$callback)
     {
         $this.dependencies.ForEach{
-            if (!$_.deploy) { continue }
-            $callback.invoke()
+            if ($_.deploy) { $callback.invoke() }
         }
     }
     
     [Void]cleanup()
     {
         $this.processDependencies({
-            
-            $this.report('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
-            Try
-            {
-                remove-item -ErrorAction Stop -Recurse -Force `
-                ('{0}\{1}' -f $this.modules, $_.name)
-            }
-            Catch
-            {
-                $this.warning($_.Exception.Message)
-            }
-            exit
-        })
+                
+                $this.report('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
+                Try
+                {
+                    remove-item -ErrorAction Continue -Recurse -Force `
+                    ('{0}\{1}' -f $this.modules, $_.name)
+                }
+                Catch
+                {
+                    $this.warning($_.Exception.Message)
+                }
+                
+            })
+        break
     }
     
     [Void]shortcuts()
@@ -73,11 +69,11 @@ class ProvisionManager
         $mask = '"{0}\{1}"'
         
         $this.processDependencies({
-            $destination = $mask -f $this.modules, $_.name
-            $source = $mask -f $this.repository, $_.name
-            $output = cmd /C mklink /J $destination $source
-            $this.report($output)
-        })
+                $destination = $mask -f $this.modules, $_.name
+                $source = $mask -f $this.repository, $_.name
+                $output = cmd /C mklink /J $destination $source
+                $this.report($output)
+            })
     }
     
     [Void]copy()
@@ -85,12 +81,12 @@ class ProvisionManager
         $mask = '"{0}\{1}"'
         
         $this.processDependencies({
-            $destination = $mask -f $this.modules, $_.name
-            $source = $mask -f $this.repository, $_.name
-            
-            $output = xcopy $source $destination /Isdy
-            $this.warning(($output | Out-String))
-        })
+                $destination = $mask -f $this.modules, $_.name
+                $source = $mask -f $this.repository, $_.name
+                
+                $output = xcopy $source $destination /Isdy
+                $this.warning(($output | Out-String))
+            })
     }
     
     [Void]bumpVersion($version, $nextVersion)
@@ -102,9 +98,8 @@ class ProvisionManager
     
     [Void]publish()
     {
-        $AapiKey = (Get-Content ('{0}\.nu_get_api_key' -f $env:USERPROFILE) |
-        Out-String).trim()
-        
-        Publish-Module -Name $this.project.FullName -NuGetApiKey $AapiKey
+        $config = Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1
+        $apiKey = $config.apiKey
+        Publish-Module -Name $this.project.FullName -NuGetApiKey $apiKey
     }
 }

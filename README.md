@@ -147,5 +147,5 @@ powershell -NoProfile .\Tests\DevTools.ps1 -action Shortcuts
 powershell -NoProfile .\Tests\DevTools.ps1 -action S
 ```
 
-[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.3-green.svg
-[psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.0.3
+[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.0.4-green.svg
+[psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.0.4
