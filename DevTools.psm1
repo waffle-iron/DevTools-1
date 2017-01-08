@@ -21,9 +21,7 @@ function Use-DevTools
     [CmdletBinding()]
     param
     (
-        [Parameter(ValueFromRemainingArguments = $true, Position = 3)]
-        [ValidateSet('Major', 'Minor', 'Build')]
-        [VersionComponent]$VersionType = [VersionComponent]::Build,
+        [Parameter(ValueFromRemainingArguments = $true)]
         $CustomVersion = $false
     )
     
@@ -88,6 +86,27 @@ function Use-DevTools
         
         $runtimeParameterDictionary.Add($actionName, $rtDefinedParameter)
         
+        $versionName = 'VersionType'
+        
+        $attributeCollection = New-Object Collection[System.Attribute]
+        
+        $parameterAttribute = New-Object ParameterAttribute
+        $parameterAttribute.Mandatory = $false
+        
+        $parameterAttribute.Position = 3
+        
+        
+        $attributeCollection.Add($parameterAttribute)
+        
+        $validateSetAttribute = New-Object ValidateSetAttribute('Major', 'Minor', 'Build')
+        
+        $attributeCollection.Add($validateSetAttribute)
+        
+        $rtDefinedParameter = New-Object RuntimeDefinedParameter($versionName, [String], $attributeCollection)
+        $PSBoundParameters[$versionName] = [VersionComponent]::Build
+        
+        $runtimeParameterDictionary.Add($versionName, $rtDefinedParameter)
+        
         return $runtimeParameterDictionary
     }
     
@@ -95,6 +114,7 @@ function Use-DevTools
     {
         $project = $PsBoundParameters[$projectName]
         $action = $PsBoundParameters[$actionName]
+        [VersionComponent]$versionType = $PsBoundParameters[$versionName]
     }
     
     process
@@ -168,6 +188,11 @@ Register-ArgumentCompleter -CommandName dt -ScriptBlock {
     if (($sync.isInProject -and $count -eq 2) -or (!$sync.isInProject -and $count -eq 1))
     {
         $methods = $sync.projects.invoke()
+    }
+    
+    if ($count -eq 3)
+    {
+        $methods = [Enum]::GetValues([VersionComponent])
     }
     
     $matches = $methods | Where-Object { $_ -like "*$wordToComplete*" }
