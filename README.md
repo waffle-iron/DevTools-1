@@ -63,18 +63,19 @@ Dependencies are the modules including the project itself, that should be provis
 to UserScope. All the modules should be located in the same root folder:<br>
 If the dependency module is already installed in the system you can skip it by setting `deploy = $false`
 
-to configure the dependencies add the following section in the module's psd1 `ModuleName.psd1`
+to configure the dependencies add the following data to the module's `PrivateData` section psd1 `ModuleName.psd1`
 
 ``` Powershell
-DevTools = @{
-    Dependencies = (
-        @{
-            deploy = $false
-            name = 'ColoredText'
-        }
-    )
+PrivateData = @{
+    DevTools = @{
+        Dependencies = (
+            @{
+                deploy = $false
+                name = 'ColoredText'
+            }
+        )
+    }
 }
-)
 ```
 
 ## Usage:
@@ -83,7 +84,8 @@ DevTools = @{
 | ---------- | ----------- |
 -Project     | Project Name
 -Action      | Actions from the aforementioned table.
--VersionType | {Major}.{Minor}.{Build} By default, the tools will increment the Build part<br>of the version, but you can easily change that with this optional optional parameter
+-VersionType | `{Major}.{Minor}.{Build}` By default, the tools will increment the `Build` part of the version, but you can easily change that with this optional parameter.
+-CustomVersion | This parameter could be used override the current version.
 
 The DevTools module is pretty smart! it has sophisticated autocompletion functionality.
 
@@ -101,6 +103,8 @@ Everywhere else it's swapped for convenience reasons:
 ```shell
 # If you are in the project directory just call:
 cd SomeModule
+dt Deploy Major
+dt Deploy -CustomVersion 1.1.0
 dt Cleanup
 dt Shortcuts
 dt Deploy
@@ -114,6 +118,8 @@ dt Cleanup AnotherProject
 cd ..
 dt SomeModule Deploy
 dt SomeModule Shortcuts
+dt SomeModule Deploy Major
+dt SomeModule Deploy -CustomVersion 1.1.0
 ```
 If you want to implement your own automation script with the DevTools functionality,<br>
 use the [DevTools.ps1](Tests/DevTools.ps1) as an example.<br>
@@ -161,7 +167,7 @@ $provision.dependencies = (
     }
 )
 
-$provision.dependencies += $projectConfig.DevTools.Dependencies
+$provision.dependencies += $projectConfig.PrivateData.DevTools.Dependencies
 
 $provision.report('Version:{0}' -f [String]$version.version)
 $provision.report('Action:{0}' -f $action)
