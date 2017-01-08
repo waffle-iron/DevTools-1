@@ -84,18 +84,18 @@ DevTools = @{
 -Project    | Project Name
 -Action     | Actions from the aforementioned table.
 
-The DevTools module is pretty smart! it has sophisticated autocompletion functionality
+The DevTools module is pretty smart! it has sophisticated autocompletion functionality.
 
-The parameters a positional, so no need to specify them, just hit the "tab" for the autocompletion!
+The parameters are positional, so no need to specify them, just hit the "tab" for the autocompletion!
 
 **Notice that the parameters order is different:**
 In project directory, it is:
-- `-Action` default action `[DevTools.Action]::Development`
-- `-Project` default to current project.
+- `-Action`  Default action `[DevTools.Action]::Development`
+- `-Project` Default to current project.
 
 Everywhere else it's swapped for convenience reasons:
-- `-Project` - Mandatory!
-- `-Action` - default action `[DevTools.Action]::Development`
+- `-Project` Mandatory!
+- `-Action`  Default action `[DevTools.Action]::Development`
 
 ```shell
 # If you are in a project directory just call:
