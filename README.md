@@ -43,30 +43,52 @@ BumpVersion | Update project version.
 Publish     | Publish project to PowerShell gallery
 Deploy      | Update the project version and deploy it to PowerShell gallery
 
+## Config
+Use `$env:USERPROFILE` to find current profile location.
+
+Set `projectsPath` to the directory where store the developed modules and their dependencies
+
+In order to deploy to PowerShell Gallery you'll need to save your API key<br>
+in the User's Profile `dev_tools_config.psd1`
+
+```
+@{
+    projectsPath = 'D:\User\Development\OpenSource\Current\Powershell'
+    apiKey = '000000000-0000-0000-0000-000000000000'
+}
+```
+
 ## Dependencies:
 
 Dependencies are the modules including the project itself, that should be provisioned<br>
 to UserScope. All the modules should be located in the same root folder:<br>
 If the dependency module already installed in the system you can skip it by setting `deploy = $false`
 
+to configure the dependencies add the following section in the module's psd1 `ModuleName.psd1`
+
 ``` Powershell
-$provision.dependencies = (
-@{
-    deploy = $true
-    name = $provision.projectName
-},
-@{
-    deploy = $false
-    name = 'ColoredText'
+DevTools = @{
+    Dependencies = (
+        @{
+            deploy = $false
+            name = 'ColoredText'
+        }
+    )
 }
 )
 ```
-## API key
 
-Use `$env:USERPROFILE` to find current profile location.<br>
-In order to deploy to PowerShell Gallery you'll need to save your API key<br>
-in the User's Profile `.nu_get_api_key`
+## Usage:
 
+The DevTools module is pretty smart! it has sophisticated autocompletion functionality
+
+
+```shell
+cd SomeModule
+dt Cleanup
+dt Shortcuts
+dt Deploy
+```
 
 ## Next Version:
 
