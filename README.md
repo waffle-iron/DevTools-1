@@ -45,7 +45,7 @@ Deploy      | Update the project version and deploy it to PowerShell gallery
 ## Config
 Use `$env:USERPROFILE` to find the current profile location.
 
-Set `projectsPath` to the directory where store the developed modules and their dependencies
+Set `projectsPath` to the directory where you store the developed modules and their dependencies.
 
 In order to deploy to PowerShell Gallery you'll need to save your API key<br>
 in the User's Profile: Create the file: `dev_tools_config.psd1`
