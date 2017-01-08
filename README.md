@@ -146,7 +146,7 @@ $nextVersion = $version.next([DevTools.VersionComponent]::Build)
 `ProjectName\Tests\ProjectName.Test.ps1`<br>
 In this file, you can do whatever you want to test and debug your app.
 
-So the simple deploy script could look like this:
+So the simple deployment script could look like this:
 
 ```powershell
 using module DevTools
