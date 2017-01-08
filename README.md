@@ -62,7 +62,7 @@ in the User's Profile `dev_tools_config.psd1`
 
 Dependencies are the modules including the project itself, that should be provisioned<br>
 to UserScope. All the modules should be located in the same root folder:<br>
-If the dependency module already installed in the system you can skip it by setting `deploy = $false`
+If the dependency module is already installed in the system you can skip it by setting `deploy = $false`
 
 to configure the dependencies add the following section in the module's psd1 `ModuleName.psd1`
 
@@ -80,14 +80,40 @@ DevTools = @{
 
 ## Usage:
 
+| Parameters| Description |
+| --------- | ----------- |
+-Project    | Project Name
+-Action     | Actions from the aforementioned table.
+
 The DevTools module is pretty smart! it has sophisticated autocompletion functionality
 
+The parameters a positional, so no need to specify them, just hit the "tab" for the autocompletion!
+
+**Notice that the parameters order is different:**
+In project directory, it is 
+- `-Action` default action `[DevTools.Action]::Development`
+- `-Project` default to current project.
+
+everywhere else it's swapped for convenience reasons
+- `-Project` - Mandatory!
+- `-Action` - default action `[DevTools.Action]::Development`
 
 ```shell
+# If you are in a project directory just call:
 cd SomeModule
 dt Cleanup
 dt Shortcuts
 dt Deploy
+# etc.
+# If being in project directory you want to manipulate another 
+# project add the project name as the second parameter:
+dt BumpVersion AnotherProject
+dt Cleanup AnotherProject
+
+# any other folder
+cd ..
+dt SomeModule Deploy
+dt SomeModule Shortcuts
 ```
 
 ## Next Version:
