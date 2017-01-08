@@ -84,7 +84,7 @@ PrivateData = @{
 | ------------ | ----------- |
 -Project       | Project Name
 -Action        | Actions from the aforementioned table.
--VersionType   | `{Major}.{Minor}.{Build}` By default, the tools will increment the `Build` part of the version, but you can easily change that with this optional parameter.
+-VersionType   | `{Major}.{Minor}.{Build}` By default, the tools will increment the `Build` part of<br> the version, but you can easily change that with this optional parameter.
 -CustomVersion | This parameter could be used override the current version.
 
 The DevTools module is pretty smart! it has sophisticated autocompletion functionality.
