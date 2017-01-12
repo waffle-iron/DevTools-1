@@ -100,6 +100,6 @@ class ProvisionManager
     {
         $config = Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1
         $apiKey = $config.apiKey
-        Publish-Module -Name $this.project.FullName -NuGetApiKey $apiKey
+        Publish-Module -Verbose -Name $this.project.FullName -NuGetApiKey $apiKey
     }
 }
