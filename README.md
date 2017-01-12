@@ -2,7 +2,7 @@
 
 [![Powershellgallery Badge][psgallery-badge]][psgallery-status]
 
-A set of tools for the rapid PS modules development.
+The main goal of this `DevTools` is to streamflow the PoweSell modules development, and make it as simple as possible.
 
 
 ## Install:
