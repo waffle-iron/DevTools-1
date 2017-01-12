@@ -5,7 +5,7 @@
     Author = 'G8t Guy'
     CompanyName = 'Unknown'
     Copyright = '(c) 2016 G8t Guy, licensed under MIT License.'
-    Description = 'A set of tools to help develop, deploy and test PowerShell modules.'
+    Description = 'A set of tools aiming to help develop, deploy and test the PowerShell modules.'
     PowerShellVersion = '5.0'
     HelpInfoURI = 'https://github.com/g8tguy/DevTools/blob/master/README.md'
     NestedModules = @('Src\ProvisionManager.psm1', 'Src\VersionManager.psm1')
