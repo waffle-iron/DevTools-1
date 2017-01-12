@@ -13,7 +13,7 @@ PS> Install-Module DevTools
 Projects using `DevTools`:
 - [Parser](https://github.com/g8tguy/Parser).
 - [Debug](https://github.com/g8tguy/Debug).
-- Well pretty much all of my projects are developed with `DevTools`
+- Well, pretty much all of my projects are developed with `DevTools`
 
 When developing the Powershell modules we need to test them, in order to do this,<br>
 they should be installed in the system.
