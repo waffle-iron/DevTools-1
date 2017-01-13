@@ -2,28 +2,28 @@
 
 version: '{build}'
 
+platform:
+  - x86
+  - x64
+  
 environment:
   gitHubToken:
     secure: 
   psGalleryKey:
     secure:
-
-platform:
-  - x86
-  - x64
   
 init:
   - WhoAmI
   
 install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
-  - ps: Install-Module Pester -Force
-  - ps: Install-Module PSScriptAnalyzer -Force
+#  - ps: Install-Module Pester -Force
+#  - ps: Install-Module PSScriptAnalyzer -Force
   - ps: Install-Module DevTools -Force
 
 before_build:
   - ps: dt Shortcuts
-  - ps: Unistall-Module DevTools
+  - ps: Uninstall-Module $env:APPVEYOR_PROJECT_NAME
 
 build_script:
   - ps: dt Build
@@ -33,3 +33,9 @@ test_script:
   
 after_test:
   - ps: dt Cleanup
+  
+build: off
+
+branches:
+  only:
+    - master
