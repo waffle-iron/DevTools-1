@@ -42,6 +42,8 @@ class ProvisionManager
     [Void]processDependencies([Scriptblock]$callback)
     {
         $this.dependencies.ForEach{
+            Write-Host ('1{0}1' -f $this.modules)
+            Write-Host ('1{0}1' -f $_.name)
             if ($_.deploy) { $callback.invoke() }
         }
     }
@@ -49,7 +51,8 @@ class ProvisionManager
     [Void]cleanup()
     {
         $this.processDependencies({
-                
+
+            
                 $this.report('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
                 Try
                 {
