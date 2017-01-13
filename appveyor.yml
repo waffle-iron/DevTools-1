@@ -39,3 +39,7 @@ build: on
 branches:
   only:
     - master
+    
+artifacts:
+  - path: test.zip
+  - path: logs
