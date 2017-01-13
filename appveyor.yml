@@ -1,21 +1,29 @@
 ﻿os: WMF 5
 
+version: '{build}'
+
 environment:
-  GitHubToken:
+  gitHubToken:
     secure: 
-  PSGalleryKey:
+  psGalleryKey:
     secure:
 
+platform:
+  - x86
+  - Any CPU
+  
+init:
+  - WhoAmI
+  
 install:
-  - ps: Install-PackageProvider NuGet -Scope CurrentUsert
-  - ps: Install-Module Pester -Scope CurrentUsert
-  - ps: Install-Module PSScriptAnalyzer -Scope CurrentUsert
-  - ps: Install-Module DevTools -Scope CurrentUsert
+  - ps: Install-PackageProvider NuGet -Force | Out-Null
+  - ps: Install-Module Pester -Force
+  - ps: Install-Module PSScriptAnalyzer -Force
+  - ps: Install-Module DevTools -Force
 
 before_build:
-  - WhoAmI
   - ps: dt Shortcuts
-  - ps: Uninstall-Module DevTools
+  - ps: Unnstall-Module DevTools
 
 build_script:
   - ps: dt Build
