@@ -7,15 +7,15 @@ environment:
     secure:
 
 install:
-  - ps: Install-PackageProvider NuGet -Force | Out-Null
-  - ps: Install-Module Pester -Force
-  - ps: Install-Module PSScriptAnalyzer -Force
-  - ps: Install-Module DevTools -Force
+  - ps: Install-PackageProvider NuGet -Scope CurrentUsert
+  - ps: Install-Module Pester -Scope CurrentUsert
+  - ps: Install-Module PSScriptAnalyzer -Scope CurrentUsert
+  - ps: Install-Module DevTools -Scope CurrentUsert
 
 before_build:
   - WhoAmI
-  - ps: Uninstall-Module DevTools
   - ps: dt Shortcuts
+  - ps: Uninstall-Module DevTools
 
 build_script:
   - ps: dt Build
