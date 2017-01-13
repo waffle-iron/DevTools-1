@@ -10,10 +10,11 @@ install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
   - ps: Install-Module Pester -Force
   - ps: Install-Module PSScriptAnalyzer -Force
+  - ps: Install-Module DevTools -Force
 
 before_build:
   - WhoAmI
-  - cmd: mklink /J C:\Users\AppVeyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
+  - ps: Uninstall-Module DevTools
   - ps: dt Shortcuts
 
 build_script:
