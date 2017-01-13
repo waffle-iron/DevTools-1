@@ -9,22 +9,13 @@ using module .\Src\AppVeyorManager.psm1
 
 $script:sync = [Hashtable]::Synchronized(@{ })
 
-$sync.config = Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1
-
-#$APPVEYOR_BUILD_FOLDER = $sync.config.projectsPath
-#$CI = $true
+$sync.appVeyor = New-Object AppVeyorManager
 
 $sync.config = switch ([Boolean]$env:CI)
 {
-    true {
-        @{
-            apiKey = ''
-            projectsPath = $env:APPVEYOR_BUILD_FOLDER
-        }
-    }
+    true { $sync.appVeyor.getConfig() }
     false { Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1 }
 }
-
 
 $sync.projects = {
     (Get-ChildItem $sync.config.projectsPath).forEach{
@@ -132,17 +123,15 @@ function Use-DevTools
     }
     process
     {
-        $sync.config
         $root = '{0}\{1}\Tests' -f $sync.config.projectsPath, $project
         
         $provision = [ProvisionManager]@{ root = $root }
         $version = [VersionManager]@{ psd = $provision.psd }
-        $appVeyor = [AppVeyorManagerManager]@{ }
         
-        
-        $provision.report('Project:{0}' -f [String]$project)
-        $provision.report('Version:{0}' -f [String]$version.version)
-        $provision.report('Action:{0}' -f $action)
+        $provision.report('System : {0} - {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
+        $provision.report('Project: {0}' -f [String]$project)
+        $provision.report('Version: {0}' -f [String]$version.version)
+        $provision.report('Action : {0}' -f $action)
         
         $nextVersion = switch ([Boolean]$customVersion)
         {
@@ -163,7 +152,7 @@ function Use-DevTools
         
         switch ($action)
         {
-            ([Action]::Build) { $appVeyor.pushArtifact() }
+            ([Action]::Build) { $sync.appVeyor.pushArtifact() }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Shortcuts) { $provision.shortcuts() }
             ([Action]::Copy) { $provision.copy() }

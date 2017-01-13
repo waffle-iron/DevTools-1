@@ -15,7 +15,7 @@ version: '{build}'
 
 before_build:
   - WhoAmI
-  - cmd: mklink /J C:\Users\appveyor\Documents\WindowsPowerShell\Modules\devtools c:\projects\devtools
+  - cmd: mklink /J C:\Users\appveyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
   - ps: dt Shortcuts
 
 build_script:
