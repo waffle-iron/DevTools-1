@@ -17,7 +17,7 @@ init:
   
 install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
-  - ps: Install-Module Pester -Force
+#  - ps: Install-Module Pester -Force
 #  - ps: Install-Module PSScriptAnalyzer -Force
   - ps: Install-Module DevTools -Force
 
@@ -41,7 +41,7 @@ branches:
     - master
     
 artifacts:
-  - path: '..\'
+  - path: ..\$(APPVEYOR_PROJECT_NAME)
     name: $(RELEASE_VERSION).zip
     type: zip
     
