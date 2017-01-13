@@ -41,12 +41,12 @@ branches:
     - master
     
 artifacts:
-  - path: $(APPVEYOR_BUILD_FOLDER)
-    name: devtools
+  - path: '..\'
+    name: $(RELEASE_VERSION).zip
     type: zip
     
 deploy:
-  release: $(appveyor_build_version)
+  release: $(RELEASE_VERSION)
   provider: GitHub
   artifact: devtools-1.1.4.zip
   draft: false

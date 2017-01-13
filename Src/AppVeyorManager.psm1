@@ -26,9 +26,9 @@ class AppVeyorManager
     
     [Void]pushArtifact([ProvisionManager]$provision, $version)
     {
-        $destination = '{0}\{1}-{2}.zip' -f $Env:TEMP, $provision.projectName, $version
+        $destination = '{0}\{1}-{2}.zip' -f $env:TEMP, $provision.projectName, $version
         
-        $env:version = $version
+        $env:RELEASE_VERSION = $version
         
         Compress-Archive -Path $provision.project.fullName "$destination" -Force -Verbose
         Push-AppveyorArtifact -Path $destination -DeploymentName $provision.projectName -Verbose
