@@ -11,11 +11,9 @@ install:
   - ps: Install-Module Pester -Force
   - ps: Install-Module PSScriptAnalyzer -Force
 
-version: '{build}'
-
 before_build:
   - WhoAmI
-  - cmd: mklink /J C:\Users\appveyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
+  - cmd: mklink /J C:\Users\AppVeyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
   - ps: dt Shortcuts
 
 build_script:

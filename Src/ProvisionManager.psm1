@@ -32,7 +32,7 @@ class ProvisionManager
         
         $this.project = (get-item $this.root).parent
         
-        $this.repository = $this.project.parent.FullName
+        $this.repository = $this.project.parent.fullName
         $this.projectName = $this.project.Name
         $this.psd = $this.psd -f $this.repository, $this.projectName
         $this.entryPoint = $this.entryPoint -f $this.repository, $this.projectName

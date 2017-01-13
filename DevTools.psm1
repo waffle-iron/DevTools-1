@@ -128,10 +128,10 @@ function Use-DevTools
         $provision = [ProvisionManager]@{ root = $root }
         $version = [VersionManager]@{ psd = $provision.psd }
         
-        $provision.report('System : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
-        $provision.report('Project: {0}' -f [String]$project)
-        $provision.report('Version: {0}' -f [String]$version.version)
-        $provision.report('Action : {0}' -f $action)
+        $provision.report('Version : {0}' -f [String]$version.version)
+        $provision.report('Project : {0}' -f [String]$project)
+        $provision.report('System  : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
+        $provision.report('Action  : {0}' -f $action)
         
         $nextVersion = switch ([Boolean]$customVersion)
         {
@@ -152,7 +152,7 @@ function Use-DevTools
         
         switch ($action)
         {
-            ([Action]::Build) { $sync.appVeyor.pushArtifact() }
+            ([Action]::Build) { $sync.appVeyor.pushArtifact($provision, $version.version) }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Shortcuts) { $provision.shortcuts() }
             ([Action]::Copy) { $provision.copy() }
