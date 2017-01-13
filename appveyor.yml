@@ -41,12 +41,12 @@ branches:
     - master
     
 deploy:
-  release: $(appveyor_build_version)
-  description: $(appveyor_build_version)
+  release: $($env:RELEASE_VERSION)
+  description: ($env:RELEASE_VERSION)
   provider: GitHub
   auth_token:
     secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
-  artifact: devtools-$(RELEASE_VERSION).zip
+  artifact: devtools
   draft: false
   prerelease: false
   on:
