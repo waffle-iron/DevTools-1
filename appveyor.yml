@@ -34,7 +34,7 @@ test_script:
 after_test:
   - ps: dt Cleanup
   
-build: off
+build: on
 
 branches:
   only:
