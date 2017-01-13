@@ -40,15 +40,12 @@ branches:
   only:
     - master
     
-artifacts:
-  - path: ..\$(APPVEYOR_PROJECT_NAME)
-    name: $(RELEASE_VERSION).zip
-    type: zip
-    
 deploy:
   release: $(RELEASE_VERSION)
   provider: GitHub
-  artifact: devtools-1.1.4.zip
+  auth_token:
+    secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
+  artifact: devtools-$(RELEASE_VERSION).zip
   draft: false
   prerelease: false
   on:
