@@ -38,9 +38,9 @@ after_test:
   
 build: on
 
-#branches:
-#  only:
-#    - master
+branches:
+  only:
+    - master
     
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
