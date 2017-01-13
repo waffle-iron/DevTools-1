@@ -27,8 +27,8 @@ class ProvisionManager
         $this.root = $data.root
         
         
-        $this.modules = ($Env:PSModulePath.Split(';') | Where-Object { $_ -match $this.modules })
-        #[Environment]::UserName
+        $this.modules = ($Env:PSModulePath.Split(';') |
+        Where-Object { $_ -match $this.modules }) | Select-Object -Unique
         
         $this.project = (get-item $this.root).parent
         
@@ -45,9 +45,6 @@ class ProvisionManager
     [Void]processDependencies([Scriptblock]$callback)
     {
         $this.dependencies.ForEach{
-            Write-Host ($Env:PSModulePath.Split(';') | Format-List | Out-String)
-            Write-Host ('1{0}1' -f $this.modules)
-            Write-Host ('1{0}1' -f $_.name)
             if ($_.deploy) { $callback.invoke() }
         }
     }

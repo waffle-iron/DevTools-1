@@ -128,7 +128,7 @@ function Use-DevTools
         $provision = [ProvisionManager]@{ root = $root }
         $version = [VersionManager]@{ psd = $provision.psd }
         
-        $provision.report('System : {0} - {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
+        $provision.report('System : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
         $provision.report('Project: {0}' -f [String]$project)
         $provision.report('Version: {0}' -f [String]$version.version)
         $provision.report('Action : {0}' -f $action)
