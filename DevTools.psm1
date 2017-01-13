@@ -21,8 +21,8 @@ function Use-DevTools
     [CmdletBinding()]
     param
     (
-        [Parameter(ValueFromRemainingArguments = $true)]
-        $CustomVersion = $false
+    [Parameter(ValueFromRemainingArguments = $true)]
+    $CustomVersion = $false
     )
     
     DynamicParam
@@ -45,8 +45,7 @@ function Use-DevTools
         {
             $parameterAttribute.Position = 2
             $PSBoundParameters[$projectName] = $sync.project
-        }
-        else
+        } else
         {
             $parameterAttribute.Position = 1
             $parameterAttribute.Mandatory = $true
@@ -109,14 +108,12 @@ function Use-DevTools
         
         return $runtimeParameterDictionary
     }
-    
     begin
     {
         $project = $PsBoundParameters[$projectName]
         $action = $PsBoundParameters[$actionName]
         [VersionComponent]$versionType = $PsBoundParameters[$versionName]
     }
-    
     process
     {
         
@@ -139,10 +136,10 @@ function Use-DevTools
         $projectConfig = Import-PowerShellDataFile $provision.psd
         
         $provision.dependencies = (
-            @{
-                deploy = $true
-                name = $provision.projectName
-            }
+        @{
+            deploy = $true
+            name = $provision.projectName
+        }
         )
         
         $provision.dependencies += $projectConfig.PrivateData.DevTools.Dependencies
@@ -174,9 +171,9 @@ New-Alias -Name dt -Value Use-DevTools
 
 Register-ArgumentCompleter -CommandName dt -ScriptBlock {
     param (
-        $wordToComplete,
-        $commandAst,
-        $cursorPosition
+    $wordToComplete,
+    $commandAst,
+    $cursorPosition
     )
     
     $ast = (-split $commandAst)
