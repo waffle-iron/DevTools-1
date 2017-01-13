@@ -10,7 +10,7 @@ environment:
 
 platform:
   - x86
-  - Any CPU
+  - x64
   
 init:
   - WhoAmI
@@ -23,7 +23,7 @@ install:
 
 before_build:
   - ps: dt Shortcuts
-  - ps: Unnstall-Module DevTools
+  - ps: Unistall-Module DevTools
 
 build_script:
   - ps: dt Build
