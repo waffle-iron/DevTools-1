@@ -41,7 +41,8 @@ branches:
     - master
     
 deploy:
-  release: $(RELEASE_VERSION)
+  release: $(appveyor_build_version)
+  description: $(appveyor_build_version)
   provider: GitHub
   auth_token:
     secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
