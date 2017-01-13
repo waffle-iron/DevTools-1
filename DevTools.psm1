@@ -14,12 +14,12 @@ $sync.config = Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1
 #$APPVEYOR_BUILD_FOLDER = $sync.config.projectsPath
 #$CI = $true
 
-$sync.config = switch ([Boolean]$CI)
+$sync.config = switch ([Boolean]$env:CI)
 {
     true {
         @{
             apiKey = ''
-            projectsPath = $APPVEYOR_BUILD_FOLDER
+            projectsPath = $env:APPVEYOR_BUILD_FOLDER
         }
     }
     false { Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1 }

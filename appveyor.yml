@@ -14,7 +14,7 @@ install:
 version: '{build}'
 
 before_build:
-  - whoami
+  - WhoAmI
   - cmd: mklink /J C:\Users\appveyor\Documents\WindowsPowerShell\Modules\devtools c:\projects\devtools
   - ps: dt Shortcuts
 
