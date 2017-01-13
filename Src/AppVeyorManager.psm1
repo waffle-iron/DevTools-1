@@ -28,6 +28,8 @@ class AppVeyorManager
     {
         $destination = '{0}\{1}-{2}.zip' -f $Env:TEMP, $provision.projectName, $version
         
+        $env:version = $version
+        
         Compress-Archive -Path $provision.project.fullName "$destination" -Force -Verbose
         Push-AppveyorArtifact -Path $destination -DeploymentName $provision.projectName -Verbose
     }

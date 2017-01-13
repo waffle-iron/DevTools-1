@@ -41,17 +41,16 @@ branches:
     - master
     
 artifacts:
-  - path: logs
-    name: test logs
+  - path: '*'
+    name: devtools
     type: zip
     
 deploy:
   release: myproduct-v1
   description: 'Release description'
   provider: GitHub
-  artifact: 'devtools-1.1.4.zip'
+  artifact: devtools-1.1.4.zip
   draft: false
   prerelease: false
   on:
-    branch: master                 
-    appveyor_repo_tag: flase        # deploy on tag push only
+    branch: master
