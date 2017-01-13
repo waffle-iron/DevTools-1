@@ -1,26 +1,28 @@
-# PowerShell 5.0 build worker
-os: WMF 5
+﻿os: WMF 5
 
-# Secret deployment keys
 environment:
   GitHubToken:
     secure: 
   PSGalleryKey:
-    secure: 
+    secure:
 
-# Install required Pester and PSScriptAnalyzer modules
 install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
   - ps: Install-Module Pester -Force
-  - ps: Install-Module PSScriptAnalyzer
+  - ps: Install-Module PSScriptAnalyzer -Force
 
 version: '{build}'
 
 before_build:
-  - ps: .\Tests\AppVeyor.ps1
-
-build_script:
+  - whoami
+  - cmd: /C mklink /J C:\Users\Administrator\Documents\WindowsPowerShell\Modules c:\projects\devtools
   - ps: dt Shortcuts
 
+build_script:
+  - ps: dt Build
+
 test_script:
-  - ps: dt Tests
+  - ps: dt Test
+  
+after_test:
+  - ps: dt Cleanup

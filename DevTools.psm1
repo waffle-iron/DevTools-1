@@ -1,14 +1,30 @@
-using namespace System.Management.Automation.Host
+﻿using namespace System.Management.Automation.Host
 using namespace System.Management.Automation
 using namespace System.Collections.ObjectModel
 using namespace System.Collections.Generic
 
 using module .\Src\ProvisionManager.psm1
 using module .\Src\VersionManager.psm1
+using module .\Src\AppVeyorManager.psm1
 
 $script:sync = [Hashtable]::Synchronized(@{ })
 
 $sync.config = Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1
+
+$APPVEYOR_BUILD_FOLDER = $sync.config.projectsPath
+$CI = $true
+
+$sync.config = switch ([Boolean]$CI)
+{
+    true {
+        @{
+            apiKey = ''
+            projectsPath = $APPVEYOR_BUILD_FOLDER
+        }
+    }
+    false { Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1 }
+}
+
 
 $sync.projects = {
     (Get-ChildItem $sync.config.projectsPath).forEach{
@@ -81,7 +97,7 @@ function Use-DevTools
         $attributeCollection.Add($validateSetAttribute)
         
         $rtDefinedParameter = New-Object RuntimeDefinedParameter($actionName, [String], $attributeCollection)
-        $PSBoundParameters[$actionName] = [Action]::Development
+        $PSBoundParameters[$actionName] = [Action]::Test
         
         $runtimeParameterDictionary.Add($actionName, $rtDefinedParameter)
         
@@ -116,11 +132,12 @@ function Use-DevTools
     }
     process
     {
-        
+        $sync.config
         $root = '{0}\{1}\Tests' -f $sync.config.projectsPath, $project
         
         $provision = [ProvisionManager]@{ root = $root }
         $version = [VersionManager]@{ psd = $provision.psd }
+        $appVeyor = [AppVeyorManagerManager]@{ }
         
         
         $provision.report('Project:{0}' -f [String]$project)
@@ -146,6 +163,7 @@ function Use-DevTools
         
         switch ($action)
         {
+            ([Action]::Build) { $appVeyor.pushArtifact() }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Shortcuts) { $provision.shortcuts() }
             ([Action]::Copy) { $provision.copy() }
@@ -159,7 +177,7 @@ function Use-DevTools
             default { }
         }
         
-        if ($action -ne [Action]::Development) { return }
+        if ($action -ne [Action]::Test) { return }
         
         $provision.report('The Test Environment is redy.')
         

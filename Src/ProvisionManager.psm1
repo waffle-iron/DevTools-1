@@ -1,5 +1,6 @@
-enum Action {
-    Development
+﻿enum Action {
+    Test
+    Build
     Shortcuts
     Copy
     Cleanup

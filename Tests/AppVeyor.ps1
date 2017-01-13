@@ -1,1 +1,1 @@
-Write-Host 'Prepare for Build'
+﻿Write-Host 'Prepare for Build'

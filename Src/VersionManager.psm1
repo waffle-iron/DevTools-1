@@ -1,4 +1,4 @@
-enum VersionComponent
+﻿enum VersionComponent
 {
     Major
     Minor
