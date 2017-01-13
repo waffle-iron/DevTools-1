@@ -41,7 +41,7 @@ branches:
     - master
     
 artifacts:
-  - path: test.zip
+  - path: test
   - path: logs
   - path: $env:APPVEYOR_PROJECT_NAME
     name: myapp
