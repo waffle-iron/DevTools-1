@@ -41,16 +41,15 @@ branches:
     - master
     
 artifacts:
-  - path: test
   - path: logs
-  - path: $env:APPVEYOR_PROJECT_NAME
-    name: myapp
-
+    name: test logs
+    type: zip
+    
 deploy:
   release: myproduct-v1
   description: 'Release description'
   provider: GitHub
-  artifact: devtools-1.1.4.zip 
+  artifact: 'devtools-1.1.4.zip'
   draft: false
   prerelease: false
   on:
