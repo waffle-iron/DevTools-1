@@ -11,8 +11,8 @@ $script:sync = [Hashtable]::Synchronized(@{ })
 
 $sync.config = Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1
 
-$APPVEYOR_BUILD_FOLDER = $sync.config.projectsPath
-$CI = $true
+#$APPVEYOR_BUILD_FOLDER = $sync.config.projectsPath
+#$CI = $true
 
 $sync.config = switch ([Boolean]$CI)
 {
