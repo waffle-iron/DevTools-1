@@ -1,6 +1,6 @@
 @{
     RootModule = 'DevTools.psm1'
-    ModuleVersion = '1.1.4'
+    ModuleVersion = '1.1.5'
     GUID = '6db91827-46cb-40b5-8843-ed393f350132'
     Author = 'G8t Guy'
     CompanyName = 'Unknown'

@@ -112,16 +112,33 @@ class ProvisionManager
         $message = 'Bump version to {0}.' -f $version
         $output = git -C "$($this.project.FullName)" commit -a -m "$message"
         
-        Write-Host($output | Out-String)
         $this.warning(($output | Out-String))
     }
     
     [Void]gitTag($version)
     {
         $desciption = '{0} release {1}.' -f $this.projectName, $version
-        $output = git -C "$($this.project.FullName)" tag -a -m "$desciption" "$version"
-        
-        Write-Host($output | Out-String)
-        $this.warning(($output | Out-String))
+        $output = git -C "$($this.project.FullName)" tag -a -m "$desciption" "$version" 2>&1
+        $this.warning((($output -split [Environment]::NewLine)[$false].trim()))
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

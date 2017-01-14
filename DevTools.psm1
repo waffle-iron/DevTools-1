@@ -155,10 +155,11 @@ function Use-DevTools
             ([Action]::Build) { $sync.appVeyor.pushArtifact($provision, $version.version) }
             ([Action]::Release)
             {
+                #$provision.gitCommitVersionChange($nextVersion)
+                $provision.bumpVersion($version, $nextVersion)
                 $provision.gitCommitVersionChange($nextVersion)
-                #$provision.gitTag($nextVersion)
-                
-                Write-Host 11
+                $provision.gitTag($nextVersion)
+
                 #$provision.bumpVersion($version, $nextVersion)
             }
             ([Action]::Cleanup) { $provision.cleanup() }
