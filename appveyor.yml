@@ -1,5 +1,7 @@
 ﻿os: WMF 5
 
+version: '{build}'
+
 platform:
   - x86
   
@@ -21,7 +23,7 @@ before_build:
   - ps: Uninstall-Module DevTools
 
 build_script:
-  - ps: if ($env:APPVEYOR_REPO_TAG) { dt Build }
+  - ps: if ($env:APPVEYOR_REPO_TAG -ne $true) { dt Build }
 
 test_script:
   - ps: dt Test
