@@ -15,10 +15,9 @@ init:
 install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
   - ps: Install-Module DevTools -Force
-#  - ps: Install-Module Debug -Force
 
 before_build:
-  - ps: dt Shortcuts
+  - ps: dt Install
   - ps: Uninstall-Module DevTools
 
 build_script:

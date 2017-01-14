@@ -29,7 +29,8 @@ function Use-DevTools
     param
     (
     [Parameter(ValueFromRemainingArguments = $true)]
-    $CustomVersion = $false
+        $CustomVersion = $false,
+        [Switch]$NoPublish
     )
     
     DynamicParam
@@ -158,7 +159,11 @@ function Use-DevTools
                 $provision.bumpVersion($version, $nextVersion)
                 $provision.gitCommitVersionChange($nextVersion)
                 $provision.gitTag($nextVersion)
-                $provision.publish()
+                
+                if ($noPublish) { break }
+                Write-Host 'zzzzzzzzzz'
+                #$provision.publish()
+                
             }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Install) { $provision.install() }
