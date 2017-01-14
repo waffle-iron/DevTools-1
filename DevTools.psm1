@@ -161,9 +161,8 @@ function Use-DevTools
                 $provision.gitTag($nextVersion)
                 
                 if ($noPublish) { break }
-                Write-Host 'zzzzzzzzzz'
-                #$provision.publish()
                 
+                $provision.publish()
             }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Install) { $provision.install() }
