@@ -134,7 +134,7 @@ class ProvisionManager
         $ps.WaitForExit()
         [string]$out = $ps.StandardError.ReadToEnd();
         $z = $ps.StandardOutput.ReadToEnd();
-        $this.warning(($z | Out-String).trim())
+        $this.warning($z)
         $this.error(($out | Out-String).trim())
         
     }
@@ -162,21 +162,7 @@ class ProvisionManager
         
         $this.error(($out | Out-String).trim())
         
-        #        Try
-        #        {
-        #            
-        #            $aa = Start-Process -NoNewWindow -PassThru -Wait `
-        #                                -FilePath git
-        #            #git -C "$($this.project.FullName)" tag -a -m "$desciption" "$version"
-        #        } Catch
-        #        {
-        #            #Write-Host($aa)
-        #            #$this.warning($_)
-        #        }
-        
-        
-        #$this.warning($output)
-        #Write-Host ($output|Format-List| Out-String)
+
     }
 }
 
