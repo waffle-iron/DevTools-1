@@ -1,14 +1,12 @@
 ﻿os: WMF 5
 
-version: '{build}'
-
 platform:
   - x86
   
 environment:
   releaseDescription : true
   psGalleryKey:
-    secure:
+    secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
   
 init:
   - WhoAmI
@@ -23,7 +21,7 @@ before_build:
   - ps: Uninstall-Module DevTools
 
 build_script:
-  - ps: dt Build
+  - ps: if ($env:APPVEYOR_REPO_TAG) { dt Build }
 
 test_script:
   - ps: dt Test
@@ -32,13 +30,6 @@ after_test:
   - ps: dt Cleanup
   
 build: on
-
-branches:
-  only:
-    - master
-    - /\d\.\d\.\d/
-
-skip_non_tags: true
 
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
@@ -50,5 +41,4 @@ deploy:
   draft: false
   prerelease: false
   on:
-    branch: master
     appveyor_repo_tag: true
