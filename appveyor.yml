@@ -15,7 +15,7 @@ init:
 install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
   - ps: Install-Module Pester -Force
-  - ps: Install-Module DevTools -Force
+#  - ps: Install-Module DevTools -Force
 
 before_build:
   #- ps: dt Install
