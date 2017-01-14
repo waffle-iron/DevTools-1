@@ -128,14 +128,14 @@ class ProvisionManager
         
         if ([Boolean]$output)
         {
-            $this.error()
+            $this.error('')
             $this.warning($output.Trim())
         }
         
         
         if ([Boolean]$error)
         {
-            $this.error()
+            $this.error('')
             $this.error($error.Trim())
         }
         
