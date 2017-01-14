@@ -126,14 +126,14 @@ class ProvisionManager
         $output = $ps.StandardOutput.ReadToEnd().Trim()
         $error = $ps.StandardError.ReadToEnd().Trim()
         
-        if ($error.length > 0)
+        if ($error.length -gt 0)
         {
             $this.warning($output)
             Write-Host '---------------'
         }
         
         
-        if ($error.length > 0)
+        if ($error.length -gt 0)
         {
             $this.error($error)
         Write-Host '---------------'    
