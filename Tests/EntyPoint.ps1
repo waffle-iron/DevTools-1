@@ -31,7 +31,7 @@ if (!$appVeyor) { return }
 
     $provision.warning("{0}Uploading $outputFile to $target" -f $provision.cr)
     
-    #(New-Object WebClient).UploadFile($target, $outputFile)
+    (New-Object WebClient).UploadFile($target, $outputFile)
 
 
 if (!$test.FailedCount) { return }
