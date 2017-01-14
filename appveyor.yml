@@ -1,5 +1,5 @@
 install:
-  - cinst pester
+  - cinst pester -version 2.0.2
 
 build: false
 
