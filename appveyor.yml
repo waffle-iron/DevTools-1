@@ -50,4 +50,5 @@ deploy:
   draft: false
   prerelease: false
   on:
+    branch: tag
     appveyor_repo_tag: true
