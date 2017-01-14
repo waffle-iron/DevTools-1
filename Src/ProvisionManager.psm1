@@ -129,9 +129,10 @@ class ProvisionManager
         $this.warning($output)
         if ($error.length > 0)
         {
+            $this.error($error)
         Write-Host '---------------'    
         }
-        $this.error($error)
+        
     }
     
     [Void]gitCommitVersionChange($version)
