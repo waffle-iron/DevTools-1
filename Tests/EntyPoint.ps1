@@ -2,10 +2,7 @@ using namespace System.Net
 
 using module DevTools
 
-#Invoke-Pester
 #get-variable -scope global
-#Write-Host 'Tests are here!'
-#Write-Host ($global:devTools | Format-List | out-string)
 
 $provision = $global:devTools.provision
 $version = $global:devTools.version
@@ -21,8 +18,6 @@ $test = Invoke-Pester -Path "$($provision.tests)" `
                       -OutputFormat NUnitXml `
                       -OutputFile "$outputFile" `
                       -PassThru
-
-
 
 if (!$appVeyor) { return }
 
