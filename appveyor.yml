@@ -7,7 +7,7 @@ platform:
 #  - x64
   
 environment:
-    zzz : 2.2.2
+  zzz : 2.2.2
   psGalleryKey:
     secure:
   
