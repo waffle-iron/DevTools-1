@@ -123,8 +123,8 @@ class ProvisionManager
         $ps.StartInfo.UseShellExecute = $false
         $ps.Start()
         $ps.WaitForExit()
-        $output = $ps.StandardOutput.ReadToEnd()
-        $error = $ps.StandardError.ReadToEnd()
+        $output = $ps.StandardOutput.ReadToEnd().Trim()
+        $error = $ps.StandardError.ReadToEnd().Trim()
         
         $this.warning($output)
         $this.error($error)
