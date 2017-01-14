@@ -47,3 +47,9 @@ deploy:
   prerelease: false
   on:
     appveyor_repo_tag: true
+    branches:
+      only:
+        - master
+        - /\d\.\d\.\d/
+      except:
+        - develop
