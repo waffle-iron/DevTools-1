@@ -1,6 +1,6 @@
 ﻿os: WMF 5
 
-version: '1.1.14.{build}'
+version: '1.1.15.{build}'
 
 platform:
   - x86
@@ -44,6 +44,9 @@ build: on
     
 skip_non_tags: true
 
+# branch: master
+# force_update: true
+
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: $(zzz)
@@ -54,5 +57,4 @@ deploy:
   draft: false
   prerelease: false
   on:
-    branch: master
     appveyor_repo_tag: true
