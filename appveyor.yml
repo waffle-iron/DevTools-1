@@ -38,7 +38,7 @@ branches:
     - master
     - /\d\.\d\.\d/
 
-skip_non_tags: true
+# skip_non_tags: true
 
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
