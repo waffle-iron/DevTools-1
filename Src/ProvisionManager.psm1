@@ -1,12 +1,13 @@
 ﻿enum Action {
-    Test
-    Build
     Install
     CopyToCurrentUserModules
+    Test
     Cleanup
     BumpVersion
     Publish
     Deploy
+    Build
+    Release
 }
 
 
@@ -67,7 +68,7 @@ class ProvisionManager
         break
     }
     
-    [Void]shortcuts()
+    [Void]install()
     {
         $mask = '"{0}\{1}"'
         
@@ -104,5 +105,23 @@ class ProvisionManager
         $config = Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1
         $apiKey = $config.apiKey
         Publish-Module -Verbose -Name $this.project.FullName -NuGetApiKey $apiKey
+    }
+    
+    [Void]gitCommitVersionChange($version)
+    {
+        $message = 'Bump version to {0}.' -f $version
+        $output = git -C "$($this.project.FullName)" commit -a -m "$message"
+        
+        Write-Host($output | Out-String)
+        $this.warning(($output | Out-String))
+    }
+    
+    [Void]gitTag($version)
+    {
+        $desciption = '{0} release {1}.' -f $this.projectName, $version
+        $output = git -C "$($this.project.FullName)" tag -a -m "$desciption" "$version"
+        
+        Write-Host($output | Out-String)
+        $this.warning(($output | Out-String))
     }
 }

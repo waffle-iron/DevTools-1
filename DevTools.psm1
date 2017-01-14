@@ -153,8 +153,16 @@ function Use-DevTools
         switch ($action)
         {
             ([Action]::Build) { $sync.appVeyor.pushArtifact($provision, $version.version) }
+            ([Action]::Release)
+            {
+                $provision.gitCommitVersionChange($nextVersion)
+                #$provision.gitTag($nextVersion)
+                
+                Write-Host 11
+                #$provision.bumpVersion($version, $nextVersion)
+            }
             ([Action]::Cleanup) { $provision.cleanup() }
-            ([Action]::Install) { $provision.shortcuts() }
+            ([Action]::Install) { $provision.install() }
             ([Action]::CopyToCurrentUserModules) { $provision.copy() }
             ([Action]::BumpVersion) { $provision.bumpVersion($version, $nextVersion) }
             ([Action]::Publish) { $provision.publish() }

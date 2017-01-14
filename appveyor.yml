@@ -23,8 +23,7 @@ before_build:
   - ps: Uninstall-Module DevTools
 
 build_script:
-  - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
-  - ps: (Get-ChildItem Env:)
+  - ps: if ([Boolean]$env:APPVEYOR_REPO_TAG) { dt Build }
 
 test_script:
   - ps: dt Test
