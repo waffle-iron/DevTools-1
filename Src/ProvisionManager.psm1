@@ -24,6 +24,7 @@ class ProvisionManager
     [String]$projectName
     [Array]$dependencies
     [String]$readme = '{0}\README.md'
+    [String]$cr = [Environment]::NewLine
     
     ProvisionManager($data)
     {
@@ -58,14 +59,14 @@ class ProvisionManager
     {
         $this.processDependencies({
                 
-                $this.info('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
+                $this.info('Cleaning : {0}\{1}' -f ($this.modules, $_.name))
                 Try
                 {
                     remove-item -ErrorAction Continue -Recurse -Force `
                     ('{0}\{1}' -f $this.modules, $_.name)
                 } Catch
                 {
-                    $this.warning($_.Exception.Message)
+                    $this.warning($this.cr + $_.Exception.Message)
                 }
                 
             })
@@ -80,7 +81,7 @@ class ProvisionManager
                 $destination = $mask -f $this.modules, $_.name
                 $source = $mask -f $this.repository, $_.name
                 $output = cmd /C mklink /J $destination $source
-                $this.info($output)
+                $this.warning($this.cr + $output)
             })
     }
     
@@ -152,23 +153,3 @@ class ProvisionManager
             ))
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
