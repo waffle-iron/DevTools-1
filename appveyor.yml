@@ -33,7 +33,11 @@ after_test:
   
 build: on
 
-    
+branches:
+  only:
+    - master
+    - /\d\.\d\.\d/
+
 skip_non_tags: true
 
 deploy:
@@ -47,6 +51,3 @@ deploy:
   prerelease: false
   on:
     appveyor_repo_tag: true
-    branches:
-      - master
-      - /\d\.\d\.\d/
