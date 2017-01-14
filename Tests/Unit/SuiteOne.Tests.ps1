@@ -1,25 +1,33 @@
 
 
-Describe "Tests Suit 1" {
-    Context "Context 1" {
+Describe 'Wait-Path' {
+    
+    Context 'Strict mode' {
         
-        $result = 1
+        Set-StrictMode -Version latest
         
-        It "Test 1" {
-            $result | Should Be 1
+        It 'Should succeed on known paths' {
+            
+
+            $Output = $null
+            $Output | Should BeNullOrEmpty
+            $true | Should be $True
         }
         
-        It "Test 2" {
-            $result | Should Be 1
+        It 'Should error on timeout without passthru' {
+            { throw "hello" } | Should Throw
         }
         
-        It "Test 3" {
-            $result | Should Be 1
+        It 'Should not error on timeout with passthru' {
+            {  } | Should Not Throw
         }
         
-        It "Test 4" {
-            {} | Should Not Throw
+        It 'Should return true when paths exist and passthru is used' {
+            $true | Should be $True
+        }
+        
+        It "Should return false when paths don't exist or we time out and passthru is used" {
+            $false | Should be $False
         }
     }
-    
 }
