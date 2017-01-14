@@ -1,4 +1,4 @@
-using namespace System.Net
+﻿using namespace System.Net
 
 using module DevTools
 
@@ -23,18 +23,20 @@ if (!$appVeyor) { return }
 
 $AppVeyorBuildJobId = $env:APPVEYOR_JOB_ID
 
-$Target = "https://ci.appveyor.com/api/testresults/nunit/$AppVeyorBuildJobId"
+$target = "https://ci.appveyor.com/api/testresults/nunit/$AppVeyorBuildJobId"
 #$target = 'https://ci.appveyor.com/api/testresults/nunit/{0}' -f $env:APPVEYOR_JOB_ID
 
 #$Target = 'https://ci.appveyor.com/api/testresults/nunit/dgfwlbeqo9436t3b'
-$provision.warning("{0}Uploading $outputFile to $target" -f $provision.cr)
+#$provision.warning("{0}Uploading $outputFile to $target" -f $provision.cr)
 
 Write-Host(Get-Content $outputFile | Out-String)
 
 #(New-Object WebClient).UploadFile($target, $outputFile)
 
 $WebClient = New-Object -TypeName 'System.Net.WebClient'
+
 $responseArray = $WebClient.UploadFile($target, $outputFile)
+
 Write-Host($responseArray | Format-List | Out-String)
 
 #if (!$test.FailedCount) { return }
