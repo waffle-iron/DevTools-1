@@ -1,7 +1,9 @@
 ﻿using module .\ProvisionManager.psm1
 
+
 # $env:CI = $true
 # $env:APPVEYOR_BUILD_FOLDER = 'D:\User\Development\OpenSource\Current\Powershell\DevTools'
+
 
 class AppVeyorManager
 {
