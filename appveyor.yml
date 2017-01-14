@@ -1,13 +1,13 @@
 ﻿os: WMF 5
 
-version: '1.1.15.{build}'
+version: '{build}'
 
 platform:
   - x86
 #  - x64
   
 environment:
-  zzz : 2.2.2
+  releaseDescription : true
   psGalleryKey:
     secure:
   
@@ -21,6 +21,7 @@ install:
 #  - ps: Install-Module Pester -Force
 #  - ps: Install-Module PSScriptAnalyzer -Force
   - ps: Install-Module DevTools -Force
+  - ps: Install-Module Debug -Force
 
 before_build:
   - ps: dt Shortcuts
@@ -49,7 +50,7 @@ skip_non_tags: true
 
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
-  description: $(zzz)
+  description: $(releaseDescription)
   provider: GitHub
   auth_token:
     secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
