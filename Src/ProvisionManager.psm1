@@ -40,8 +40,10 @@ class ProvisionManager
         $this.readme = $this.readme -f $this.project.FullName
     }
     
-    [Void]report($text) { Write-Host $text -ForegroundColor DarkGreen }
+    
+    [Void]info($text) { Write-Host $text -ForegroundColor DarkGreen }
     [Void]warning($text) { Write-Host $text -ForegroundColor DarkRed }
+    [Void]error($text) { Write-Host $text -ForegroundColor DarkGreen }
     
     [Void]processDependencies([Scriptblock]$callback)
     {
@@ -54,7 +56,7 @@ class ProvisionManager
     {
         $this.processDependencies({
                 
-                $this.report('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
+                $this.info('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
                 Try
                 {
                     remove-item -ErrorAction Continue -Recurse -Force `
@@ -76,7 +78,7 @@ class ProvisionManager
                 $destination = $mask -f $this.modules, $_.name
                 $source = $mask -f $this.repository, $_.name
                 $output = cmd /C mklink /J $destination $source
-                $this.report($output)
+                $this.info($output)
             })
     }
     
@@ -95,7 +97,7 @@ class ProvisionManager
     
     [Void]bumpVersion($version, $nextVersion)
     {
-        $this.report('Bump version to:{0}' -f $nextVersion)
+        $this.info('Bump version to:{0}' -f $nextVersion)
         $version.apply($nextVersion)
         $version.updateBadge($nextVersion, $this.readme, $this.projectName)
     }
@@ -132,7 +134,7 @@ class ProvisionManager
         $ps.WaitForExit()
         [string]$out = $ps.StandardError.ReadToEnd();
         $z = $ps.StandardOutput.ReadToEnd();
-        $this.report(($z | Out-String).trim())
+        $this.info(($z | Out-String).trim())
         $this.warning(($out | Out-String).trim())
         
     }

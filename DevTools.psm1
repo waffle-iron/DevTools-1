@@ -128,10 +128,10 @@ function Use-DevTools
         $provision = [ProvisionManager]@{ root = $root }
         $version = [VersionManager]@{ psd = $provision.psd }
         
-        $provision.report('Version : {0}' -f [String]$version.version)
-        $provision.report('Project : {0}' -f [String]$project)
-        $provision.report('System  : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
-        $provision.report('Action  : {0}' -f $action)
+        $provision.info('Version : {0}' -f [String]$version.version)
+        $provision.info('Project : {0}' -f [String]$project)
+        $provision.info('System  : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
+        $provision.info('Action  : {0}' -f $action)
         
         $nextVersion = switch ([Boolean]$customVersion)
         {
@@ -176,7 +176,7 @@ function Use-DevTools
         
         if ($action -ne [Action]::Test) { return }
         
-        $provision.report('The Test Environment is redy.')
+        $provision.info('The Test Environment is redy.')
         
         powershell -NoProfile $provision.entryPoint
     }
