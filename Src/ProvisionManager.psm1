@@ -111,7 +111,7 @@ class ProvisionManager
     {
         $message = 'Bump version to {0}.' -f $version
         $output = git -C "$($this.project.FullName)" commit -a -m "$message" 2>&1
-        $this.warning($output)
+        $this.warning(($output | Out-String))
     }
     
     [Void]gitTag($version)
