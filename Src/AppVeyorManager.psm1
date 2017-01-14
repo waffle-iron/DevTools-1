@@ -1,17 +1,17 @@
 ﻿using module .\ProvisionManager.psm1
 
-#$env:CI = $true
-#$env:APPVEYOR_BUILD_FOLDER = 'D:\User\Development\OpenSource\Current\Powershell\DevTools'
+# $env:CI = $true
+# $env:APPVEYOR_BUILD_FOLDER = 'D:\User\Development\OpenSource\Current\Powershell\DevTools'
 
 class AppVeyorManager
 {
     [String]$environment = 'AppVeyor'
-    [String]$apiKey = $null
+    [String]$apiKey = $env:psGalleryKey
+    [String]$stagingPath = $env:TEMP
     [String]$projectsPath = $env:APPVEYOR_BUILD_FOLDER
     
     AppVeyorManager()
     {
-        if ($env:CI -eq $null) { Return }
         $this.projectsPath = (get-item $this.projectsPath).parent.FullName
     }
     
@@ -26,9 +26,7 @@ class AppVeyorManager
     
     [Void]pushArtifact([ProvisionManager]$provision, $version)
     {
-        $destination = '{0}\{1}-{2}.zip' -f $env:TEMP, $provision.projectName, $version
-        
-        $env:RELEASE_VERSION = $version
+        $destination = '{0}\{1}-{2}.zip' -f $this.stagingPath, $provision.projectName, $version
         
         Compress-Archive -Path $provision.project.fullName "$destination" -Force -Verbose
         Push-AppveyorArtifact -Path $destination -DeploymentName $provision.projectName -Verbose

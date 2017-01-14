@@ -154,8 +154,8 @@ function Use-DevTools
         {
             ([Action]::Build) { $sync.appVeyor.pushArtifact($provision, $version.version) }
             ([Action]::Cleanup) { $provision.cleanup() }
-            ([Action]::Shortcuts) { $provision.shortcuts() }
-            ([Action]::Copy) { $provision.copy() }
+            ([Action]::Install) { $provision.shortcuts() }
+            ([Action]::CopyToCurrentUserModules) { $provision.copy() }
             ([Action]::BumpVersion) { $provision.bumpVersion($version, $nextVersion) }
             ([Action]::Publish) { $provision.publish() }
             ([Action]::Deploy)

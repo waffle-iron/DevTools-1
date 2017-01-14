@@ -1,8 +1,8 @@
 ﻿enum Action {
     Test
     Build
-    Shortcuts
-    Copy
+    Install
+    CopyToCurrentUserModules
     Cleanup
     BumpVersion
     Publish
@@ -52,20 +52,18 @@ class ProvisionManager
     [Void]cleanup()
     {
         $this.processDependencies({
-
             
-                $this.report('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
-                Try
-                {
-                    remove-item -ErrorAction Continue -Recurse -Force `
-                    ('{0}\{1}' -f $this.modules, $_.name)
-                }
-                Catch
-                {
-                    $this.warning($_.Exception.Message)
-                }
-                
-            })
+            $this.report('Cleaning:{0}\{1}' -f ($this.modules, $_.name))
+            Try
+            {
+                remove-item -ErrorAction Continue -Recurse -Force `
+                ('{0}\{1}' -f $this.modules, $_.name)
+            } Catch
+            {
+                $this.warning($_.Exception.Message)
+            }
+            
+        })
         break
     }
     
@@ -74,11 +72,11 @@ class ProvisionManager
         $mask = '"{0}\{1}"'
         
         $this.processDependencies({
-                $destination = $mask -f $this.modules, $_.name
-                $source = $mask -f $this.repository, $_.name
-                $output = cmd /C mklink /J $destination $source
-                $this.report($output)
-            })
+            $destination = $mask -f $this.modules, $_.name
+            $source = $mask -f $this.repository, $_.name
+            $output = cmd /C mklink /J $destination $source
+            $this.report($output)
+        })
     }
     
     [Void]copy()
@@ -86,12 +84,12 @@ class ProvisionManager
         $mask = '"{0}\{1}"'
         
         $this.processDependencies({
-                $destination = $mask -f $this.modules, $_.name
-                $source = $mask -f $this.repository, $_.name
-                
-                $output = xcopy $source $destination /Isdy
-                $this.warning(($output | Out-String))
-            })
+            $destination = $mask -f $this.modules, $_.name
+            $source = $mask -f $this.repository, $_.name
+            
+            $output = xcopy $source $destination /Isdy
+            $this.warning(($output | Out-String))
+        })
     }
     
     [Void]bumpVersion($version, $nextVersion)

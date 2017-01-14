@@ -1,21 +1,20 @@
 ﻿os: WMF 5
 
-version: '{build}'
+version: '1.1.4.{build}'
 
 platform:
   - x86
 #  - x64
   
 environment:
-  gitHubToken:
-    secure: 
+    zzz : 2.2.2
   psGalleryKey:
     secure:
   
 init:
   - WhoAmI
 
-skip_non_tags: true
+
 
 install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
@@ -41,10 +40,13 @@ build: on
 branches:
   only:
     - master
+    - dev
     
+skip_non_tags: true
+
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
-  description: $(APPVEYOR_REPO_TAG_NAME)
+  description: $(zzz)
   provider: GitHub
   auth_token:
     secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
