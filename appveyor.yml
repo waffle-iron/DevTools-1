@@ -32,6 +32,9 @@ after_test:
   
 build: on
 
+skip_commits:
+  message: /Version Bump/
+
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: $(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)
