@@ -34,7 +34,7 @@ build: on
 
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
-  description: $(APPVEYOR_REPO_COMMIT_MESSAGE)
+  description: $(APPVEYOR_REPO_COMMIT_MESSAGE_EXTENDED)
   provider: GitHub
   auth_token:
     secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH

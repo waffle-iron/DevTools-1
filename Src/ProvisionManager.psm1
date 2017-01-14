@@ -99,7 +99,9 @@ class ProvisionManager
     
     [Void]bumpVersion($version, $nextVersion)
     {
-        $this.info('Bump version to:{0}' -f $nextVersion)
+       
+        $this.warning('{0}Updating version to : {1}' -f ([Environment]::NewLine, $nextVersion))
+        
         $version.apply($nextVersion)
         $version.updateBadge($nextVersion, $this.readme, $this.projectName)
     }
@@ -132,7 +134,7 @@ class ProvisionManager
     
     [Void]gitCommitVersionChange($version)
     {
-        $message = 'Bump version to {0}.' -f $version
+        $message = 'Version Bump {0}' -f $version
         
         $this.gitCommand((
                 ('-C "{0}"' -f $this.project.FullName),
