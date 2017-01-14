@@ -4,10 +4,7 @@ version: '{build}'
 
 platform:
   - x86
-  
-environment:
-  psGalleryKey:
-    secure: f2QEkAOa73mlQ+LP/dvdg88ByzaXVa21F8M0GgOPzsmU6eLOmrmF5R0jRftFG9DH
+  - x64
   
 init:
   - WhoAmI
