@@ -31,4 +31,5 @@ class AppVeyorManager
         Compress-Archive -Path $provision.project.fullName "$destination" -Force -Verbose
         Push-AppveyorArtifact -Path $destination -DeploymentName $provision.projectName -Verbose
     }
+    
 }

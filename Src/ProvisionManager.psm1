@@ -18,11 +18,15 @@ class ProvisionManager
     $root
     $project
     [String]$psd = '{0}\{1}\{1}.psd1'
-    [String]$entryPoint = '{0}\{1}\Tests\{1}.Test.ps1'
+    #[String]$entryPoint = '{0}\{1}\Tests\{1}.Test.ps1'
+    [String]$entryPoint = '{0}\{1}\Tests\EntyPoint.ps1'
+    [String]$temp = $env:TEMP
+    [String]$tests
     [String]$modules = 'Documents'
     [String]$repository
     [String]$projectName
     [Array]$dependencies
+    
     [String]$readme = '{0}\README.md'
     [String]$cr = [Environment]::NewLine
     
@@ -40,6 +44,7 @@ class ProvisionManager
         $this.projectName = $this.project.Name
         $this.psd = $this.psd -f $this.repository, $this.projectName
         $this.entryPoint = $this.entryPoint -f $this.repository, $this.projectName
+        $this.tests = '{0}\Tests' -f $this.project.FullName
         $this.readme = $this.readme -f $this.project.FullName
     }
     
@@ -100,7 +105,7 @@ class ProvisionManager
     
     [Void]bumpVersion($version, $nextVersion)
     {
-       
+        
         $this.warning('{0}Updating version to : {1}' -f ([Environment]::NewLine, $nextVersion))
         
         $version.apply($nextVersion)

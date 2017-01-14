@@ -7,18 +7,20 @@ using module .\Src\ProvisionManager.psm1
 using module .\Src\VersionManager.psm1
 using module .\Src\AppVeyorManager.psm1
 
-$script:sync = [Hashtable]::Synchronized(@{ })
+#$global:devTools = [Hashtable]::Synchronized(@{ })
 
-$sync.appVeyor = New-Object AppVeyorManager
+$global:devTools = @{ }
 
-$sync.config = switch ([Boolean]$env:CI)
+$devTools.appVeyor = New-Object AppVeyorManager
+
+$devTools.config = switch ([Boolean]$env:CI)
 {
-    true { $sync.appVeyor.getConfig() }
+    true { $devTools.appVeyor.getConfig() }
     false { Import-PowerShellDataFile $env:USERPROFILE\dev_tools_config.psd1 }
 }
 
-$sync.projects = {
-    (Get-ChildItem $sync.config.projectsPath).forEach{
+$devTools.projects = {
+    (Get-ChildItem $devTools.config.projectsPath).forEach{
         if ($_.length -eq $true) { $_.name }
     }
 }
@@ -28,7 +30,7 @@ function Use-DevTools
     [CmdletBinding()]
     param
     (
-    [Parameter(ValueFromRemainingArguments = $true)]
+        [Parameter(ValueFromRemainingArguments = $true)]
         $CustomVersion = $false,
         [Switch]$NoPublish
     )
@@ -43,16 +45,16 @@ function Use-DevTools
         
         $parameterAttribute = New-Object ParameterAttribute
         
-        $sync.location = (Get-Item -Path $pwd)
-        $sync.path = $sync.location.FullName
-        $sync.project = $sync.location.Name
-        $sync.isInProject = Test-Path ('{0}\{1}.psd1' -f $sync.path, $sync.project)
+        $devTools.location = (Get-Item -Path $pwd)
+        $devTools.path = $devTools.location.FullName
+        $devTools.project = $devTools.location.Name
+        $devTools.isInProject = Test-Path ('{0}\{1}.psd1' -f $devTools.path, $devTools.project)
         
         
-        if ($sync.isInProject)
+        if ($devTools.isInProject)
         {
             $parameterAttribute.Position = 2
-            $PSBoundParameters[$projectName] = $sync.project
+            $PSBoundParameters[$projectName] = $devTools.project
         } else
         {
             $parameterAttribute.Position = 1
@@ -61,7 +63,7 @@ function Use-DevTools
         
         $attributeCollection.Add($parameterAttribute)
         
-        $validateSetAttribute = New-Object ValidateSetAttribute($sync.projects.Invoke())
+        $validateSetAttribute = New-Object ValidateSetAttribute($devTools.projects.Invoke())
         
         $attributeCollection.Add($validateSetAttribute)
         
@@ -76,7 +78,7 @@ function Use-DevTools
         $parameterAttribute = New-Object ParameterAttribute
         $parameterAttribute.Mandatory = $false
         
-        $parameterAttribute.Position = switch ($sync.isInProject)
+        $parameterAttribute.Position = switch ($devTools.isInProject)
         {
             True { 1 }
             Default { 2 }
@@ -124,14 +126,14 @@ function Use-DevTools
     }
     process
     {
-        $root = '{0}\{1}\Tests' -f $sync.config.projectsPath, $project
+        $root = '{0}\{1}\Tests' -f $devTools.config.projectsPath, $project
         
-        $provision = [ProvisionManager]@{ root = $root }
-        $version = [VersionManager]@{ psd = $provision.psd }
+        $devTools.provision = $provision = [ProvisionManager]@{ root = $root }
+        $devTools.version = $version = [VersionManager]@{ psd = $provision.psd }
         
         $provision.info('Version : {0}' -f [String]$version.version)
         $provision.info('Project : {0}' -f [String]$project)
-        $provision.info('System  : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $sync.config.environment))
+        $provision.info('System  : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $devTools.config.environment))
         $provision.info('Action  : {0}' -f $action)
         
         $nextVersion = switch ([Boolean]$customVersion)
@@ -143,24 +145,24 @@ function Use-DevTools
         $projectConfig = Import-PowerShellDataFile $provision.psd
         
         $provision.dependencies = (
-        @{
-            deploy = $true
-            name = $provision.projectName
-        }
+            @{
+                deploy = $true
+                name = $provision.projectName
+            }
         )
         
         $provision.dependencies += $projectConfig.PrivateData.DevTools.Dependencies
         
         switch ($action)
         {
-            ([Action]::Build) { $sync.appVeyor.pushArtifact($provision, $version.version) }
+            ([Action]::Build) { $devTools.appVeyor.pushArtifact($provision, $version.version) }
             ([Action]::Release)
             {
                 $provision.bumpVersion($version, $nextVersion)
                 $provision.gitCommitVersionChange($nextVersion)
                 $provision.gitTag($nextVersion)
                 
-                if ($noPublish) { break }
+                if ($noPublish.isPresent) { break }
                 
                 $provision.publish()
             }
@@ -179,9 +181,12 @@ function Use-DevTools
         
         if ($action -ne [Action]::Test) { return }
         
-        $provision.info('The Test Environment is redy.')
+        $provision.warning('{0}Test Environment : Redy' -f $provision.cr)
         
-        powershell -NoProfile $provision.entryPoint
+        # powershell -NoProfile $provision.entryPoint
+        # . $provision.entryPoint
+        Invoke-Expression $provision.entryPoint
+        
     }
 }
 
@@ -189,9 +194,9 @@ New-Alias -Name dt -Value Use-DevTools
 
 Register-ArgumentCompleter -CommandName dt -ScriptBlock {
     param (
-    $wordToComplete,
-    $commandAst,
-    $cursorPosition
+        $wordToComplete,
+        $commandAst,
+        $cursorPosition
     )
     
     $ast = (-split $commandAst)
@@ -200,9 +205,9 @@ Register-ArgumentCompleter -CommandName dt -ScriptBlock {
     
     $methods = [Enum]::GetValues([Action])
     
-    if (($sync.isInProject -and $count -eq 2) -or (!$sync.isInProject -and $count -eq 1))
+    if (($devTools.isInProject -and $count -eq 2) -or (!$devTools.isInProject -and $count -eq 1))
     {
-        $methods = $sync.projects.invoke()
+        $methods = $devTools.projects.invoke()
     }
     
     if ($count -eq 3)
