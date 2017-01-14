@@ -42,7 +42,7 @@ class ProvisionManager
     
     
     [Void]info($text) { Write-Host $text -ForegroundColor DarkGreen }
-    [Void]warning($text) { Write-Host $text -ForegroundColor DarkRed }
+    [Void]warning($text) { Write-Host $text -ForegroundColor Yellow }
     [Void]error($text) { Write-Host $text -ForegroundColor DarkGreen }
     
     [Void]processDependencies([Scriptblock]$callback)
@@ -134,8 +134,8 @@ class ProvisionManager
         $ps.WaitForExit()
         [string]$out = $ps.StandardError.ReadToEnd();
         $z = $ps.StandardOutput.ReadToEnd();
-        $this.info(($z | Out-String).trim())
-        $this.warning(($out | Out-String).trim())
+        $this.warning(($z | Out-String).trim())
+        $this.error(($out | Out-String).trim())
         
     }
     
@@ -160,7 +160,7 @@ class ProvisionManager
         $ps.WaitForExit()
         [string]$out = $ps.StandardError.ReadToEnd();
         
-        $this.warning(($out | Out-String).trim())
+        $this.error(($out | Out-String).trim())
         
         #        Try
         #        {
