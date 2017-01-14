@@ -123,20 +123,18 @@ class ProvisionManager
         $ps.StartInfo.UseShellExecute = $false
         $ps.Start()
         $ps.WaitForExit()
-        $output = $ps.StandardOutput.ReadToEnd().Trim()
-        $error = $ps.StandardError.ReadToEnd().Trim()
+        $output = $ps.StandardOutput.ReadToEnd()
+        $error = $ps.StandardError.ReadToEnd()
         
-        if ($output.length -gt 0)
+        if ([Boolean]$output)
         {
-            $this.warning($output)
-            Write-Host '1'
+            $this.warning($output.Trim())
         }
         
         
-        if ($error.length -gt 0)
+        if ([Boolean]$error)
         {
-            $this.error($error)
-        Write-Host '2'    
+            $this.error($error.Trim())
         }
         
     }
