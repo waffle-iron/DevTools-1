@@ -18,8 +18,9 @@ install:
   - ps: Install-Module DevTools -Force
 
 before_build:
-  - ps: dt Install
-  - ps: Uninstall-Module DevTools
+  #- ps: dt Install
+  #- ps: Uninstall-Module DevTools
+  - cmd: mklink /J C:\Users\AppVeyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
 
 build_script:
   - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
