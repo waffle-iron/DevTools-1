@@ -1,6 +1,7 @@
 # <img src="/Docs/Logo/dt.png" alt="Logo" width="48" align="left"/>  DevTools
 
 [![Appveyor Badge][appveyor-badge]][appveyor-status]
+[![GitHub Release][release-badge]][release-status]
 [![Powershellgallery Badge][psgallery-badge]][psgallery-status]
 
 The main goal of `DevTools` is to streamline the PoweSell modules development, and make it as simple as possible.
@@ -211,6 +212,9 @@ powershell -NoProfile .\Tests\DevTools.ps1
 powershell -NoProfile .\Tests\DevTools.ps1 -Action Development
 powershell -NoProfile .\Tests\DevTools.ps1 -Action Shortcuts
 ```
+
+[release-badge]: https://img.shields.io/github/release/claudiospizzi/ScriptLogger-green.svg
+[release-status]: https://ci.appveyor.com/project/g8tguy/DevTools/releases
 
 [appveyor-badge]: https://ci.appveyor.com/api/projects/status/4b9rsut8uhto2y61?svg=true
 [appveyor-status]: https://ci.appveyor.com/project/g8tguy/devtools
