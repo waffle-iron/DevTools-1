@@ -37,10 +37,10 @@ after_test:
   
 build: on
 
-branches:
-  only:
-    - master
-    - dev
+#branches:
+#  only:
+#    - master
+#    - dev
     
 skip_non_tags: true
 
