@@ -24,7 +24,7 @@ before_build:
 
 build_script:
   - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
-  - ps: Write-Host $env:APPVEYOR_REPO_TAG
+  - ps: Write-Host $env
 
 test_script:
   - ps: dt Test
