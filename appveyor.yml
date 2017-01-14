@@ -22,7 +22,7 @@ before_build:
   - ps: Uninstall-Module DevTools
 
 build_script:
-  - ps: if ([Boolean]$env:APPVEYOR_REPO_TAG) { dt Build }
+  - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
 
 test_script:
   - ps: dt Test
