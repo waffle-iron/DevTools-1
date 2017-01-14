@@ -1,11 +1,21 @@
 
 
-Describe "Project Structure" {
-    Context "When there are changes" {
-        $result = 1.2
-        It "Returns the next version number" {
-            $result | Should Be 1.3
+Describe "Tests Suit 2" {
+    Context "Context 2" {
+        
+        $result = 1
+        
+        It "Test 1" {
+            $result | Should Be 1
+        }
+        
+        It "Test 2" {
+            $result | Should Be 1
+        }
+        
+        It "Test 3" {
+            $result | Should Be 1
         }
     }
-
+    
 }

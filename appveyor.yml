@@ -23,7 +23,8 @@ before_build:
   - cmd: mklink /J C:\Users\AppVeyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
 
 build_script:
-  - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
+  #- ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
+  - ps: dt Build
 
 test_script:
   - ps: dt Test
