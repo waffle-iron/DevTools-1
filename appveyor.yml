@@ -28,6 +28,7 @@ build_script:
 
 test_script:
   - ps: dt Test
+  - ps: .\Test.ps1
   
 after_test:
   - ps: dt Cleanup

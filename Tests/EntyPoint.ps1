@@ -27,6 +27,8 @@ $target = "https://ci.appveyor.com/api/testresults/nunit/$AppVeyorBuildJobId"
 #$target = 'https://ci.appveyor.com/api/testresults/nunit/{0}' -f $env:APPVEYOR_JOB_ID
 
 #$Target = 'https://ci.appveyor.com/api/testresults/nunit/dgfwlbeqo9436t3b'
+
+
 #$provision.warning("{0}Uploading $outputFile to $target" -f $provision.cr)
 
 Write-Host(Get-Content $outputFile | Out-String)
@@ -44,5 +46,10 @@ Write-Host($responseArray | Format-List | Out-String)
 #$provision.error('{0}Failed tests count : {1}' -f ($provision.cr, $test.FailedCount))
 
 #exit ($test.FailedCount)
+
+Add-AppveyorMessage "This is a test message"
+Add-AppveyorCompilationMessage "Unreachable code detected" -Category Warning -FileName "Program.cs" -Line 1 -Column 3
+
+
 Write-Host 111
 
