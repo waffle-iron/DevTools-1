@@ -126,16 +126,8 @@ class ProvisionManager
         $output = $ps.StandardOutput.ReadToEnd().trim()
         $error = $ps.StandardError.ReadToEnd().trim()
         
-        if ([Boolean]$output)
-        {
-            $this.warning([Environment]::NewLine + $output)
-        }
-        
-        if ([Boolean]$error)
-        {
-            $this.error([Environment]::NewLine + $error)
-        }
-        
+        if ([Boolean]$output) { $this.warning([Environment]::NewLine + $output) }
+        if ([Boolean]$error) { $this.error([Environment]::NewLine + $error) }
     }
     
     [Void]gitCommitVersionChange($version)
@@ -146,7 +138,6 @@ class ProvisionManager
                 ('-C "{0}"' -f $this.project.FullName),
                 'commit  -a -m "{0}"' -f $message
             ))
-        
     }
     
     [Void]gitTag($version)

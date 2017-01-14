@@ -155,11 +155,9 @@ function Use-DevTools
             ([Action]::Build) { $sync.appVeyor.pushArtifact($provision, $version.version) }
             ([Action]::Release)
             {
-                #$provision.bumpVersion($version, $nextVersion)
+                $provision.bumpVersion($version, $nextVersion)
                 $provision.gitCommitVersionChange($nextVersion)
                 $provision.gitTag($nextVersion)
-
-
             }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Install) { $provision.install() }
