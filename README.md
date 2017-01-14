@@ -213,7 +213,7 @@ powershell -NoProfile .\Tests\DevTools.ps1 -Action Development
 powershell -NoProfile .\Tests\DevTools.ps1 -Action Shortcuts
 ```
 
-[release-badge]: https://img.shields.io/github/release/claudiospizzi/ScriptLogger-green.svg
+[release-badge]: https://img.shields.io/github/release/g8tguy/DevTools-green.svg
 [release-status]: https://ci.appveyor.com/project/g8tguy/DevTools/releases
 
 [appveyor-badge]: https://ci.appveyor.com/api/projects/status/4b9rsut8uhto2y61?svg=true
