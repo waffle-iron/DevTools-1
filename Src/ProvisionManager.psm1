@@ -110,16 +110,15 @@ class ProvisionManager
     [Void]gitCommitVersionChange($version)
     {
         $message = 'Bump version to {0}.' -f $version
-        $output = git -C "$($this.project.FullName)" commit -a -m "$message"
-        
-        $this.warning(($output | Out-String))
+        $output = git -C "$($this.project.FullName)" commit -a -m "$message" 2>&1
+        $this.warning($output)
     }
     
     [Void]gitTag($version)
     {
         $desciption = '{0} release {1}.' -f $this.projectName, $version
         $output = git -C "$($this.project.FullName)" tag -a -m "$desciption" "$version" 2>&1
-        $this.warning((($output -split [Environment]::NewLine)[$false].trim()))
+        $this.warning($output)
     }
 }
 
