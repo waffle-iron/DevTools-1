@@ -14,9 +14,9 @@ init:
   - WhoAmI
   
 install:
-  - cinst Pester -version 3.4.3
-#  - ps: Install-PackageProvider NuGet -Force | Out-Null
-#  - ps: Install-Module Pester -RequiredVersion 3.4.3 -Force
+#  - cinst Pester -version 3.4.3
+  - ps: Install-PackageProvider NuGet -Force | Out-Null
+  - ps: Install-Module Pester -RequiredVersion 3.4.3 -Force
 
 before_build:
   - cmd: set PS_PROFILE=%userprofile%\Documents\WindowsPowerShell\Modules\%APPVEYOR_PROJECT_NAME%
