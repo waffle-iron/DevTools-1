@@ -94,11 +94,10 @@ function Use-DevTools
         
         $cpu_architecture = switch ([IntPtr]::Size) { 4 { 'x86' }; 8 { 'x64' } }
         
-        $provision.info('Version : {0}' -f [String]$version.version)
-        $provision.info('Project : {0}' -f [String]$project)
-        $provision.info('System  : {0} {1}' -f ($cpu_architecture, $devTools.config.environment))
-        
-        $provision.info('Action  : {0}' -f $action)
+        $info = '{0} {1} {2} [{3} {4}]' -f $project, $version.version, `
+        $action, $cpu_architecture, $env:COMPUTERNAME
+
+        $provision.info($info)
         
         $nextVersion = switch ([Boolean]$customVersion)
         {
@@ -147,10 +146,7 @@ function Use-DevTools
         
         $provision.warning('{0}Test Environment : Redy' -f $provision.cr)
         
-        # powershell -NoProfile $provision.entryPoint
-        # . $provision.entryPoint
         Invoke-Expression $provision.entryPoint
-        
     }
 }
 
