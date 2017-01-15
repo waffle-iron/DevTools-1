@@ -5,7 +5,7 @@ init:
   
 install:
   - ps: Install-PackageProvider NuGet -Force | Out-Null
-  - ps: Install-Module Pester -RequiredVersion 3.4.2 -Force
+  - ps: Install-Module Pester -RequiredVersion 3.4.3 -Force
 
 
 before_build:
