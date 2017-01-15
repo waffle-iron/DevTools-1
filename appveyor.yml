@@ -4,7 +4,7 @@ skip_commits:
   message: /docs/
   
 platform:
-  - x86
+  - x64
   
 init:
   - WhoAmI
