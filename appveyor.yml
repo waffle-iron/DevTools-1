@@ -13,8 +13,15 @@ init:
 install:
   - cinst pester -version 3.4.0
 
+before_build:
+  #- ps: dt Install
+  #- ps: Uninstall-Module DevTools
+  - cmd: mklink /J C:\Users\AppVeyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
 
-# build: false
+build_script:
+  - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
+  
+build: false
 
 test_script:
   - ps: $res = Invoke-Pester -Path ".\Tests" -OutputFormat NUnitXml -OutputFile ".\TestsResults.xml" -PassThru
