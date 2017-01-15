@@ -1,6 +1,9 @@
 ﻿using namespace System.Management.Automation
 using namespace System.Collections.ObjectModel
 
+using namespace System.Management.Automation.Host
+using namespace System.Management.Automation
+using namespace System.Collections.Generic
 
 class DynamicParamFactory {
     
@@ -10,7 +13,7 @@ class DynamicParamFactory {
     {
         $validateSetAttribute = New-Object ValidateSetAttribute($validateSet)
         
-        $attributeCollection = New-Object Collection[System.Attribute]
+        $attributeCollection = New-Object Collection[Attribute]
         $attributeCollection.Add($parameterAttribute)
         $attributeCollection.Add($validateSetAttribute)
         

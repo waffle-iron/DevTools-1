@@ -34,9 +34,6 @@ class ProvisionManager
     {
         $this.root = $data.root
         
-        $av = $this.devTools.appVeyor
-        Write-Host($av)
-        
         $this.modules = ($Env:PSModulePath.Split(';') |
             Where-Object { $_ -match $this.modules }) | Select-Object -Unique
         
