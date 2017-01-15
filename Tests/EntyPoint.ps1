@@ -39,7 +39,7 @@ $message = '{0}Failed tests count : {1}' -f ($provision.cr, $test.FailedCount)
 $provision.error($message)
 Add-AppveyorMessage -Message $message -Category Error
 
-throw Exception $message
+throw $message
 
 
 
