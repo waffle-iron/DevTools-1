@@ -1,9 +1,9 @@
-﻿using namespace System.Management.Automation
-using namespace System.Collections.ObjectModel
-
-using namespace System.Management.Automation.Host
+﻿using namespace System.Management.Automation.Host
 using namespace System.Management.Automation
 using namespace System.Collections.Generic
+
+
+using namespace System.Collections.ObjectModel
 
 using module .\Src\ProvisionManager.psm1
 using module .\Src\VersionManager.psm1
