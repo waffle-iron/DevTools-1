@@ -17,7 +17,7 @@ install:
 before_build:
   - cmd: set PS_PROFILE=%userprofile%\Documents\WindowsPowerShell\Modules\%APPVEYOR_PROJECT_NAME%
   - cmd: mklink /J %PS_PROFILE% %APPVEYOR_BUILD_FOLDER%
- # - ps: dt Install
+  - ps: dt Install
 
 build_script:
   - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
