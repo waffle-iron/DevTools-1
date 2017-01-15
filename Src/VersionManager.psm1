@@ -8,6 +8,7 @@
 
 class VersionManager
 {
+    [HashTable]$devTools = $global:devTools
     [String]$psd
     [String]$regex = "ModuleVersion\s=\s'(?<version>.+)'"
     [String]$content

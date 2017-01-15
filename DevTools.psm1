@@ -1,15 +1,14 @@
 ﻿using namespace System.Management.Automation.Host
 using namespace System.Management.Automation
-using namespace System.Collections.ObjectModel
 using namespace System.Collections.Generic
 
 using module .\Src\ProvisionManager.psm1
 using module .\Src\VersionManager.psm1
 using module .\Src\AppVeyorManager.psm1
+using module .\Src\DynamicParamFactory.psm1
 
-#$global:devTools = [Hashtable]::Synchronized(@{ })
 
-$global:devTools = @{ }
+$global:devTools = [Hashtable]::Synchronized(@{ })
 
 $devTools.appVeyor = New-Object AppVeyorManager
 
@@ -20,9 +19,7 @@ $devTools.config = switch ([Boolean]$env:CI)
 }
 
 $devTools.projects = {
-    (Get-ChildItem $devTools.config.projectsPath).forEach{
-        if ($_.length -eq $true) { $_.name }
-    }
+    (Get-ChildItem $devTools.config.projectsPath).forEach{ if ($_.length -eq $true) { $_.name } }
 }
 
 function Use-DevTools
@@ -37,20 +34,18 @@ function Use-DevTools
     
     DynamicParam
     {
-        $runtimeParameterDictionary = New-Object RuntimeDefinedParameterDictionary
-        
-        $projectName = 'Project'
-        
-        $attributeCollection = New-Object Collection[System.Attribute]
-        
-        $parameterAttribute = New-Object ParameterAttribute
-        
         $devTools.location = (Get-Item -Path $pwd)
         $devTools.path = $devTools.location.FullName
         $devTools.project = $devTools.location.Name
         $devTools.isInProject = Test-Path ('{0}\{1}.psd1' -f $devTools.path, $devTools.project)
         
+        $dpf = New-Object DynamicParamFactory
         
+        $runtimeParameterDictionary = $dpf.runtimeParameterDictionary
+        
+        # Project
+        $projectName = 'Project'
+        $parameterAttribute = New-Object ParameterAttribute
         if ($devTools.isInProject)
         {
             $parameterAttribute.Position = 2
@@ -60,63 +55,29 @@ function Use-DevTools
             $parameterAttribute.Position = 1
             $parameterAttribute.Mandatory = $true
         }
+        [Void]$dpf.set($parameterAttribute, $devTools.projects.Invoke(), $projectName)
         
-        $attributeCollection.Add($parameterAttribute)
-        
-        $validateSetAttribute = New-Object ValidateSetAttribute($devTools.projects.Invoke())
-        
-        $attributeCollection.Add($validateSetAttribute)
-        
-        $rtDefinedParameter = New-Object RuntimeDefinedParameter($projectName, [String], $attributeCollection)
-        
-        $runtimeParameterDictionary.Add($projectName, $rtDefinedParameter)
-        
+        # Action
         $actionName = 'Action'
-        
-        $attributeCollection = New-Object Collection[System.Attribute]
         
         $parameterAttribute = New-Object ParameterAttribute
         $parameterAttribute.Mandatory = $false
-        
         $parameterAttribute.Position = switch ($devTools.isInProject)
         {
             True { 1 }
             Default { 2 }
         }
-        
-        $attributeCollection.Add($parameterAttribute)
-        
-        $validateSetAttribute = New-Object ValidateSetAttribute([Enum]::GetValues([Action]))
-        
-        $attributeCollection.Add($validateSetAttribute)
-        
-        $rtDefinedParameter = New-Object RuntimeDefinedParameter($actionName, [String], $attributeCollection)
         $PSBoundParameters[$actionName] = [Action]::Test
+        [Void]$dpf.set($parameterAttribute, [Enum]::GetValues([Action]), $actionName)
         
-        $runtimeParameterDictionary.Add($actionName, $rtDefinedParameter)
-        
+        # VersionType
         $versionName = 'VersionType'
-        
-        $attributeCollection = New-Object Collection[System.Attribute]
-        
         $parameterAttribute = New-Object ParameterAttribute
         $parameterAttribute.Mandatory = $false
-        
         $parameterAttribute.Position = 3
-        
-        
-        $attributeCollection.Add($parameterAttribute)
-        
-        $validateSetAttribute = New-Object ValidateSetAttribute('Major', 'Minor', 'Build')
-        
-        $attributeCollection.Add($validateSetAttribute)
-        
-        $rtDefinedParameter = New-Object RuntimeDefinedParameter($versionName, [String], $attributeCollection)
         $PSBoundParameters[$versionName] = [VersionComponent]::Build
         
-        $runtimeParameterDictionary.Add($versionName, $rtDefinedParameter)
-        
-        return $runtimeParameterDictionary
+        return $dpf.set($parameterAttribute, ('Major', 'Minor', 'Build'), $versionName)
     }
     begin
     {
@@ -131,9 +92,12 @@ function Use-DevTools
         $devTools.provision = $provision = [ProvisionManager]@{ root = $root }
         $devTools.version = $version = [VersionManager]@{ psd = $provision.psd }
         
+        $cpu_architecture = switch ([IntPtr]::Size) { 4 { 'x86' }; 8 { 'x64' } }
+        
         $provision.info('Version : {0}' -f [String]$version.version)
         $provision.info('Project : {0}' -f [String]$project)
-        $provision.info('System  : {0} {1}' -f ($Env:PROCESSOR_ARCHITECTURE, $devTools.config.environment))
+        $provision.info('System  : {0} {1}' -f ($cpu_architecture, $devTools.config.environment))
+        
         $provision.info('Action  : {0}' -f $action)
         
         $nextVersion = switch ([Boolean]$customVersion)

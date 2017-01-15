@@ -1,5 +1,6 @@
 ﻿using namespace System.Diagnostics
 
+
 enum Action {
     Install
     CopyToCurrentUserModules
@@ -17,6 +18,7 @@ class ProvisionManager
 {
     $root
     $project
+    [HashTable]$devTools = $global:devTools
     [String]$psd = '{0}\{1}\{1}.psd1'
     [String]$entryPoint = '{0}\{1}\Tests\EntyPoint.ps1'
     [String]$tests
@@ -32,6 +34,8 @@ class ProvisionManager
     {
         $this.root = $data.root
         
+        $av = $this.devTools.appVeyor
+        Write-Host($av)
         
         $this.modules = ($Env:PSModulePath.Split(';') |
             Where-Object { $_ -match $this.modules }) | Select-Object -Unique
@@ -46,10 +50,18 @@ class ProvisionManager
         $this.readme = $this.readme -f $this.project.FullName
     }
     
-    
-    [Void]info($text) { Write-Host $text -ForegroundColor DarkGreen }
-    [Void]warning($text) { Write-Host $text -ForegroundColor Yellow }
-    [Void]error($text) { Write-Host $text -ForegroundColor Red }
+    [Void]log($text, $color, $category)
+    {
+        if ($this.devTools.appVeyor)
+        {
+            $this.devTools.appVeyor.message($text, $category)
+        }
+        Write-Host $text -ForegroundColor $color
+    }
+
+    [Void]info($text) { $this.log($text, [ConsoleColor]::DarkGreen, 'Information') }
+    [Void]warning($text) { $this.log($text, [ConsoleColor]::Yellow, 'Warning') }
+    [Void]error($text) { $this.log($text, [ConsoleColor]::Red, 'Error') }
     
     [Void]processDependencies([Scriptblock]$callback)
     {

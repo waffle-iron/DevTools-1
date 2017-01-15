@@ -1,18 +1,18 @@
-﻿using module .\ProvisionManager.psm1
-
-#$env:CI = $true
+﻿#$env:CI = $true
 #$env:APPVEYOR_BUILD_FOLDER = 'D:\User\Development\OpenSource\Current\Powershell\DevTools'
+
 
 class AppVeyorManager
 {
+    [HashTable]$devTools = $global:devTools
     [String]$environment = 'AppVeyor'
     [String]$apiKey = $env:psGalleryKey
     [String]$stagingPath = $env:TEMP
-    [String]$projectsPath = $env:APPVEYOR_BUILD_FOLDER
+    [String]$projectsPath
     
     AppVeyorManager()
     {
-        $this.projectsPath = (get-item $this.projectsPath).parent.FullName
+        $this.projectsPath = (get-item $env:APPVEYOR_BUILD_FOLDER).parent.FullName
     }
     
     [HashTable]getConfig()
@@ -24,7 +24,12 @@ class AppVeyorManager
         }
     }
     
-    [Void]pushArtifact([ProvisionManager]$provision, $version)
+    [Void]message($message, $category)
+    {
+        #Add-AppveyorMessage $message -Category $category
+    }
+    
+    [Void]pushArtifact($provision, $version)
     {
         $destination = '{0}\{1}-{2}.zip' -f $this.stagingPath, $provision.projectName, $version
         
