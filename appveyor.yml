@@ -19,7 +19,7 @@ install:
 #  - ps: Install-Module Pester -RequiredVersion 3.4.3 -Force
 
 before_build:
-  - cmd: mklink /J %userprofile%\Documents\WindowsPowerShell\Modules\$(APPVEYOR_PROJECT_NAME) $(APPVEYOR_BUILD_FOLDER)
+  - cmd: mklink /J %userprofile%\Documents\WindowsPowerShell\Modules\%APPVEYOR_PROJECT_NAME% %APPVEYOR_BUILD_FOLDER%
 
 build_script:
   - ps: if ($env:APPVEYOR_REPO_TAG -eq $true) { dt Build }
