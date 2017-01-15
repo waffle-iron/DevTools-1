@@ -10,7 +10,9 @@ init:
   - WhoAmI
   
 install:
-  - ps: Install-PackageProvider NuGet -Force | Out-Null
+#  - cinst Pester -version 3.4.3
+  - Install-Product NuGet
+#  - ps: Install-PackageProvider NuGet -Force | Out-Null
   - ps: Install-Module Pester -RequiredVersion 3.4.3 -Force
 
 before_build:
