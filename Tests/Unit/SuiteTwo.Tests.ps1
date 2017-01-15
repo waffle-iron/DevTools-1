@@ -7,6 +7,6 @@ Describe "Tests Suit 2" {
         
         It "Test 2" { $result | Should Not Be 0 }
         
-        It "Test 3" { $result | Should Be 1 }
+        It "Test 3" { $result | Should Be 0 }
     }
 }
