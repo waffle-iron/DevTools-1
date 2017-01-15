@@ -9,5 +9,4 @@ Describe "Tests Suit 2" {
         
         It "Test 3" { $result | Should Be 0 }
     }
-    
 }

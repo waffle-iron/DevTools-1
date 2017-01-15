@@ -4,9 +4,8 @@ Describe 'Tests Suit 1' {
         Set-StrictMode -Version latest
         
         It 'Should succeed on event' {
-            $Output = $null
-            $Output | Should BeNullOrEmpty
-            $true | Should be $True
+            $null | Should BeNullOrEmpty
+            $true | Should be $true
         }
         
         It 'Should error on event without parameter' {

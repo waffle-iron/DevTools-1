@@ -29,7 +29,7 @@ $target = 'https://ci.appveyor.com/api/testresults/nunit/{0}' -f $env:APPVEYOR_J
 
 $message  = "{0}Uploading $outputFile to $target" -f $provision.cr
 $provision.warning($message)
-Add-AppveyorCompilationMessage -Message $message -Category Information
+Add-AppveyorMessage -Message $message -Category Information
 
 (New-Object WebClient).UploadFile($target, $outputFile)
 
@@ -37,7 +37,7 @@ if (!$test.FailedCount) { return }
 
 $message = '{0}Failed tests count : {1}' -f ($provision.cr, $test.FailedCount)
 $provision.error($message)
-Add-AppveyorCompilationMessage -Message $message -Category Error
+Add-AppveyorMessage -Message $message -Category Error
 
 exit ($test.FailedCount)
 
