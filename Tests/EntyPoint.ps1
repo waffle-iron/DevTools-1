@@ -11,7 +11,7 @@ $outputFile = '{0}\{1}-{2}.NUnit.xml' -f (
     $version.version
 )
 
-$pesterConfig = {
+$pesterConfig = @{
     path = $provision.tests
     outputFormat = 'NUnitXml' 
     outputFile = $outputFile
@@ -27,19 +27,20 @@ if (!$appVeyor) { return }
 
 $target = 'https://ci.appveyor.com/api/testresults/nunit/{0}' -f $env:APPVEYOR_JOB_ID
 
-$provision.warning("{0}Uploading $outputFile to $target" -f $provision.cr)
+$message  = "{0}Uploading $outputFile to $target" -f $provision.cr
+$provision.warning($message)
+Add-AppveyorCompilationMessage -Message $message -Category Information
 
 (New-Object WebClient).UploadFile($target, $outputFile)
 
 if (!$test.FailedCount) { return }
 
-$provision.error('{0}Failed tests count : {1}' -f ($provision.cr, $test.FailedCount))
+$message = '{0}Failed tests count : {1}' -f ($provision.cr, $test.FailedCount)
+$provision.error($message)
+Add-AppveyorCompilationMessage -Message $message -Category Error
 
 exit ($test.FailedCount)
 
-
-#Add-AppveyorMessage "This is a test message"
-#Add-AppveyorCompilationMessage "Unreachable code detected" -Category Warning -FileName "Program.cs" -Line 1 -Column 3
 
 
 #$res = Invoke-Pester -Path ".\Tests" -OutputFormat NUnitXml -OutputFile ".\TestsResults.xml" -PassThru
