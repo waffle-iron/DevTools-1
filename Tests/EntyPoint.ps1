@@ -18,10 +18,12 @@ $pesterConfig = @{
     passThru = $true
 }
 
-$test = Invoke-Pester -Path "$($provision.tests)" `
-                      -OutputFormat NUnitXml `
-                      -OutputFile "$outputFile" `
-                      -PassThru
+#$test = Invoke-Pester -Path "$($provision.tests)" `
+#                      -OutputFormat NUnitXml `
+#                      -OutputFile "$outputFile" `
+#                      -PassThru
+
+$test = Invoke-Pester @pesterConfig
 
 if (!$appVeyor) { return }
 
@@ -36,14 +38,7 @@ Add-AppveyorMessage -Message $message -Category Information
 if (!$test.FailedCount) { return }
 
 $message = '{0}Failed tests count : {1}' -f ($provision.cr, $test.FailedCount)
-$provision.error($message)
+
 Add-AppveyorMessage -Message $message -Category Error
 
 throw $message
-
-
-
-
-#$res = Invoke-Pester -Path ".\Tests" -OutputFormat NUnitXml -OutputFile ".\TestsResults.xml" -PassThru
-#(New-Object 'System.Net.WebClient').UploadFile("https://ci.appveyor.com/api/testresults/nunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path .\TestsResults.xml))
-#if ($res.FailedCount -gt 0) { throw "$($res.FailedCount) tests failed."}
