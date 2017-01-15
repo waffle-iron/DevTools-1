@@ -1,7 +1,20 @@
+version: '{build}'
+
+platform:
+  - x86
+#  - x64
+
+skip_commits:
+  message: /Docs/
+
+init:
+  - WhoAmI
+  
 install:
   - cinst pester -version 3.4.0
 
-build: false
+
+# build: false
 
 test_script:
   - ps: $res = Invoke-Pester -Path ".\Tests" -OutputFormat NUnitXml -OutputFile ".\TestsResults.xml" -PassThru
