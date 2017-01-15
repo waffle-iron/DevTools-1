@@ -17,7 +17,7 @@ $config = @{
 }
 
 # Disabling Pester progress output
-#$global:ProgressPreference = 'SilentlyContinue'
+$global:ProgressPreference = 'SilentlyContinue'
 
 $test = Invoke-Pester @config
 

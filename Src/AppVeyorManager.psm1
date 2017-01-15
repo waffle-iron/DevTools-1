@@ -26,7 +26,7 @@ class AppVeyorManager
     
     [Void]message($message, $category)
     {
-        #Add-AppveyorMessage $message -Category $category
+        Add-AppveyorMessage $message -Category $category
     }
     
     [Void]pushArtifact($provision, $version)
