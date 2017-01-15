@@ -24,6 +24,8 @@ $test = Invoke-Pester @config
 
 if (!$appVeyor) { return }
 
+#$appVeyor.uploadTests($config)
+
 $target = 'https://ci.appveyor.com/api/testresults/nunit/{0}' -f $env:APPVEYOR_JOB_ID
 
 $message  = "{0}Uploading {1} to {2}" -f $provision.cr, $config.outputFile, $target

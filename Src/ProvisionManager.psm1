@@ -49,28 +49,27 @@ class ProvisionManager
     
     [Void]log($text, $color, $category)
     {
+        if ([String]::IsNullOrEmpty($text.trim())) { return }
+        
         if ($this.devTools.appVeyor)
         {
             $this.devTools.appVeyor.message($text, $category)
         }
         Write-Host $text -ForegroundColor $color
     }
-
+    
     [Void]info($text) { $this.log($text, [ConsoleColor]::DarkGreen, 'Information') }
     [Void]warning($text) { $this.log($text, [ConsoleColor]::Yellow, 'Warning') }
     [Void]error($text) { $this.log($text, [ConsoleColor]::Red, 'Error') }
     
     [Void]processDependencies([Scriptblock]$callback)
     {
-        $this.dependencies.ForEach{
-            if ($_.deploy) { $callback.invoke() }
-        }
+        $this.dependencies.ForEach{ if ($_.deploy) { $callback.invoke() } }
     }
     
     [Void]cleanup()
     {
         $this.processDependencies({
-                
                 $this.info('Cleaning : {0}\{1}' -f ($this.modules, $_.name))
                 Try
                 {

@@ -144,9 +144,6 @@ function Use-DevTools
         }
         
         if ($action -ne [Action]::Test) { return }
-        
-        $provision.warning('{0}Test Environment : Redy' -f $provision.cr)
-        
         Invoke-Expression $provision.entryPoint
     }
 }
