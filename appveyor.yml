@@ -4,7 +4,9 @@ init:
   - WhoAmI
   
 install:
-  - cinst pester -version 3.4.0
+  - ps: Install-PackageProvider NuGet -Force | Out-Null
+  - ps: Install-Module Pester -Force
+
 
 before_build:
   - cmd: mklink /J C:\Users\AppVeyor\Documents\WindowsPowerShell\Modules\DevTools c:\projects\DevTools
