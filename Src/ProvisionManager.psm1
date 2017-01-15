@@ -18,9 +18,7 @@ class ProvisionManager
     $root
     $project
     [String]$psd = '{0}\{1}\{1}.psd1'
-    #[String]$entryPoint = '{0}\{1}\Tests\{1}.Test.ps1'
     [String]$entryPoint = '{0}\{1}\Tests\EntyPoint.ps1'
-    [String]$temp = $env:TEMP
     [String]$tests
     [String]$modules = 'Documents'
     [String]$repository
