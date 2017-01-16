@@ -101,7 +101,7 @@ function Use-DevTools
         
         $info = '{0} {1} {2} [{3} {4}]' -f $project, $version.version, `
         $action, $cpu_architecture, $env:COMPUTERNAME
-
+        
         $provision.info($info)
         
         $nextVersion = switch ([Boolean]$customVersion)
@@ -130,6 +130,14 @@ function Use-DevTools
             }
             ([Action]::Release)
             {
+                while ($choice -notmatch '[y|n]')
+                {
+                    Read-Host -OutVariable choice `
+                    -Prompt "Publish The Next [$nextVersion] Release, Are You Shure?(Y/N)"
+                }
+                
+                if ($choice -eq 'n') { break }
+
                 $provision.bumpVersion($version, $nextVersion)
                 $provision.gitCommitVersionChange($nextVersion)
                 $provision.gitTag($nextVersion)
@@ -151,6 +159,7 @@ function Use-DevTools
             default { }
         }
         
+        if ([Boolean]$env:APPVEYOR_REPO_TAG -eq $true) { break }
         if ($action -ne [Action]::Test) { return }
         
         Invoke-Expression $provision.entryPoint
