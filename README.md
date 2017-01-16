@@ -216,7 +216,7 @@ powershell -NoProfile .\Tests\DevTools.ps1 -Action Shortcuts
 [release-badge]: https://img.shields.io/github/release/g8tguy/DevTools.svg
 [release-status]: https://ci.appveyor.com/project/g8tguy/DevTools/releases
 
-[appveyor-badge]: https://ci.appveyor.com/api/projects/status/4b9rsut8uhto2y61?svg=true
+[appveyor-badge]: https://ci.appveyor.com/api/projects/status/9s5wnlc6t0ry20ek?svg=true
 [appveyor-status]: https://ci.appveyor.com/project/g8tguy/devtools
 
 [psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.1.5-green.svg
