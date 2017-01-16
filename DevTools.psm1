@@ -125,7 +125,11 @@ function Use-DevTools
         {
             ([Action]::Build)
             {
-                if ($env:APPVEYOR_REPO_TAG -eq $false) { break }
+                if ($env:APPVEYOR_REPO_TAG -eq $false)
+                {
+                    $provision.warning('Build is skipped on {0}' -f $env:APPVEYOR_REPO_BRANCH)
+                    break
+                }
                 $devTools.appVeyor.pushArtifact($provision, $version.version)
             }
             ([Action]::Release)
@@ -159,7 +163,11 @@ function Use-DevTools
             default { }
         }
         
-        if ($env:APPVEYOR_REPO_TAG -eq $true) { return }
+        if ($env:APPVEYOR_REPO_TAG -eq $true)
+        {
+            $provision.warning('Tests are skipped on Tag branch')
+            return
+        }
         if ($action -ne [Action]::Test) { return }
         
         Invoke-Expression $provision.entryPoint
