@@ -11,7 +11,6 @@ The main goal of `DevTools` is to streamline the PoweSell modules development, a
 ```powershell
 PS> Install-Module DevTools
 ```
-
 Projects using `DevTools`:
 - [Parser](https://github.com/g8tguy/Parser).
 - [Debug](https://github.com/g8tguy/Debug).
