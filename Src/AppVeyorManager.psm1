@@ -1,6 +1,4 @@
-﻿using namespace System.Net
-
-#$env:CI = $true
+﻿#$env:CI = $true
 #$env:APPVEYOR_BUILD_FOLDER = 'D:\User\Development\OpenSource\Current\Powershell\DevTools'
 
 
@@ -48,7 +46,7 @@ class AppVeyorManager
         
         $provision.warning($message)
         
-        (New-Object WebClient).UploadFile($target, $pesterConfig.outputFile)
+        (New-Object Net.WebClient).UploadFile($target, $pesterConfig.outputFile)
     }
     
     [HashTable]getPesterDefaultConfig($provision, $moduleVersion)
