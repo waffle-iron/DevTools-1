@@ -125,7 +125,7 @@ function Use-DevTools
         {
             ([Action]::Build)
             {
-                if ([Boolean]$env:APPVEYOR_REPO_TAG -eq $false) { break }
+                if ($env:APPVEYOR_REPO_TAG -eq $false) { break }
                 $devTools.appVeyor.pushArtifact($provision, $version.version)
             }
             ([Action]::Release)
@@ -159,7 +159,7 @@ function Use-DevTools
             default { }
         }
         
-        if ([Boolean]$env:APPVEYOR_REPO_TAG -eq $true) { return }
+        if ($env:APPVEYOR_REPO_TAG -eq $true) { return }
         if ($action -ne [Action]::Test) { return }
         
         Invoke-Expression $provision.entryPoint
