@@ -1,4 +1,4 @@
-version: '{build}'
+qwversion: '{build}'
 
 skip_commits:
   message: /docs/

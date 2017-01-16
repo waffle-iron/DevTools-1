@@ -1,46 +1,22 @@
-﻿using namespace System.Net
-using module DevTools
-
+﻿# Expose some globals.
 $provision = $global:devTools.provision
 $version = $global:devTools.version
 $appVeyor = $global:devTools.appVeyor
 
-$config = @{
-    path = $provision.tests
-    outputFormat = 'NUnitXml' 
-    outputFile = '{0}\{1}-{2}.NUnit.xml' -f (
-        $env:TEMP,
-        $provision.projectName,
-        $version.version
-    )
-    passThru = $true
+$pesterConfig = switch ([Boolean]$appVeyor)
+{
+    $true { $appVeyor.getPesterDefaultConfig($provision, $version.version) }
+    $false { @{ path = $provision.tests } }
 }
+
 
 # Disabling Pester progress output
 $global:ProgressPreference = 'SilentlyContinue'
 
-$test = Invoke-Pester @config
+$test = Invoke-Pester @pesterConfig
 
 
 if (!$appVeyor) { return }
 
-#$appVeyor.uploadTests($config)
-
-$target = 'https://ci.appveyor.com/api/testresults/nunit/{0}' -f $env:APPVEYOR_JOB_ID
-
-$message  = "{0}Uploading {1} to {2}" -f $provision.cr, $config.outputFile, $target
-$provision.warning($message)
-#return
-#Add-AppveyorMessage $message -Category Information
-
-(New-Object WebClient).UploadFile($target, $config.outputFile)
-
-if (!$test.FailedCount) { return }
-
-$message = '{0}Failed tests count : {1}' -f ($provision.cr, $test.FailedCount)
-
-$provision.error($message)
-
-#Add-AppveyorMessage $message -Category Error
-
-throw $message
+$appVeyor.uploadTestsFile($provision, $pesterConfig)
+$appVeyor.throwOnFail($provision, $test.FailedCount)
