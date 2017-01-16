@@ -123,7 +123,11 @@ function Use-DevTools
         
         switch ($action)
         {
-            ([Action]::Build) { $devTools.appVeyor.pushArtifact($provision, $version.version) }
+            ([Action]::Build)
+            {
+                if ([Boolean]$env:APPVEYOR_REPO_TAG -eq $false) { break }
+                $devTools.appVeyor.pushArtifact($provision, $version.version)
+            }
             ([Action]::Release)
             {
                 $provision.bumpVersion($version, $nextVersion)
@@ -148,6 +152,7 @@ function Use-DevTools
         }
         
         if ($action -ne [Action]::Test) { return }
+        
         Invoke-Expression $provision.entryPoint
     }
 }
