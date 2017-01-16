@@ -127,7 +127,7 @@ function Use-DevTools
             {
                 if ($env:APPVEYOR_REPO_TAG -eq $false)
                 {
-                    $provision.warning('Build is Launched only on Tag brunch' -f $env:APPVEYOR_REPO_BRANCH)
+                    $provision.warning('Task [Build] is not allowed on {0}!' -f $env:APPVEYOR_REPO_BRANCH)
                     break
                 }
                 $devTools.appVeyor.pushArtifact($provision, $version.version)
@@ -137,11 +137,11 @@ function Use-DevTools
                 while ($choice -notmatch '[y|n]')
                 {
                     Read-Host -OutVariable choice `
-                    -Prompt "Publish The Next [$nextVersion] Release, Are You Shure?(Y/N)"
+                              -Prompt "Publish The Next [$nextVersion] Release, Are You Shure?(Y/N)"
                 }
                 
                 if ($choice -eq 'n') { break }
-
+                
                 $provision.bumpVersion($version, $nextVersion)
                 $provision.gitCommitVersionChange($nextVersion)
                 $provision.gitTag($nextVersion)
@@ -160,17 +160,18 @@ function Use-DevTools
                 $provision.bumpVersion($version, $nextVersion)
                 $provision.publish()
             }
+            ([Action]::Test)
+            {
+                if ($env:APPVEYOR_REPO_TAG -eq $true)
+                {
+                    $provision.warning('Task [Test] is not allowed on Tag branches!')
+                    return
+                }
+                
+                Invoke-Expression $provision.entryPoint
+            }
             default { }
         }
-        
-        if ($env:APPVEYOR_REPO_TAG -eq $true)
-        {
-            $provision.warning('Tests are skipped on Tag branch')
-            return
-        }
-        if ($action -ne [Action]::Test) { return }
-        
-        Invoke-Expression $provision.entryPoint
     }
 }
 
