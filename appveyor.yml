@@ -1,7 +1,7 @@
 version: '{build}'
 
 skip_commits:
-  message: /docs/
+  message: /(readme|docs)/
   
 platform:
   - x64
