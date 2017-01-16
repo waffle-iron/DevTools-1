@@ -127,7 +127,7 @@ function Use-DevTools
             {
                 if ($env:APPVEYOR_REPO_TAG -eq $false)
                 {
-                    $provision.warning('Build is skipped on {0}' -f $env:APPVEYOR_REPO_BRANCH)
+                    $provision.warning('Build is Launched only on Tag brunch' -f $env:APPVEYOR_REPO_BRANCH)
                     break
                 }
                 $devTools.appVeyor.pushArtifact($provision, $version.version)
