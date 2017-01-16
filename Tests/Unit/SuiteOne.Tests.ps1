@@ -1,4 +1,4 @@
-Describe 'Tests Suit 1' {
+﻿Describe 'Tests Suit 1' {
     Context 'Strict mode' {
         
         Set-StrictMode -Version latest

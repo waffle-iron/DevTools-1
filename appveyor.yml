@@ -5,7 +5,6 @@ skip_commits:
   
 platform:
   - x64
-  - x86
   
 init:
   - WhoAmI
