@@ -93,7 +93,11 @@ function Use-DevTools
         $devTools.provision = $provision = [ProvisionManager]@{ root = $root }
         $devTools.version = $version = [VersionManager]@{ psd = $provision.psd }
         
-        $cpu_architecture = switch ([environment]::Is64BitProcess) { true { 'x64' }; false { 'x86' } }
+        $cpu_architecture = switch ([Boolean]$env:PLATFORM)
+        {
+            true { $env:PLATFORM }
+            false { $env:PROCESSOR_ARCHITECTURE }
+        }
         
         $info = '{0} {1} {2} [{3} {4}]' -f $project, $version.version, `
         $action, $cpu_architecture, $env:COMPUTERNAME
