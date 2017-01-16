@@ -159,7 +159,7 @@ function Use-DevTools
             default { }
         }
         
-        if ([Boolean]$env:APPVEYOR_REPO_TAG -eq $true) { break }
+        if ([Boolean]$env:APPVEYOR_REPO_TAG -eq $true) { return }
         if ($action -ne [Action]::Test) { return }
         
         Invoke-Expression $provision.entryPoint
