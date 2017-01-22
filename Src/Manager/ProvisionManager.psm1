@@ -1,16 +1,12 @@
-﻿using namespace System.Diagnostics
-
-using module .\Types.psm1
+﻿Set-StrictMode -Version latest
 
 
 class ProvisionManager
 {
     [IO.DirectoryInfo]$project
-    [Object]$config
-    [String]$psd = '{0}\{1}\{1}.psd1'
-    [String]$entryPoint = '{0}\{1}\Tests\EntyPoint.ps1'
-    [String]$tests
-    [String]$modules
+    [Object]$devTools
+    [String]$entryPoint = '{0}\{1}\Tests\PesterEntryPoint'
+    [String]$modulesPath
     [String]$repository
     [String]$projectName
     [Array]$dependencies
@@ -19,22 +15,19 @@ class ProvisionManager
     
     ProvisionManager([HashTable]$data)
     {
-        $this.config = $data.config
+        $this.devTools = $data.config
         $this.projectName = $data.project
         
-        $this.modules = $this.config.modules
+        $this.modulesPath = $this.devTools.modulesPath
         
-        $this.project = get-item $this.config.getProjectPath($this.projectName)
+        $this.project = get-item $this.devTools.getProjectPath($this.projectName)
         
         if (!$this.project) { return }
         
         $this.repository = $this.project.parent.fullName
         
-        $this.psd = $this.psd -f $this.repository, $this.projectName
-        
         $this.entryPoint = $this.entryPoint -f $this.repository, $this.projectName
         
-        $this.tests = '{0}\Tests' -f $this.project.FullName
         $this.readme = $this.readme -f $this.project.FullName
         
         $this.loadDependencies()
@@ -42,9 +35,9 @@ class ProvisionManager
     
     [Void]loadDependencies()
     {
-        $projectConfig = Import-PowerShellDataFile $this.psd
         $this.dependencies = (@{ deploy = $true; name = $this.projectName })
-        $this.dependencies += $projectConfig.PrivateData.DevTools.Dependencies
+        $this.dependencies += Get-Property $this.devTools.moduleSettings `
+                                           PrivateData DevTools Dependencies
     }
     
     [Void]processDependencies([Scriptblock]$callback)
@@ -52,17 +45,40 @@ class ProvisionManager
         $this.dependencies.ForEach{ if ($_.deploy) { $callback.invoke() } }
     }
     
+    [String]bundle()
+    {
+        $dt = $this.devTools
+        
+        $bundleId = [guid]::newGuid()
+        
+        $dt.warning('Staging bundle {0}' -f $bundleId)
+        
+        foreach ($file in -split $dt.moduleSettings.fileList)
+        {
+            [IO.FileInfo]$fileInfo = '{0}\{1}' -f $dt.modulePath, $file
+            
+            $destination = '{0}\{1}\{2}' -f $dt.stagingPath, $bundleId, $file
+            
+            if ($fileInfo.exists -or $fileInfo.Attributes -eq [IO.FileAttributes]::Directory)
+            {
+                Copy-Item $fileInfo $destination -recurse
+            }
+        }
+        
+        return ('{0}\{1}' -f $dt.stagingPath, $bundleId)
+    }
+    
     [Void]cleanup()
     {
         $this.processDependencies({
-                $this.config.info('Cleaning : {0}\{1}' -f ($this.modules, $_.name))
+                $this.devTools.info('Cleaning : {0}\{1}' -f ($this.modulesPath, $_.name))
                 Try
                 {
                     remove-item -ErrorAction Continue -Recurse -Force `
-                    ('{0}\{1}' -f $this.modules, $_.name)
+                    ('{0}\{1}' -f $this.modulesPath, $_.name)
                 } Catch
                 {
-                    $this.config.warning($_.Exception.Message)
+                    $this.devTools.warning($_.Exception.Message)
                 }
                 
             })
@@ -74,15 +90,15 @@ class ProvisionManager
         $mask = '"{0}\{1}"'
         
         $this.processDependencies({
-                $destination = $mask -f $this.modules, $_.name
+                $destination = $mask -f $this.modulesPath, $_.name
                 $source = $mask -f $this.repository, $_.name
                 $output = cmd /C mklink /J $destination $source
                 if ($output -eq $null)
                 {
-                    $this.config.warning("$($_.name) already installed.")
+                    $this.devTools.warning("$($_.name) already installed.")
                     return
                 }
-                $this.config.warning($output)
+                $this.devTools.warning($output)
             })
     }
     
@@ -91,18 +107,18 @@ class ProvisionManager
         $mask = '"{0}\{1}"'
         
         $this.processDependencies({
-                $destination = $mask -f $this.modules, $_.name
+                $destination = $mask -f $this.modulesPath, $_.name
                 $source = $mask -f $this.repository, $_.name
                 
                 $output = xcopy $source $destination /Isdy
-                $this.config.warning(($output | Out-String))
+                $this.devTools.warning(($output | Out-String))
             })
     }
     
     [Void]bumpVersion($version, $nextVersion)
     {
         $message = '{0}Updating version to : {1}' -f ([Environment]::NewLine, $nextVersion)
-        $this.config.warning($message)
+        $this.devTools.warning($message)
         
         $version.apply($nextVersion)
         $version.updateBadge($nextVersion, $this.readme, $this.projectName)
@@ -110,9 +126,9 @@ class ProvisionManager
     
     [Void]publish()
     {
-        if ($this.config.whatIf) { return }
+        if ($this.devTools.whatIf) { return }
         
-        $apiKey = $this.config.userSettings.psGalleryApiKey
+        $apiKey = $this.devTools.userSettings.psGalleryApiKey
         Publish-Module -Verbose -Name $this.project.FullName -NuGetApiKey $apiKey
     }
     
@@ -131,8 +147,8 @@ class ProvisionManager
         $output = $ps.StandardOutput.ReadToEnd().trim()
         $error = $ps.StandardError.ReadToEnd().trim()
         
-        if ([Boolean]$output) { $this.config.warning([Environment]::NewLine + $output) }
-        if ([Boolean]$error) { $this.config.error([Environment]::NewLine + $error) }
+        if ([Boolean]$output) { $this.devTools.warning([Environment]::NewLine + $output) }
+        if ([Boolean]$error) { $this.devTools.error([Environment]::NewLine + $error) }
     }
     
     [Void]gitCommitVersionChange($version)

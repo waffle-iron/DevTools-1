@@ -1,45 +1,55 @@
 using namespace System.Management.Automation
-using namespace System.Collections.ObjectModel
 
-using module .\Src\Types.psm1
-using module .\Src\DynamicParameter.psm1
+using module .\Src\Enums.psm1
 using module .\Src\DynamicConfig.psm1
 
-$global:devTools = New-Object DynamicConfig
+using module .\Src\Manager\AppVeyorManager.psm1
+using module .\Src\Manager\ModuleManager.psm1
+using module .\Src\Manager\ProvisionManager.psm1
+using module .\Src\Manager\VersionManager.psm1
+
+
+Set-StrictMode -Version latest
+
+[DynamicConfig]$script:devTools = $null
 
 function Use-DevTools
 {
     [CmdletBinding()]
     param
     (
-        [Switch]$NoPublish,
         [Switch]$WhatIf,
+        [Switch]$NoPublish,
+        [Switch]$GenerateProject,
         [Parameter(ValueFromRemainingArguments = $true)]
-        $CustomVersion = $false,
-        [Parameter(ValueFromRemainingArguments = $true)]
-        $GenerateProject = $false
+        $CustomVersion = $false
     )
     
     DynamicParam
     {
-        $devTools.whatIf = $whatIf.IsPresent
+        $script:devTools = $devTools = New-Object DynamicConfig
+        
         $devTools.setEnvironment()
+        
         return $devTools.dynamicParameters([ref]$psBoundParameters)
     }
     process
     {
-        [String]$project = $psBoundParameters['Project']
-        [Action]$action = $psBoundParameters['Action']
-        [VersionComponent]$versionType = $psBoundParameters['VersionType']
+        $devTools.setProjectVariables($psBoundParameters)
         
         if ($generateProject)
         {
-            ($devTools.moduleFactory($generateProject)).create()
+            #([ModuleManager]$devTools.moduleFactory()).create()
             return
         }
         
-        $provision = $devTools.provisionFactory($project)
-        $version = $devTools.versionFactory()
+        
+        [AppVeyorManager]$appVeyor = $devTools.appVeyorFactory()
+        [ProvisionManager]$provision = $devTools.provisionFactory()
+        [VersionManager]$version = $devTools.versionFactory()
+        
+
+        
         
         $cpu_architecture = switch ([Boolean]$env:PLATFORM)
         {
@@ -47,18 +57,18 @@ function Use-DevTools
             false { $env:PROCESSOR_ARCHITECTURE }
         }
         
-        $info = '{0} {1} {2} [{3} {4}]' -f $project, $version.version, `
-        $action, $cpu_architecture, $env:COMPUTERNAME
+        $info = '{5}{0} {1} {2} [{3} {4}]{5}' -f $devTools.projectName, $version.version, `
+        $devTools.action, $cpu_architecture, $env:COMPUTERNAME, [Environment]::NewLine
         
-        $devTools.info($devTools.cr + $info + $devTools.cr)
+        $devTools.info($info)
         
         $nextVersion = switch ([Boolean]$customVersion)
         {
             True { $customVersion }
-            Default { $version.next($versionType) }
+            Default { $version.next($devTools.versionType) }
         }
         
-        switch ($action)
+        switch ($devTools.action)
         {
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Install) { $provision.install() }
@@ -77,7 +87,7 @@ function Use-DevTools
                     $devTools.warning('Task [Build] is not allowed on {0}!' -f $env:APPVEYOR_REPO_BRANCH)
                     break
                 }
-                $devTools.appVeyor.pushArtifact($provision, $version.version)
+                $appVeyor.pushArtifact($version.version)
             }
             ([Action]::Release)
             {
@@ -120,6 +130,7 @@ Register-ArgumentCompleter -CommandName dt -ScriptBlock {
         $commandAst,
         $cursorPosition
     )
+    
     
     $ast = (-split $commandAst)
     $count = $ast.length

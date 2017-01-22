@@ -1,4 +1,4 @@
-# <img src="/Docs/Logo/dt.png" alt="Logo" width="48" align="left"/>  DevTools
+# <img src="/Docs/Logo/logo.png" alt="Logo" width="48" align="left"/>  DevTools
 
 [![Appveyor Badge][appveyor-badge]][appveyor-status]
 [![GitHub Release][release-badge]][release-status]

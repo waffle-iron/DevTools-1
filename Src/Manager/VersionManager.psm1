@@ -1,4 +1,7 @@
-﻿using module .\Types.psm1
+﻿using module ..\Enums.psm1
+
+
+Set-StrictMode -Version latest
 
 
 class VersionManager

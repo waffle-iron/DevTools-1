@@ -8,25 +8,27 @@
     <Folder>Tests</Folder>
     <Folder>Tests\Unit</Folder>
     <Folder>Examples</Folder>
+    <Folder>Src\Manager</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
     <File Build="2">DevTools.psm1</File>
-    <File Build="2">Src\AppVeyorManager.psm1</File>
+    <File Build="2">Src\Manager\AppVeyorManager.psm1</File>
     <File Build="2">Src\DynamicConfig.psm1</File>
-    <File Build="2">Src\DynamicParameter.psm1</File>
-    <File Build="2">Src\ModuleManager.psm1</File>
-    <File Build="2">Src\ProvisionManager.psm1</File>
-    <File Build="2">Src\Types.psm1</File>
-    <File Build="2">Src\VersionManager.psm1</File>
-    <File Build="2" Shared="False">Tests\Integration\WorkFlow.ps1</File>
-    <File Build="2" Shared="False">Tests\EntyPoint.ps1</File>
+    <File Build="2">Src\Manager\ModuleManager.psm1</File>
+    <File Build="2">Src\Manager\ProvisionManager.psm1</File>
+    <File Build="2">Src\Enums.psm1</File>
+    <File Build="2">Src\Manager\VersionManager.psm1</File>
+    <File Build="2" Shared="False">Tests\DebugEntryPoint.ps1</File>
+    <File Build="2" Shared="False">Tests\PesterEntryPoint.ps1</File>
     <File Build="2" Shared="False">Examples\API.ps1</File>
     <File Build="2">appveyor.yml</File>
     <File Build="2">README.md</File>
     <File Build="2">.gitattributes</File>
     <File Build="2">.gitignore</File>
-    <File Build="2" Shared="False">Tests\Unit\Module.Tests.ps1</File>
+    <File Build="2" Shared="False">Tests\Unit\Sanity.Tests.ps1</File>
+    <File Build="2" Shared="False">Tests\Unit\Behavioral.Tests.ps1</File>
+    <File Build="2" Shared="False">Tests\Unit\SharedFixtures.ps1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>Tests\Integration\WorkFlow.ps1</PrimaryFile>

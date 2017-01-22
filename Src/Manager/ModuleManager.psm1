@@ -1,3 +1,6 @@
+Set-StrictMode -Version latest
+
+
 class ModuleManager {
     
     [Object]$config

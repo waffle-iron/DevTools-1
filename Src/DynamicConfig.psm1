@@ -1,40 +1,55 @@
-﻿using namespace System.Management.Automation
+﻿using module LibPosh
 
-using module .\Types.psm1
+using module .\Enums.psm1
 
-using module .\DynamicParameter.psm1
+using module .\Manager\AppVeyorManager.psm1
+using module .\Manager\ProvisionManager.psm1
+using module .\Manager\VersionManager.psm1
+using module .\Manager\ModuleManager.psm1
 
-using module .\AppVeyorManager.psm1
-using module .\ProvisionManager.psm1
-using module .\VersionManager.psm1
-using module .\ModuleManager.psm1
+
+Set-StrictMode -Version latest
+
 
 class DynamicConfig {
     
-    [Hashtable]$devTools = [Hashtable]::Synchronized(@{ })
+    [Boolean]$verbose = $false
     
-    [String]$userSettingsFile = '{0}\dev_tools_config.psd1' -f $env:USERPROFILE
-    [Hashtable]$userSettings
+    [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
     
-    [String]$modules = 'Documents'
+    [Hashtable]$userSettings = @{ file = ('{0}\dev_tools_config.psd1' -f $env:USERPROFILE) }
     
-    [String]$project
     [Boolean]$isInProject
-    [Boolean]$whatIf = $false
+    [Boolean]$whatIf
+    
+    [String]$currentDirectoryName
+    [String]$stagingPath = $env:temp
+    [String]$modulesPath = 'Documents'
+    [String]$modulePath
+    [String]$testsPath = '{0}\Tests'
+    
+    [IO.FileInfo]$psdFile = '{0}\{1}.psd1'
+    [Hashtable]$moduleSettings
+    
+    [String]$projectName
+    [Action]$action
+    [VersionComponent]$versionType
     
     [AppVeyorManager]$appVeyor
     [ProvisionManager]$provision
     [VersionManager]$version
     [ModuleManager]$module
     
-    [String]$cr = [Environment]::NewLine
+    $ciProvider = [AppVeyorManager]
+    [Boolean]$ci = $env:CI
     
     [Void]log($text, $color, $category)
     {
         $text = $text.trim()
         if ([String]::IsNullOrEmpty($text)) { return }
         
-        if ($this.appVeyor) { $this.appVeyor.message($text, $category) }
+        if ($this.ci) { $this.ciProvider::message($text, $category) }
+        
         Write-Host $text -ForegroundColor $color
     }
     
@@ -44,53 +59,76 @@ class DynamicConfig {
     
     [Array]getProjects()
     {
-        return (Get-ChildItem $this.userSettings.projectsPath).forEach{
-            if ($_.length -eq $true) { $_.name }
-        }
+        return (Get-ChildItem -Directory $this.userSettings.projectsPath).forEach{ $_.name }
     }
     
     DynamicConfig()
     {
-        $this.userSettings = Import-PowerShellDataFile $this.userSettingsFile
-        
-        if ([Boolean]$env:CI)
-        {
-            $this.appVeyor = New-Object AppVeyorManager $this
-            $this.userSettings = $this.appVeyor.getConfig()
-        }
-        
-        $this.modules = ($Env:psModulePath.split(';') |
-            Where-Object { $_ -match $this.modules }) | Select-Object -Unique
+        $this.modulesPath = ($Env:psModulePath.split(';') |
+            Where-Object { $_ -match $this.modulesPath }) | Select-Object -Unique
     }
     
     [Void]setEnvironment()
     {
+        $this.userSettings = switch ([Boolean]$this.ci)
+        {
+            true{ $this.ciProvider::getConfig() }
+            false{ Import-PowerShellDataFile $this.userSettings.file }
+        }
+        
         [IO.DirectoryInfo]$location = Get-Item -Path $pwd
-        $path = $location.FullName
-        $this.project = $location.Name
-        $this.isInProject = Test-Path ('{0}\{1}.psd1' -f $path, $this.project)
+        $path = $location.fullName
+        $this.currentDirectoryName = $location.name
+        $this.isInProject = Test-Path ('{0}\{1}.psd1' -f $path, $this.currentDirectoryName)
     }
     
-    [ProvisionManager]provisionFactory($moduleName)
+    [Void]setProjectVariables($boundParameters)
+    {
+        
+        $this.projectName = $boundParameters['Project']
+        $this.action = $boundParameters['Action']
+        $this.versionType = $boundParameters['VersionType']
+        $this.whatIf = $boundParameters['WhatIf']
+        
+        $this.modulePath = $this.getProjectPath($this.projectName)
+        
+        $this.testsPath = $this.testsPath -f $this.modulePath
+        $this.psdFile = $this.psdFile -f $this.modulePath, $this.projectName
+        
+        if ($this.psdFile.exists) { $this.moduleSettings = Import-PowerShellDataFile $this.psdFile }
+    }
+    
+    [AppVeyorManager]appVeyorFactory()
+    {
+        $this.appVeyor = switch ([Boolean]$this.ci)
+        {
+            true{ [AppVeyorManager]@{ devTools = $this } }
+            false{ $null }
+        }
+        
+        return $this.appVeyor
+    }
+    
+    [ProvisionManager]provisionFactory()
     {
         $this.provision = [ProvisionManager]@{
             config = $this
-            project = $moduleName
+            project = $this.projectName
         }
         return $this.provision
     }
     
     [VersionManager]versionFactory()
     {
-        $this.version = [VersionManager]@{ psd = $this.provision.psd }
+        $this.version = [VersionManager]@{ psd = $this.psdFile }
         return $this.version
     }
     
-    [ModuleManager]ModuleFactory($moduleName)
+    [ModuleManager]ModuleFactory()
     {
         $this.module = [ModuleManager]@{
             config = $this
-            moduleName = $moduleName
+            moduleName = $this.projectName
         }
         return $this.module
     }
@@ -104,35 +142,37 @@ class DynamicConfig {
     {
         $generateProject = $boundParameters.value['generateProject']
         
-        $dpf = New-Object DynamicParameter
+        $dpf = New-Object LibPosh.DynamicParameter
         
         $runtimeParameterDictionary = $dpf.runtimeParameterDictionary
         
         # Project
-        $projectName = 'Project'
-        $parameterAttribute = New-Object ParameterAttribute
+        $projectField = 'Project'
+        $parameterAttribute = $dpf.getParameterAttribute(@{ position = 1; mandatory = $true })
         
         if ($this.isInProject)
         {
             $parameterAttribute.position = 2
-            $boundParameters.value[$projectName] = $this.project
-        } else
-        {
-            $parameterAttribute.position = 1
-            $parameterAttribute.mandatory = $true
-        }
-        
-        if ([Boolean]$generateProject)
-        {
             $parameterAttribute.mandatory = $false
+            $boundParameters.value[$projectField] = $this.currentDirectoryName
         }
+        #        else
+        #        {
+        #            $parameterAttribute.position = 1
+        #            $parameterAttribute.mandatory = $true
+        #        }
         
-        [Void]$dpf.set($parameterAttribute, $this.getProjects(), $projectName)
+        #        if ([Boolean]$generateProject)
+        #        {
+        #            $parameterAttribute.mandatory = $false
+        #        }
+        
+        [Void]$dpf.set($parameterAttribute, $this.getProjects(), $projectField)
         
         # Action
-        $actionName = 'Action'
+        $actionField = 'Action'
         
-        $parameterAttribute = New-Object ParameterAttribute
+        $parameterAttribute = $dpf.getParameterAttribute()
         $parameterAttribute.mandatory = $false
         $parameterAttribute.position = switch ($this.isInProject)
         {
@@ -140,17 +180,17 @@ class DynamicConfig {
             Default { 2 }
         }
         
-        $boundParameters.value[$actionName] = [Action]::Test
+        $boundParameters.value[$actionField] = [Action]::Test
         
-        [Void]$dpf.set($parameterAttribute, [Enum]::getValues([Action]), $actionName)
+        [Void]$dpf.set($parameterAttribute, [Enum]::getValues([Action]), $actionField)
         
         # VersionType
-        $versionName = 'VersionType'
-        $parameterAttribute = New-Object ParameterAttribute
+        $versionField = 'VersionType'
+        $parameterAttribute = $dpf.getParameterAttribute(@{ position = 3 })
         $parameterAttribute.mandatory = $false
         $parameterAttribute.position = 3
-        $boundParameters.value[$versionName] = [VersionComponent]::Build
+        $boundParameters.value[$versionField] = [VersionComponent]::Build
         
-        return $dpf.set($parameterAttribute, ('Major', 'Minor', 'Build'), $versionName)
+        return $dpf.set($parameterAttribute, ('Major', 'Minor', 'Build'), $versionField)
     }
 }
