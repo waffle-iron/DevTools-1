@@ -6,6 +6,7 @@ enum VersionComponent
 }
 
 enum Action {
+    GenerateProject
     Install
     CopyToCurrentUserModules
     Test

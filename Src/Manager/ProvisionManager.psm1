@@ -36,8 +36,9 @@ class ProvisionManager
     [Void]loadDependencies()
     {
         $this.dependencies = (@{ deploy = $true; name = $this.projectName })
-        $this.dependencies += Get-Property $this.devTools.moduleSettings `
-                                           PrivateData DevTools Dependencies
+        
+        $this.dependencies += Get-Property $this.devTools.moduleSettings.PrivateData `
+                                           DevTools.Dependencies
     }
     
     [Void]processDependencies([Scriptblock]$callback)

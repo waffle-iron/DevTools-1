@@ -11,7 +11,7 @@ using module .\Src\Manager\VersionManager.psm1
 
 Set-StrictMode -Version latest
 
-[DynamicConfig]$script:devTools = $null
+[DynamicConfig]$global:devTools = $null
 
 function Use-DevTools
 {
@@ -19,15 +19,13 @@ function Use-DevTools
     param
     (
         [Switch]$WhatIf,
-        [Switch]$NoPublish,
-        [Switch]$GenerateProject,
         [Parameter(ValueFromRemainingArguments = $true)]
         $CustomVersion = $false
     )
     
     DynamicParam
     {
-        $script:devTools = $devTools = New-Object DynamicConfig
+        $global:devTools = $devTools = New-Object DynamicConfig
         
         $devTools.setEnvironment()
         
@@ -35,32 +33,14 @@ function Use-DevTools
     }
     process
     {
-        $devTools.setProjectVariables($psBoundParameters)
-        
-        if ($generateProject)
-        {
-            #([ModuleManager]$devTools.moduleFactory()).create()
-            return
-        }
-        
+        $name, $action = $devTools.setProjectVariables($psBoundParameters)
         
         [AppVeyorManager]$appVeyor = $devTools.appVeyorFactory()
         [ProvisionManager]$provision = $devTools.provisionFactory()
         [VersionManager]$version = $devTools.versionFactory()
+        [ModuleManager]$module = $devTools.moduleFactory()
         
-
-        
-        
-        $cpu_architecture = switch ([Boolean]$env:PLATFORM)
-        {
-            true { $env:PLATFORM }
-            false { $env:PROCESSOR_ARCHITECTURE }
-        }
-        
-        $info = '{5}{0} {1} {2} [{3} {4}]{5}' -f $devTools.projectName, $version.version, `
-        $devTools.action, $cpu_architecture, $env:COMPUTERNAME, [Environment]::NewLine
-        
-        $devTools.info($info)
+        $devTools.info($devTools.getTitle())
         
         $nextVersion = switch ([Boolean]$customVersion)
         {
@@ -68,8 +48,9 @@ function Use-DevTools
             Default { $version.next($devTools.versionType) }
         }
         
-        switch ($devTools.action)
+        switch ($action)
         {
+            ([Action]::GenerateProject) { $module.create() }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::Install) { $provision.install() }
             ([Action]::CopyToCurrentUserModules) { $provision.copy() }
@@ -124,30 +105,6 @@ function Use-DevTools
 
 New-Alias -Name dt -Value Use-DevTools
 
-Register-ArgumentCompleter -CommandName dt -ScriptBlock {
-    param (
-        $wordToComplete,
-        $commandAst,
-        $cursorPosition
-    )
-    
-    
-    $ast = (-split $commandAst)
-    $count = $ast.length
-    $last = $ast[- $true]
-    
-    $methods = [Enum]::GetValues([Action])
-    
-    if (($devTools.isInProject -and $count -eq 2) -or (!$devTools.isInProject -and $count -eq 1))
-    {
-        $methods = $devTools.getProjects()
-    }
-    
-    if ($count -eq 3) { $methods = [Enum]::GetValues([VersionComponent]) }
-    
-    $matches = $methods | Where-Object { $_ -like "*$wordToComplete*" }
-    
-    $matches = switch ([Boolean]$matches.Count) { True { $matches } False { $methods } }
-    
-    $matches | Sort-Object | ForEach-Object { [CompletionResult]::new($_) }
-}
+Invoke-Expression $PSScriptRoot\Src\ArgumentCompleter
+
+Write-Host -ForegroundColor Red 'First Run: Loading DevTools Module And Conole AutoCompleter'

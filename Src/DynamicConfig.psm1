@@ -82,7 +82,7 @@ class DynamicConfig {
         $this.isInProject = Test-Path ('{0}\{1}.psd1' -f $path, $this.currentDirectoryName)
     }
     
-    [Void]setProjectVariables($boundParameters)
+    [Array]setProjectVariables($boundParameters)
     {
         
         $this.projectName = $boundParameters['Project']
@@ -96,6 +96,8 @@ class DynamicConfig {
         $this.psdFile = $this.psdFile -f $this.modulePath, $this.projectName
         
         if ($this.psdFile.exists) { $this.moduleSettings = Import-PowerShellDataFile $this.psdFile }
+        
+        return ($this.projectName, $this.action)
     }
     
     [AppVeyorManager]appVeyorFactory()
@@ -120,7 +122,7 @@ class DynamicConfig {
     
     [VersionManager]versionFactory()
     {
-        $this.version = [VersionManager]@{ psd = $this.psdFile }
+        $this.version = [VersionManager]@{ config = $this }
         return $this.version
     }
     
@@ -138,9 +140,21 @@ class DynamicConfig {
         return '{0}\{1}' -f $this.userSettings.projectsPath, $moduleName
     }
     
+    [String]getTitle() {
+        $cpu_architecture = switch ([Boolean]$env:PLATFORM)
+        {
+            true { 'CI {0}' -f $env:PLATFORM }
+            false { $env:PROCESSOR_ARCHITECTURE }
+        }
+        
+        $title = '{5}{0} {1} {2} [{3} {4}]{5}' -f $this.projectName, $this.version.version, `
+        $this.action, $cpu_architecture, $env:COMPUTERNAME, [Environment]::NewLine
+        return $title
+    }
+    
     [Object]dynamicParameters([ref]$boundParameters)
     {
-        $generateProject = $boundParameters.value['generateProject']
+        #$generateProject = $boundParameters.value['generateProject']
         
         $dpf = New-Object LibPosh.DynamicParameter
         
@@ -156,18 +170,29 @@ class DynamicConfig {
             $parameterAttribute.mandatory = $false
             $boundParameters.value[$projectField] = $this.currentDirectoryName
         }
-        #        else
-        #        {
-        #            $parameterAttribute.position = 1
-        #            $parameterAttribute.mandatory = $true
-        #        }
         
-        #        if ([Boolean]$generateProject)
-        #        {
-        #            $parameterAttribute.mandatory = $false
-        #        }
+        $projects = $this.getProjects()
         
-        [Void]$dpf.set($parameterAttribute, $this.getProjects(), $projectField)
+        $rawParameters = -split $myinvocation.line
+        
+        [Boolean]$generateProject = $rawParameters -contains 'GenerateProject'
+        
+        if ($generateProject)
+        {
+            $newProject = switch ($rawParameters[$true] -eq 'GenerateProject')
+            {
+                true { $rawParameters[2] }
+                false { $rawParameters[1] }
+            }
+            
+            if ($projects -notcontains $newProject)
+            {
+                $parameterAttribute.mandatory = $false
+                $projects += $newProject
+            }
+        }
+
+        [Void]$dpf.set($parameterAttribute, $projects, $projectField)
         
         # Action
         $actionField = 'Action'

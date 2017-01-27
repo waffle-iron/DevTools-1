@@ -1,5 +1,4 @@
-﻿using module DevTools
-using namespace DevTools
+﻿
 
 Set-StrictMode -Version latest
 
@@ -17,6 +16,7 @@ Describe 'DevTools Sanity Check' {
         BeforeAll {
             if (-not $devTools.ci)
             {
+                $env:PLATFORM = 'AppVeyor'
                 $env:CI = $true
                 $env:APPVEYOR_BUILD_FOLDER = $devTools.modulePath
             }

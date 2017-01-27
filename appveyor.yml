@@ -23,9 +23,9 @@ before_test:
 test_script:
   - ps: |
         dt Install
-        dt Test
-        dt Build
-        dt Cleanup
+     #   dt Test
+     #   dt Build
+     #   dt Cleanup
 
 build: off
 

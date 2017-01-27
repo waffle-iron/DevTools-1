@@ -22,24 +22,51 @@ class ModuleManager {
     
     [Void]create()
     {
-        $this.demoModuleURI = $this.demoModuleURI -f (Get-Item $PSScriptRoot).parent.fullName
-        $this.moduleURI = $this.config.getProjectPath($this.moduleName)
         
-        $this.replaceQueue += @{
-            ModuleName = $this.moduleName
-            NewGuid = [guid]::newGuid()
-        } + $this.config.userSettings.userInfo
-        
-
-        $output = xcopy $this.demoModuleURI $this.moduleURI /Isdy
-        $this.config.warning('Generating {0} module.' -f $this.moduleName)
-
-        foreach ($file in $this.files)
-        {
-            [IO.FileInfo]$file = '{0}\{1}' -f $this.moduleURI, $file
-            $this.updateContent($file)
-            $this.updateFile($file)
-        }
+        #        if ($devTools.action -eq [Action]::GenerateProject)
+        #        {
+        #            
+        #                        
+        #                        if ($newProject -match '^[\.\w\d_-]+$') {
+        #                            Write-Host $newProject
+        #                        }
+        #                        
+        #            
+        #            $choice = [String]::Empty
+        #            while ($choice -notmatch '[Y|N]')
+        #            {
+        #                Write-Host -ForegroundColor Red -NoNewline `
+        #                ('Create module named: "{0}" ? (Y/N)' -f $newProject)
+        #                
+        #                Read-Host -OutVariable choice
+        #            }
+        #            
+        #            if ($choice -eq 'n') { return }
+        #            
+        #            Write-Host($devTools.projectName)
+        #            Write-Host($devTools.action)
+        #            ([ModuleManager]$devTools.moduleFactory()).create()
+        #            return
+        #        }
+        Write-Host 'zzzzzzz'
+#        $this.demoModuleURI = $this.demoModuleURI -f (Get-Item $PSScriptRoot).parent.fullName
+#        $this.moduleURI = $this.config.getProjectPath($this.moduleName)
+#        
+#        $this.replaceQueue += @{
+#            ModuleName = $this.moduleName
+#            NewGuid = [guid]::newGuid()
+#        } + $this.config.userSettings.userInfo
+#        
+#
+#        $output = xcopy $this.demoModuleURI $this.moduleURI /Isdy
+#        $this.config.warning('Generating {0} module.' -f $this.moduleName)
+#
+#        foreach ($file in $this.files)
+#        {
+#            [IO.FileInfo]$file = '{0}\{1}' -f $this.moduleURI, $file
+#            $this.updateContent($file)
+#            $this.updateFile($file)
+#        }
     }
     
     [Void]updateContent([IO.FileInfo]$file)

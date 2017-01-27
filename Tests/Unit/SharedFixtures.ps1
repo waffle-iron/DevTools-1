@@ -1,5 +1,9 @@
-﻿[HashTable]$state = @{
+﻿using module DevTools
+using namespace DevTools
+
+[HashTable]$state = @{
     CI = $env:CI
+    PLATFORM = $env:PLATFORM
     APPVEYOR_BUILD_FOLDER = $env:APPVEYOR_BUILD_FOLDER
     APPVEYOR_REPO_TAG = $env:APPVEYOR_REPO_TAG
     APPVEYOR_REPO_BRANCH = $env:APPVEYOR_REPO_BRANCH
@@ -24,4 +28,5 @@ $restoreState = {
     $env:APPVEYOR_BUILD_FOLDER = $state.APPVEYOR_BUILD_FOLDER
     $env:APPVEYOR_REPO_TAG = $state.APPVEYOR_REPO_TAG
     $env:APPVEYOR_REPO_BRANCH = $state.APPVEYOR_REPO_BRANCH
+    $env:PLATFORM = $state.PLATFORM
 }

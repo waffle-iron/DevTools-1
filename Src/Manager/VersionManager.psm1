@@ -6,47 +6,41 @@ Set-StrictMode -Version latest
 
 class VersionManager
 {
-    [String]$psd
+    [Object]$devTools
     [String]$regex = "ModuleVersion\s=\s'(?<version>.+)'"
-    [String]$content
     [Version]$version
     
     VersionManager($data)
     {
-        $this.psd = $data.psd
-        $this.content = Get-Content $this.psd | Out-String
+        $this.devTools = $data.config
         $this.version = $this.getVersion()
     }
     
     [Version]getVersion()
     {
-        $result = switch ($this.content -match $this.regex)
-        {
-            True { $matches['version'] }
-            default { $false }
-        }
-        
-        return $result
+        return Get-Property $this devTools.moduleSettings.ModuleVersion 1.0.0
     }
     
     [String]next([VersionComponent]$incr)
     {
-        $temlate = @{
+        $template = @{
             [VersionComponent]::Major = $this.version.Major
             [VersionComponent]::Minor = $this.version.Minor
             [VersionComponent]::Build = $this.version.Build
         }
         
-        $temlate.Item($incr) += $true
+        $template.Item($incr) += $true
         
-        return '{2}.{1}.{0}' -f ([Array]$temlate.Values)
+        return '{2}.{1}.{0}' -f ([Array]$template.values)
     }
     
     [Void]apply($nextVersion)
     {
-        $result = $this.content -replace $this.regex, "ModuleVersion = '$nextVersion'"
-        $result.trim() |
-        Set-Content $this.psd
+        $psd = $this.devTools.psdFile
+        $content = Get-Content $psd | Out-String
+        
+        $result = $content -replace $this.regex, "ModuleVersion = '$nextVersion'"
+        $result.trim() | Set-Content $psd
     }
 
     [Void]updateBadge($nextVersion, $readme, $projectName)
