@@ -13,7 +13,7 @@ Set-StrictMode -Version latest
 
 class DynamicConfig {
     
-    [Boolean]$verbose = $false
+    [Boolean]$verbose = $true
     
     [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
     
@@ -56,6 +56,7 @@ class DynamicConfig {
     [Void]info($text) { $this.log($text, [ConsoleColor]::DarkGreen, 'Information') }
     [Void]warning($text) { $this.log($text, [ConsoleColor]::Yellow, 'Warning') }
     [Void]error($text) { $this.log($text, [ConsoleColor]::Red, 'Error') }
+    [Void]debug($text) { $this.log($text, [ConsoleColor]::DarkYellow, 'Error') }
     
     [Array]getProjects()
     {
@@ -129,8 +130,10 @@ class DynamicConfig {
     [ModuleManager]ModuleFactory()
     {
         $this.module = [ModuleManager]@{
-            config = $this
-            moduleName = $this.projectName
+            devTools = $this
+            projectName = $this.projectName
+            stagingPath = $this.stagingPath
+            verbose = $this.verbose
         }
         return $this.module
     }
@@ -140,7 +143,8 @@ class DynamicConfig {
         return '{0}\{1}' -f $this.userSettings.projectsPath, $moduleName
     }
     
-    [String]getTitle() {
+    [String]getTitle()
+    {
         $cpu_architecture = switch ([Boolean]$env:PLATFORM)
         {
             true { 'CI {0}' -f $env:PLATFORM }
@@ -191,7 +195,7 @@ class DynamicConfig {
                 $projects += $newProject
             }
         }
-
+        
         [Void]$dpf.set($parameterAttribute, $projects, $projectField)
         
         # Action

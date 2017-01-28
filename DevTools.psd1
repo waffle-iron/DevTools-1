@@ -9,7 +9,7 @@
     PowerShellVersion = '5.0'
     HelpInfoURI = 'https://github.com/g8tguy/DevTools/blob/master/README.md'
     RequiredModules = @('LibPosh')
-
+    RequiredAssemblies = @('System.IO.Compression.FileSystem')
     NestedModules = @(
         'Src\Manager\AppVeyorManager.psm1',
         'Src\Manager\ModuleManager.psm1',

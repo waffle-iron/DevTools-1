@@ -23,7 +23,7 @@ before_test:
 test_script:
   - ps: |
         dt Install
-     #   dt Test
+        dt Test
      #   dt Build
      #   dt Cleanup
 

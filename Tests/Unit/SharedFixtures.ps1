@@ -1,6 +1,10 @@
 ﻿using module DevTools
 using namespace DevTools
 
+$global:verbose = $true
+
+$global:result = [String]::Empty
+
 [HashTable]$state = @{
     CI = $env:CI
     PLATFORM = $env:PLATFORM
@@ -15,9 +19,9 @@ $writeHostMock = {
          –ParameterFilter { $ForegroundColor –ne 'Blue' } `
          -CommandName Write-Host -MockWith {
         
-        $debug = $true
+
         
-        if ($debug) { Microsoft.PowerShell.Utility\Write-Host $text -ForegroundColor Blue }
+        if ($verbose) { Microsoft.PowerShell.Utility\Write-Host $text -ForegroundColor Blue }
         
         $global:result += $text
     }

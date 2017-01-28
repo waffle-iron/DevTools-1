@@ -1,4 +1,4 @@
-﻿@{
+@{
     RootModule = 'ModuleName.psm1'
     ModuleVersion = '1.0.0'
     GUID = 'NewGuid'
@@ -8,11 +8,15 @@
     Description = 'A PowerShell module.'
     PowerShellVersion = '5.0'
     HelpInfoURI = 'https://github.com/GitHubSlug/ModuleName/blob/master/README.md'
+    RequiredModules = @()
+    RequiredAssemblies = @()
     NestedModules = @()
-    
+
+    FileList = @('Src', 'ModuleName.psd1', 'ModuleName.psm1')
+
     FunctionsToExport = 'Get-ModuleName'
     AliasesToExport = 'ModuleName'
-    
+
     PrivateData = @{
         PSData = @{
             Tags = @('ModuleName', 'PowerShell', 'Module')

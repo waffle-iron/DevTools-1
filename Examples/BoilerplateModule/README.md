@@ -1,11 +1,11 @@
-﻿# <img src="/Docs/Logo/logo.png" alt="Logo" width="48" align="left"/>  ModuleName
+# <img src="/Docs/Logo/logo.png" alt="Logo" width="48" align="left"/>  ModuleName
 
 [![Appveyor Badge][appveyor-badge]][appveyor-status]
 [![GitHub Release][release-badge]][release-status]
 [![Powershellgallery Badge][psgallery-badge]][psgallery-status]
 
 A `PowerShell` module.
- 
+
 ## Install:
 
 ```powershell

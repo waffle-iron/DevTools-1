@@ -1,72 +1,113 @@
+using namespace System.IO.Compression
+
 Set-StrictMode -Version latest
 
-
 class ModuleManager {
+    [Boolean]$verbose = $false
     
-    [Object]$config
+    [String]$uri = 'https://github.com/g8tguy/DevTools/archive/master.zip'
+    [String]$slug = 'BoilerplateModule'
     
-    [String]$moduleName
-    [String]$moduleURI
+    [String]$projectName
+    [String]$stagingPath
+    
+    [Object]$devTools
     
     [HashTable]$replaceQueue = @{ }
     
     [Array]$files = (
-        'Tests\Unit\Module.Tests.ps1',
+        'Tests\DebugEntryPoint.ps1',
+        'Tests\Unit\Unit.Tests.ps1',
         'appveyor.yml',
+        'Module.psproj',
+        'README.md',
         'Module.psd1',
-        'Module.psm1',
-        'README.md'
+        'Module.psm1'
+        
     )
     
-    [String]$demoModuleURI = '{0}\Examples\BoilerplateModule'
+    [Void]extractBoilerplateModule($inputFile, $outputFolder)
+    {
+        $archive = [ZipFile]::OpenRead($inputFile)
+        
+        foreach ($entry in $archive.Entries)
+        {
+            if ($entry.FullName -match $this.slug)
+            {
+                $outputFile = Join-Path $outputFolder `
+                ($entry.FullName -replace ('^.*?{0}' -f $this.slug), '')
+                
+                $this.devTools.debug('Extract {0}' -f $outputFile)
+                
+                try
+                {
+                    [ZipFileExtensions]::ExtractToFile($entry, $outputFile, $true)
+                } catch
+                {
+                    New-Item -Force $outputFile -ItemType directory
+                }
+            }
+        }
+        $archive.Dispose()
+    }
+    
+    [void]prepareReplaceQueue()
+    {
+        $this.replaceQueue += @{
+            ModuleName = $this.projectName
+            NewGuid = [guid]::newGuid()
+        } + $this.devTools.userSettings.userInfo
+    }
+    
+    [void]copyToModulePath($extractionDirectory)
+    {
+        
+        $log = robocopy $extractionDirectory $this.devTools.modulePath `
+                        /xc /xn /xo /E /NJS /NS /NC /NP /NJH
+        
+        $log = $log |
+        Where-Object { $_ -ne '' } | ForEach-Object{ 'Copy {0}' -f $_.trim() } | out-string
+        $this.devTools.debug($log)
+    }
     
     [Void]create()
     {
+        $this.devTools.warning('Generate {0} module' -f $this.projectName)
         
-        #        if ($devTools.action -eq [Action]::GenerateProject)
-        #        {
-        #            
-        #                        
-        #                        if ($newProject -match '^[\.\w\d_-]+$') {
-        #                            Write-Host $newProject
-        #                        }
-        #                        
-        #            
-        #            $choice = [String]::Empty
-        #            while ($choice -notmatch '[Y|N]')
-        #            {
-        #                Write-Host -ForegroundColor Red -NoNewline `
-        #                ('Create module named: "{0}" ? (Y/N)' -f $newProject)
-        #                
-        #                Read-Host -OutVariable choice
-        #            }
-        #            
-        #            if ($choice -eq 'n') { return }
-        #            
-        #            Write-Host($devTools.projectName)
-        #            Write-Host($devTools.action)
-        #            ([ModuleManager]$devTools.moduleFactory()).create()
-        #            return
-        #        }
-        Write-Host 'zzzzzzz'
-#        $this.demoModuleURI = $this.demoModuleURI -f (Get-Item $PSScriptRoot).parent.fullName
-#        $this.moduleURI = $this.config.getProjectPath($this.moduleName)
-#        
-#        $this.replaceQueue += @{
-#            ModuleName = $this.moduleName
-#            NewGuid = [guid]::newGuid()
-#        } + $this.config.userSettings.userInfo
-#        
-#
-#        $output = xcopy $this.demoModuleURI $this.moduleURI /Isdy
-#        $this.config.warning('Generating {0} module.' -f $this.moduleName)
-#
-#        foreach ($file in $this.files)
-#        {
-#            [IO.FileInfo]$file = '{0}\{1}' -f $this.moduleURI, $file
-#            $this.updateContent($file)
-#            $this.updateFile($file)
-#        }
+        $isValidName = ($this.projectName -match '^[\.\w\d_-]+$')
+        
+        [IO.FileInfo]$repositoryArchive = '{0}\master.zip' -f $this.stagingPath
+        $extractionDirectory = '{0}\{1}' -f $this.stagingPath, $this.slug
+        
+        $this.devTools.warning('Download {0}' -f $this.uri)
+        Invoke-WebRequest -Uri $this.uri -OutFile $repositoryArchive -Verbose:$this.verbose
+        
+        $this.devTools.warning('Extract to {0}' -f $extractionDirectory)
+        
+        if (-not $repositoryArchive.Exists) { throw 'Can''t find {0}' -f $repositoryArchive }
+        
+        $this.extractBoilerplateModule($repositoryArchive, $extractionDirectory)
+        
+        $this.devTools.warning('Process Data')
+        
+        $this.prepareReplaceQueue()
+        
+        
+        foreach ($file in $this.files)
+        {
+            [IO.FileInfo]$file = '{0}\{1}' -f $extractionDirectory, $file
+            
+            $this.devTools.debug('Process {0}' -f $file)
+            
+            $this.updateContent($file)
+            $this.updateFile($file)
+        }
+        
+        $this.devTools.warning('Copy to {0}' -f $this.devTools.modulePath)
+        $this.copyToModulePath($extractionDirectory)
+        
+        Remove-Item -Path ($extractionDirectory, $repositoryArchive) -Recurse `
+                    -ErrorAction Ignore -Verbose:$this.verbose
     }
     
     [Void]updateContent([IO.FileInfo]$file)
@@ -82,16 +123,9 @@ class ModuleManager {
     
     [Void]updateFile([IO.FileInfo]$file)
     {
-        if ($file.extension -match '(psd|psm)')
+        if ($file.extension -match '(psd|psm|psproj)')
         {
-            [IO.FileInfo]$newName = '{0}\{1}{2}' -f (
-                $this.moduleURI,
-                $this.moduleName,
-                $file.extension
-            )
-            
-            if ($newName.exists) { $file.delete(); return }
-            
+            [IO.FileInfo]$newName = $file -replace '\bModule', $this.projectName
             $file.moveTo($newName)
         }
     }
