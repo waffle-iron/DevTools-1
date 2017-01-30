@@ -14,6 +14,7 @@ install:
   - ps: Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.208 -Force | Out-Null
   - ps: Install-Module Pester -RequiredVersion 3.4.3 -Scope CurrentUser -Force
   - ps: Install-Module LibPosh -Scope CurrentUser -Force
+  - ps: Install-Module DevTools -Scope CurrentUser -Force
 
 before_test:
   - ps: Get-InstalledModule | Select-Object -Property Name, Version

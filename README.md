@@ -1,8 +1,13 @@
 # <img src="/Docs/Logo/logo.png" alt="Logo" width="48" align="left"/>  DevTools
 
 [![Appveyor Badge][appveyor-badge]][appveyor-status]
-[![GitHub Release][release-badge]][release-status]
 [![Powershellgallery Badge][psgallery-badge]][psgallery-status]
+[![GitHub Release Badge][release-badge]][release-status]
+[![WMF Badge][wmf-badge]][wmf-status]
+[![StrictMode Badge][strictmode-badge]][strictmode-status]
+[![Discord Badge][discord-badge]][discord-status]
+[![Downloads Badge][downloads-badge]][downloads-status]
+[![Requirements Badge][requirements-badge]][requirements-status]
 
 The main goal of `DevTools` is to streamline the PoweSell modules development, and make it as simple as possible.
 
@@ -20,7 +25,7 @@ The main goal of `DevTools` is to streamline the PoweSell modules development, a
 - Tab completion in ISE and Console.
 - Lots of syntactic sugar.
 - Advanced API with strong typing, inheritance and extensibility.
- 
+
 ## Install:
 
 ```powershell
@@ -38,12 +43,12 @@ Set `apiKey` to your PowerShell Gallery API key
 
 ```
 @{
-    projectsPath = 'D:\MyModules'
-    apiKey = '000000000-0000-0000-0000-000000000000'
+projectsPath = 'D:\MyModules'
+apiKey = '000000000-0000-0000-0000-000000000000'
 }
 ```
 
-## Workflow 
+## Workflow
 
 ```shell
 # Create a GitHub repository "ProjectName" and clone it to "projectsPath"
@@ -53,8 +58,8 @@ ps> git clone git@github.com:{user}/{ProjectName}.git
 # Generate a new "dummy" PS Module with unique GUID.
 ps> dt -GenerateProject ProjectName
 
-# Add the module to the CurrentUser scope 
-# The project will behave like it's installed in the system, 
+# Add the module to the CurrentUser scope
+# The project will behave like it's installed in the system,
 # and any change you make will be immediately propagated.
 ps> dt ProjectName Install
 ```
@@ -80,7 +85,7 @@ The `Release` task will:
 - `Commit` the following changes.
 - Create a new annotated `release tag`.
 - Deploy the `release` to the PowerShell Gallery.
- 
+
 After you push the release to `GitHub`, it will trigger two `AppVeyor` builds,<br>
 one to test the `master`, and the other to deploy the required artifacts back to GitHub.
 
@@ -111,11 +116,11 @@ In order to these tools to work the project, should have the following minimal s
 
 ```
 + ProjectName
-  + Tests
-    - EntyPoint.ps1
-  - ProjectName.psm1
-  - ProjectName.psd1
-  - README.md
++ Tests
+- EntyPoint.ps1
+- ProjectName.psm1
+- ProjectName.psd1
+- README.md
 ```
 ## Actions - Tasks:
 
@@ -165,7 +170,7 @@ dt Release -CustomVersion 1.1.0
 dt Cleanup
 # etc.
 
-# If, while being inside the project directory you'll want to manipulate another 
+# If, while being inside the project directory you'll want to manipulate another
 # project - add that project name as the second parameter:
 dt BumpVersion AnotherProject
 dt Cleanup AnotherProject
@@ -190,14 +195,14 @@ to configure the dependencies add the following data to the module's `PrivateDat
 
 ``` Powershell
 PrivateData = @{
-    DevTools = @{
-        Dependencies = (
-            @{
-                deploy = $false
-                name = 'ColoredText'
-            }
-        )
-    }
+DevTools = @{
+Dependencies = (
+@{
+deploy = $false
+name = 'ColoredText'
+}
+)
+}
 }
 ```
 
@@ -214,7 +219,7 @@ The `devtools` API is very powerful, you can get the basics by reviewing the `pr
 
 ### Entry Point:
 
- After the test environment is ready, the script will launch a:<br>
+After the test environment is ready, the script will launch a:<br>
 `ProjectName\Tests\EntyPoint.ps1`<br>
 In this file, you can do whatever you want to test and debug your app.
 
@@ -251,11 +256,26 @@ powershell -NoProfile .\{whatever}\{whatever}.ps1 -Action Install
 
 
 
-[appveyor-badge]: https://ci.appveyor.com/api/projects/status/9s5wnlc6t0ry20ek?svg=true
+[appveyor-badge]: https://ci.appveyor.com/api/projects/status/github/g8tguy/DevTools?svg=true
 [appveyor-status]: https://ci.appveyor.com/project/g8tguy/devtools
 
-[release-badge]: https://img.shields.io/github/release/g8tguy/DevTools.svg
-[release-status]: https://github.com/g8tguy/DevTools/releases
-
-[psgallery-badge]: https://img.shields.io/badge/PowerShell_Gallery-1.1.8-green.svg
+[psgallery-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/ps-gallery-1.1.8.svg
 [psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.1.8
+
+[release-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/release.svg
+[release-status]: https://github.com/g8tguy/DevTools/releases/latest
+
+[wmf-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/wmf.svg
+[wmf-status]: https://msdn.microsoft.com/en-us/powershell/wmf/readme
+
+[strictmode-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/strictmode.svg
+[strictmode-status]: https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.core/set-strictmode
+
+[discord-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/discord-chat.svg
+[discord-status]: https://discord.gg/qQAmdDK
+
+[downloads-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/downloads132.svg
+[downloads-status]: https://www.powershellgallery.com/packages/DevTools
+
+[requirements-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/req-true.svg
+[requirements-status]: https://github.com/g8tguy/DevTools/blob/master/DevTools.psd1

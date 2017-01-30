@@ -4,6 +4,7 @@
 
 Describe 'DevTools Behavioral Tests' {
     BeforeAll {
+        
         $writeHostMock.invoke()
         
         Set-Location $devTools.userSettings.projectsPath
@@ -11,13 +12,17 @@ Describe 'DevTools Behavioral Tests' {
         $projectName = 'NewProject'
         $projectPath = $devTools.getProjectPath($projectName)
     }
-    
+
     AfterAll {
         Set-Location $state.PWD
-        Remove-Item -ErrorAction Ignore -Path $projectPath -Recurse -Verbose:$verbose
+        $devTools.remove($projectPath)
     }
     
-    Context 'GenerateProject' {
+    Context "GenerateProject $projectName" {
+        
+        It "$projectName not exist" {
+            Test-Path $projectPath | Should Be $false
+        }
         
         $result = powershell -NoProfile dt $projectName GenerateProject
         
@@ -26,5 +31,10 @@ Describe 'DevTools Behavioral Tests' {
             $result[1] | Should Match ('{0} 1.0.0 GenerateProject' -f $projectName)
         }
         
+        It "$projectName directory exists" { Test-Path $projectPath | Should Be $true }
+    }
+    
+    Context "Test DevTools on $projectName" {
+
     }
 }

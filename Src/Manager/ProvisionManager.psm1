@@ -33,6 +33,7 @@ class ProvisionManager
         $this.loadDependencies()
     }
     
+    
     [Void]loadDependencies()
     {
         $this.dependencies = (@{ deploy = $true; name = $this.projectName })
@@ -43,31 +44,10 @@ class ProvisionManager
     
     [Void]processDependencies([Scriptblock]$callback)
     {
-        $this.dependencies.ForEach{ if ($_.deploy) { $callback.invoke() } }
+        $this.dependencies.where({ $_ -ne $null }).forEach{ if ($_.deploy) { $callback.invoke() } }
     }
     
-    [String]bundle()
-    {
-        $dt = $this.devTools
-        
-        $bundleId = [guid]::newGuid()
-        
-        $dt.warning('Staging bundle {0}' -f $bundleId)
-        
-        foreach ($file in -split $dt.moduleSettings.fileList)
-        {
-            [IO.FileInfo]$fileInfo = '{0}\{1}' -f $dt.modulePath, $file
-            
-            $destination = '{0}\{1}\{2}' -f $dt.stagingPath, $bundleId, $file
-            
-            if ($fileInfo.exists -or $fileInfo.Attributes -eq [IO.FileAttributes]::Directory)
-            {
-                Copy-Item $fileInfo $destination -recurse
-            }
-        }
-        
-        return ('{0}\{1}' -f $dt.stagingPath, $bundleId)
-    }
+
     
     [Void]cleanup()
     {
@@ -133,6 +113,29 @@ class ProvisionManager
         Publish-Module -Verbose -Name $this.project.FullName -NuGetApiKey $apiKey
     }
     
+    [String]bundle()
+    {
+        $dt = $this.devTools
+        
+        $bundleId = [guid]::newGuid()
+        
+        $dt.warning('Staging bundle {0}' -f $bundleId)
+        
+        foreach ($file in -split $dt.moduleSettings.fileList)
+        {
+            [IO.FileInfo]$fileInfo = '{0}\{1}' -f $dt.modulePath, $file
+            
+            $destination = '{0}\{1}\{2}' -f $dt.stagingPath, $bundleId, $file
+            
+            if ($fileInfo.exists -or $fileInfo.Attributes -eq [IO.FileAttributes]::Directory)
+            {
+                Copy-Item $fileInfo $destination -recurse
+            }
+        }
+        
+        return ('{0}\{1}' -f $dt.stagingPath, $bundleId)
+    }
+    
     [Void]gitCommand([Array]$arguments)
     {
         $ps = new-object Process
@@ -172,3 +175,28 @@ class ProvisionManager
             ))
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

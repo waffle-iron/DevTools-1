@@ -4,6 +4,7 @@ Set-StrictMode -Version latest
 
 class ModuleManager {
     [Boolean]$verbose = $false
+    [Boolean]$useCache = $true
     
     [String]$uri = 'https://github.com/g8tguy/DevTools/archive/master.zip'
     [String]$slug = 'BoilerplateModule'
@@ -80,7 +81,11 @@ class ModuleManager {
         $extractionDirectory = '{0}\{1}' -f $this.stagingPath, $this.slug
         
         $this.devTools.warning('Download {0}' -f $this.uri)
-        Invoke-WebRequest -Uri $this.uri -OutFile $repositoryArchive -Verbose:$this.verbose
+        
+        if (-not $this.useCache)
+        {
+            Invoke-WebRequest -Uri $this.uri -OutFile $repositoryArchive -Verbose:$this.verbose
+        }
         
         $this.devTools.warning('Extract to {0}' -f $extractionDirectory)
         
@@ -106,8 +111,12 @@ class ModuleManager {
         $this.devTools.warning('Copy to {0}' -f $this.devTools.modulePath)
         $this.copyToModulePath($extractionDirectory)
         
-        Remove-Item -Path ($extractionDirectory, $repositoryArchive) -Recurse `
-                    -ErrorAction Ignore -Verbose:$this.verbose
+        $this.devTools.remove($extractionDirectory)
+        
+        if (-not $this.useCache)
+        {
+            $this.devTools.remove($repositoryArchive)
+        }
     }
     
     [Void]updateContent([IO.FileInfo]$file)

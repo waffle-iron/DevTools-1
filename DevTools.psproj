@@ -30,7 +30,9 @@
     <File Build="2" Shared="False">Tests\Unit\Behavioral.Tests.ps1</File>
     <File Build="2" Shared="False">Tests\Unit\SharedFixtures.ps1</File>
     <File Build="2" Shared="False">Src\ArgumentCompleter.ps1</File>
+    <File Build="2">Src\Manager\BadgeManager.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
-  <PrimaryFile>Tests\Integration\WorkFlow.ps1</PrimaryFile>
+  <PrimaryFile>
+  </PrimaryFile>
 </Project>

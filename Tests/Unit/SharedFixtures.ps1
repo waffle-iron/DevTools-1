@@ -1,7 +1,7 @@
 ﻿using module DevTools
 using namespace DevTools
 
-$global:verbose = $true
+$global:verbose = $false
 
 $global:result = [String]::Empty
 
@@ -19,10 +19,16 @@ $writeHostMock = {
          –ParameterFilter { $ForegroundColor –ne 'Blue' } `
          -CommandName Write-Host -MockWith {
         
-
-        
-        if ($verbose) { Microsoft.PowerShell.Utility\Write-Host $text -ForegroundColor Blue }
-        
+        if ($verbose)
+        {
+            $host.UI.WriteLine(
+                [ConsoleColor]::Black,
+                [ConsoleColor]::Blue,
+                'PESTER VERBOSE: {0}' -f $text
+            )
+            
+           # Microsoft.PowerShell.Utility\Write-Host $text -ForegroundColor Blue
+        }
         $global:result += $text
     }
 }

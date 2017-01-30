@@ -3,6 +3,7 @@
 using module .\Enums.psm1
 
 using module .\Manager\AppVeyorManager.psm1
+using module .\Manager\BadgeManager.psm1
 using module .\Manager\ProvisionManager.psm1
 using module .\Manager\VersionManager.psm1
 using module .\Manager\ModuleManager.psm1
@@ -13,7 +14,7 @@ Set-StrictMode -Version latest
 
 class DynamicConfig {
     
-    [Boolean]$verbose = $true
+    [Boolean]$verbose = $false
     
     [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
     
@@ -27,6 +28,7 @@ class DynamicConfig {
     [String]$modulesPath = 'Documents'
     [String]$modulePath
     [String]$testsPath = '{0}\Tests'
+    [String]$readmePath = '{0}\README.md'
     
     [IO.FileInfo]$psdFile = '{0}\{1}.psd1'
     [Hashtable]$moduleSettings
@@ -39,6 +41,7 @@ class DynamicConfig {
     [ProvisionManager]$provision
     [VersionManager]$version
     [ModuleManager]$module
+    [BadgeManager]$badge
     
     $ciProvider = [AppVeyorManager]
     [Boolean]$ci = $env:CI
@@ -61,6 +64,12 @@ class DynamicConfig {
     [Array]getProjects()
     {
         return (Get-ChildItem -Directory $this.userSettings.projectsPath).forEach{ $_.name }
+    }
+    
+    [Void] remove($object)
+    {
+        Remove-Item -Path $object -Recurse `
+                    -ErrorAction Ignore -Verbose:$this.verbose
     }
     
     DynamicConfig()
@@ -94,6 +103,9 @@ class DynamicConfig {
         $this.modulePath = $this.getProjectPath($this.projectName)
         
         $this.testsPath = $this.testsPath -f $this.modulePath
+        
+        $this.readmePath = $this.readmePath -f $this.modulePath
+        
         $this.psdFile = $this.psdFile -f $this.modulePath, $this.projectName
         
         if ($this.psdFile.exists) { $this.moduleSettings = Import-PowerShellDataFile $this.psdFile }
@@ -127,15 +139,31 @@ class DynamicConfig {
         return $this.version
     }
     
-    [ModuleManager]ModuleFactory()
+    [ModuleManager]moduleFactory()
     {
         $this.module = [ModuleManager]@{
             devTools = $this
+            verbose = $this.verbose
             projectName = $this.projectName
             stagingPath = $this.stagingPath
-            verbose = $this.verbose
+            
         }
         return $this.module
+    }
+    
+    [BadgeManager]badgeFactory()
+    {
+        $this.badge = [BadgeManager]@{
+            devTools = $this
+            verbose = $this.verbose
+            projectName = $this.projectName
+            stagingPath = $this.stagingPath
+            modulePath = $this.modulePath
+            readmePath = $this.readmePath
+            version = $this.version.version
+            requiredModules = $this.moduleSettings.RequiredModules
+        }
+        return $this.badge
     }
     
     [String]getProjectPath($moduleName)

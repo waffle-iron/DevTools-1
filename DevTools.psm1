@@ -4,6 +4,7 @@ using module .\Src\Enums.psm1
 using module .\Src\DynamicConfig.psm1
 
 using module .\Src\Manager\AppVeyorManager.psm1
+using module .\Src\Manager\BadgeManager.psm1
 using module .\Src\Manager\ModuleManager.psm1
 using module .\Src\Manager\ProvisionManager.psm1
 using module .\Src\Manager\VersionManager.psm1
@@ -39,6 +40,7 @@ function Use-DevTools
         [ProvisionManager]$provision = $devTools.provisionFactory()
         [VersionManager]$version = $devTools.versionFactory()
         [ModuleManager]$module = $devTools.moduleFactory()
+        [BadgeManager]$badge = $devTools.badgeFactory()
         
         $devTools.info($devTools.getTitle())
         
@@ -48,11 +50,13 @@ function Use-DevTools
             Default { $version.next($devTools.versionType) }
         }
         
+        $badge.updateBadgs()
+        return
         switch ($action)
         {
             ([Action]::GenerateProject) { $module.create() }
+            ([Action]::Install){ $provision.install() }
             ([Action]::Cleanup) { $provision.cleanup() }
-            ([Action]::Install) { $provision.install() }
             ([Action]::CopyToCurrentUserModules) { $provision.copy() }
             ([Action]::BumpVersion) { $provision.bumpVersion($version, $nextVersion) }
             ([Action]::Publish) { $provision.publish() }

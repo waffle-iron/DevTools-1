@@ -8,10 +8,14 @@
     Description = 'A set of tools aiming to help develop, deploy and test the PowerShell modules.'
     PowerShellVersion = '5.0'
     HelpInfoURI = 'https://github.com/g8tguy/DevTools/blob/master/README.md'
-    RequiredModules = @('LibPosh')
+    
+    RequiredModules = @(@{ ModuleName = 'LibPosh'; RequiredVersion = '1.0.7' }, 'Debug')
+    
     RequiredAssemblies = @('System.IO.Compression.FileSystem')
+    
     NestedModules = @(
         'Src\Manager\AppVeyorManager.psm1',
+        'Src\Manager\BadgeManager.psm1',
         'Src\Manager\ModuleManager.psm1',
         'Src\Manager\ProvisionManager.psm1',
         'Src\Manager\VersionManager.psm1',
