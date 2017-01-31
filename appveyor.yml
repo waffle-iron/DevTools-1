@@ -6,30 +6,51 @@ version: '{build}'
 skip_commits:
   message: /(readme|docs)/
 
+environment:
+  nuGetPath: $(ProgramFiles)\packageManagement\ProviderAssemblies\nuget
+  UserModules: $(USERPROFILE)\Documents\WindowsPowerShell\Modules
+  
+cache:
+  - '%nuGetPath%'
+  - '%UserModules% -> appveyor.yml'
+  
+  
 init:
   - ps: ('POSH {0}' -f $psVersionTable.psVersion)
   - WhoAmI
-
+  
 install:
-  - ps: Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.208 -Force | Out-Null
-  - ps: Install-Module Pester -RequiredVersion 3.4.3 -Scope CurrentUser -Force
+ 
+  - ps: Get-ChildItem $env:UserModules | ForEach-Object{ $_.FullName }
+    
+  - ps: if (-not (Test-Path $env:nuGetPath)) {
+            Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.208 -Force | Out-Null
+        }
+  
+  - ps: if (-not (Test-Path $env:UserModules\Pester)) {
+            Install-Module Pester -RequiredVersion 3.4.3 -Scope CurrentUser -Force
+        }
+  
   - ps: Install-Module LibPosh -Scope CurrentUser -Force
-  - ps: Install-Module DevTools -Scope CurrentUser -Force
+
 
 before_test:
-  - ps: Get-InstalledModule | Select-Object -Property Name, Version
+  - ps: Get-InstalledModule  | Format-Table -HideTableHeaders -Property Name, Version
   - cmd: set PS_PROFILE=%userprofile%\Documents\WindowsPowerShell\Modules\%APPVEYOR_PROJECT_NAME%
-  - cmd: mklink /J %PS_PROFILE% %APPVEYOR_BUILD_FOLDER%
+  - cmd: IF Not Exist %PS_PROFILE% mklink /J %PS_PROFILE% %APPVEYOR_BUILD_FOLDER%
 
 test_script:
   - ps: |
-        dt Install
+     #   dt Install
         dt Test
      #   dt Build
      #   dt Cleanup
 
+after_test:
+  - ps: Remove-Item -Path $env:UserModules\$env:APPVEYOR_PROJECT_NAME -Recurse -Force -Verbose
+  
 build: off
-
+  
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: $(APPVEYOR_PROJECT_NAME) release $(APPVEYOR_REPO_TAG_NAME)
@@ -41,3 +62,10 @@ deploy:
   prerelease: false
   on:
     appveyor_repo_tag: true
+
+# https://discordapp.com/api/webhooks/{SecureId}/slack
+# https://discordapp.com/api/webhooks/{SecureId}/github
+notifications:
+  - provider: Slack
+    incoming_webhook:
+      secure: WslMACA0ED0I2ETVid7b6+vtoRlTaBRMo3i5xxJitRKq7T2e+jy9fLrwPmwsT9RcYdzr2a6yZRFH9TT8qCnOYerD/eFCGRSe+9xRNNJQU8r6S8urWkaLJ2hMnolw5UQXQu3RvNMkKDq1f+1stoZDi1u8tVE97yNKi1vKsOunzEqkT92TwLfIV+6USGsLq6ig

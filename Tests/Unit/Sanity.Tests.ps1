@@ -3,15 +3,16 @@
 . ('{0}\Unit\SharedFixtures' -f $devTools.testsPath)
 
 Describe 'DevTools Sanity Check' {
+    
     BeforeAll {
-        $writeHostMock.invoke()
-        
+        $pesterShared.mocks.__writeHost.invoke()
         Set-Location $devTools.modulePath
     }
     
-    AfterAll { Set-Location $state.PWD }
+    AfterAll { Set-Location $pesterShared.state.PWD }
     
     Context 'AppVeyor Environment [Self Test]' {
+        
         BeforeAll {
             if (-not $devTools.ci)
             {
@@ -21,34 +22,37 @@ Describe 'DevTools Sanity Check' {
             }
         }
         
-        AfterAll {
-            $restoreState.invoke()
-        }
+        AfterAll { $pesterShared.stateRestore.invoke() }
         
-        InModuleScope 'AppVeyorManager' {
+        InModuleScope AppVeyorManager {
             
-            Function Add-AppveyorMessage { }
+            
             Function Push-AppveyorArtifact { }
             
-            Mock Add-AppveyorMessage -MockWith { }
-            Mock Push-AppveyorArtifact -MockWith { }
+            InModuleScope ILogger {
+                Function Add-AppveyorMessage { }
+                Mock -ModuleName ILogger Add-AppveyorMessage -MockWith { }
+                
+            }
             
-            $global:result = @()
+            Mock Push-AppveyorArtifact -MockWith { }
             
             dt Install
             
+            It 'Calls Add-AppveyorMessage' {
+                Assert-MockCalled -ModuleName ILogger Add-AppveyorMessage -Scope Context
+            }
+            
             It 'Action should be "Install"' {
-                $result[0] | Should Match 'Install'
-                $result[1] | Should Be 'DevTools already installed.'
+                
+                $pesterShared.result.nextLine() | Should Match 'Install'
             }
             
             It 'Should be already installed' {
-                $result[1] | Should Be 'DevTools already installed.'
+                $pesterShared.result.nextLine() | Should Be 'DevTools already installed.'
             }
             
-            It 'Calls Add-AppveyorMessage' {
-                Assert-MockCalled Add-AppveyorMessage -Scope Context;
-            }
+            $pesterShared.result.clear()
             
             It 'Calls Push-AppveyorArtifact on a "Tag" branch' {
                 $env:APPVEYOR_REPO_TAG = $true
@@ -65,54 +69,53 @@ Describe 'DevTools Sanity Check' {
     }
     
     Context  'Local Environment [Self Test]' {
+        
+        AfterAll { $pesterShared.stateRestore.invoke() }
+        
         BeforeAll {
             $env:CI = $null
             $env:APPVEYOR_BUILD_FOLDER = $null
             
             $content = '@{
-                projectsPath = "{projectsPath}"
-                psGalleryApiKey = $null
-            
-                userInfo = (
-                    @{
-                        gitHubSlug = $null
-                        userName = $null
-                        gitHubAuthToken = $null
-                    }
-                )
-            }' -replace '{projectsPath}', $devTools.ciProvider::projectsPath
+                    projectsPath = "{projectsPath}"
+                    psGalleryApiKey = $null
+                
+                    userInfo = (
+                        @{
+                            gitHubSlug = $null
+                            userName = $null
+                            gitHubAuthToken = $null
+                        }
+                    )
+                }' -replace '{projectsPath}', $devTools.ciProvider::projectsPath
             
             [IO.FileInfo]$file = "$env:USERPROFILE\dev_tools_config.psd1"
             
             if ($env:APPVEYOR -and $file.exists -eq $false)
             {
                 It '$appVeyor should be oftype AppVeyorManager' {
-                    $appVeyor | Should be 'AppVeyorManager'
+                    $appVeyor | Should Be 'AppVeyorManager'
                 }
                 
                 $content | Set-Content $file
             } else
             {
                 It '$appVeyor should be $null' {
-                    $appVeyor | Should be $null
+                    $appVeyor | Should Be $null
                 }
             }
         }
         
-        AfterAll {
-            $restoreState.invoke()
-        }
-        
-        $global:result = @()
+        $pesterShared.result.clear()
         
         dt Install
         
         It 'Action should be "Install"' {
-            $result[0] | Should Match 'Install'
+            $pesterShared.result.nextLine() | Should Match 'Install'
         }
         
         It 'Should be already installed' {
-            $result[1] | Should Be 'DevTools already installed.'
+            $pesterShared.result.nextLine() | Should Be 'DevTools already installed.'
         }
         
         It 'Build should throw' {

@@ -1,10 +1,13 @@
-﻿Set-StrictMode -Version latest
+﻿using module .\IManager.psm1
 
 
-class ProvisionManager
+Set-StrictMode -Version latest
+
+
+class ProvisionManager: IManager
 {
     [IO.DirectoryInfo]$project
-    [Object]$devTools
+
     [String]$entryPoint = '{0}\{1}\Tests\PesterEntryPoint'
     [String]$modulesPath
     [String]$repository
@@ -15,7 +18,7 @@ class ProvisionManager
     
     ProvisionManager([HashTable]$data)
     {
-        $this.devTools = $data.config
+        $this.devTools = $data.devTools
         $this.projectName = $data.project
         
         $this.modulesPath = $this.devTools.modulesPath
@@ -74,7 +77,7 @@ class ProvisionManager
                 $destination = $mask -f $this.modulesPath, $_.name
                 $source = $mask -f $this.repository, $_.name
                 $output = cmd /C mklink /J $destination $source
-                if ($output -eq $null)
+                if ([String]$output -eq $null)
                 {
                     $this.devTools.warning("$($_.name) already installed.")
                     return

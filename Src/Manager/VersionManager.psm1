@@ -1,18 +1,19 @@
-﻿using module ..\Enums.psm1
+﻿using module .\IManager.psm1
+using module ..\Enums.psm1
 
 
 Set-StrictMode -Version latest
 
 
-class VersionManager
+class VersionManager: IManager
 {
-    [Object]$devTools
+
     [String]$regex = "ModuleVersion\s=\s'(?<version>.+)'"
     [Version]$version
     
     VersionManager($data)
     {
-        $this.devTools = $data.config
+        $this.devTools = $data.devTools
         $this.version = $this.getVersion()
     }
     

@@ -1,8 +1,12 @@
 using namespace System.IO.Compression
 
+using module .\IManager.psm1
+
+
 Set-StrictMode -Version latest
 
-class ModuleManager {
+class ModuleManager: IManager
+{
     [Boolean]$verbose = $false
     [Boolean]$useCache = $true
     
@@ -11,8 +15,6 @@ class ModuleManager {
     
     [String]$projectName
     [String]$stagingPath
-    
-    [Object]$devTools
     
     [HashTable]$replaceQueue = @{ }
     
@@ -76,6 +78,8 @@ class ModuleManager {
         $this.devTools.warning('Generate {0} module' -f $this.projectName)
         
         $isValidName = ($this.projectName -match '^[\.\w\d_-]+$')
+        
+        if (-not $isValidName) {throw 'Invalid Name'}
         
         [IO.FileInfo]$repositoryArchive = '{0}\master.zip' -f $this.stagingPath
         $extractionDirectory = '{0}\{1}' -f $this.stagingPath, $this.slug

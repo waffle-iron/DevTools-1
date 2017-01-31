@@ -1,10 +1,11 @@
-﻿Set-StrictMode -Version latest
+﻿using module .\IManager.psm1
 
 
-class AppVeyorManager
+Set-StrictMode -Version latest
+
+
+class AppVeyorManager: IManager
 {
-    [Object]$devTools
-    
     static [String]$projectsPath = [IO.Directory]::GetParent($env:APPVEYOR_BUILD_FOLDER)
     static [String]$apiKey = $env:psGalleryKey
     

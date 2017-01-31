@@ -1,0 +1,5 @@
+class IManager
+{
+    [Object]$devTools
+    
+}

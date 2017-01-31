@@ -1,4 +1,4 @@
-﻿Register-ArgumentCompleter -CommandName dt -ScriptBlock {
+﻿Register-ArgumentCompleter -CommandName ('dt', 'Use-DevTools') -ScriptBlock {
     param (
         $wordToComplete,
         $commandAst,
@@ -7,7 +7,9 @@
     
     $ast = (-split $commandAst)
     $count = $ast.length
-    $last = $ast[- $true]
+    $last = $ast[-1]
+    
+    if ($last) { }
     
     $methods = [Enum]::GetValues([Action])
     

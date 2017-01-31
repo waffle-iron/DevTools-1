@@ -1,11 +1,27 @@
-﻿using module DevTools
+﻿using namespace System.Collections
+
+using module DevTools
 using namespace DevTools
 
-$global:verbose = $false
 
-$global:result = [String]::Empty
+class Text: ArrayList
+{
+    [Int]$current = -1
+    [Void]clear() { $this.current = -1; ([ArrayList]$this).clear() }
+    [String]nextLine() { return $this[++$this.current] }
+    [String]previousLine() { return $this[--$this.current] }
+}
 
-[HashTable]$state = @{
+
+Set-Variable pesterShared @{ } -Scope Global
+
+
+$pesterShared.verbose = $true
+
+$pesterShared.result = New-Object Text
+$pesterShared.resulta = @()
+
+$pesterShared.state = @{
     CI = $env:CI
     PLATFORM = $env:PLATFORM
     APPVEYOR_BUILD_FOLDER = $env:APPVEYOR_BUILD_FOLDER
@@ -14,29 +30,40 @@ $global:result = [String]::Empty
     PWD = $pwd
 }
 
-$writeHostMock = {
-    Mock -ModuleName DynamicConfig `
-         –ParameterFilter { $ForegroundColor –ne 'Blue' } `
-         -CommandName Write-Host -MockWith {
-        
-        if ($verbose)
-        {
-            $host.UI.WriteLine(
-                [ConsoleColor]::Black,
-                [ConsoleColor]::Blue,
-                'PESTER VERBOSE: {0}' -f $text
-            )
-            
-           # Microsoft.PowerShell.Utility\Write-Host $text -ForegroundColor Blue
-        }
-        $global:result += $text
-    }
+$pesterShared.stateRestore = {
+    $env:CI = $pesterShared.state.CI
+    $env:PLATFORM = $pesterShared.state.PLATFORM
+    $env:APPVEYOR_BUILD_FOLDER = $pesterShared.state.APPVEYOR_BUILD_FOLDER
+    $env:APPVEYOR_REPO_TAG = $pesterShared.state.APPVEYOR_REPO_TAG
+    $env:APPVEYOR_REPO_BRANCH = $pesterShared.state.APPVEYOR_REPO_BRANCH
 }
 
-$restoreState = {
-    $env:CI = $state.CI
-    $env:APPVEYOR_BUILD_FOLDER = $state.APPVEYOR_BUILD_FOLDER
-    $env:APPVEYOR_REPO_TAG = $state.APPVEYOR_REPO_TAG
-    $env:APPVEYOR_REPO_BRANCH = $state.APPVEYOR_REPO_BRANCH
-    $env:PLATFORM = $state.PLATFORM
+$pesterShared.mocks = @{
+    writeHost = {
+        function global:Write-Host
+        {
+            param ($text)
+            if ($pesterShared.verbose) { Microsoft.PowerShell.Utility\Write-Host $text @args }
+            $pesterShared.result.add($text)
+        }
+    }
+    writeHostAfterAll = { Remove-Item function:Write-Host }
+    __writeHost = {
+        Mock -ModuleName ILogger `
+             –ParameterFilter { $ForegroundColor –ne [ConsoleColor]::Blue } `
+             -CommandName Write-Host -MockWith {
+            
+            param ([String]$object)
+            
+            if ($pesterShared.verbose)
+            {
+                $host.UI.WriteLine(
+                    [ConsoleColor]::Black,
+                    [ConsoleColor]::Blue,
+                    'PESTER VERBOSE: {0}' -f $object
+                )
+            }
+            $pesterShared.result.add($object)
+        }
+    }
 }

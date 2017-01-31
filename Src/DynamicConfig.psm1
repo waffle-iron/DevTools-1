@@ -1,7 +1,10 @@
-﻿using module LibPosh
+﻿
+
+using module LibPosh
 
 using module .\Enums.psm1
 
+using module .\Manager\IManager.psm1
 using module .\Manager\AppVeyorManager.psm1
 using module .\Manager\BadgeManager.psm1
 using module .\Manager\ProvisionManager.psm1
@@ -9,12 +12,16 @@ using module .\Manager\VersionManager.psm1
 using module .\Manager\ModuleManager.psm1
 
 
+using module .\Logger\ILogger.psm1
+
 Set-StrictMode -Version latest
 
 
 class DynamicConfig {
     
     [Boolean]$verbose = $false
+    
+    [ILogger]$logger
     
     [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
     
@@ -37,11 +44,11 @@ class DynamicConfig {
     [Action]$action
     [VersionComponent]$versionType
     
-    [AppVeyorManager]$appVeyor
-    [ProvisionManager]$provision
-    [VersionManager]$version
-    [ModuleManager]$module
-    [BadgeManager]$badge
+    [IManager]$appVeyor
+    [IManager]$provision
+    [IManager]$version
+    [IManager]$module
+    [IManager]$badge
     
     $ciProvider = [AppVeyorManager]
     [Boolean]$ci = $env:CI
@@ -56,10 +63,15 @@ class DynamicConfig {
         Write-Host $text -ForegroundColor $color
     }
     
-    [Void]info($text) { $this.log($text, [ConsoleColor]::DarkGreen, 'Information') }
-    [Void]warning($text) { $this.log($text, [ConsoleColor]::Yellow, 'Warning') }
-    [Void]error($text) { $this.log($text, [ConsoleColor]::Red, 'Error') }
-    [Void]debug($text) { $this.log($text, [ConsoleColor]::DarkYellow, 'Error') }
+    #    [Void]info($text) { $this.log($text, [ConsoleColor]::DarkGreen, 'Information') }
+    #    [Void]warning($text) { $this.log($text, [ConsoleColor]::Yellow, 'Warning') }
+    #    [Void]error($text) { $this.log($text, [ConsoleColor]::Red, 'Error') }
+    #    [Void]debug($text) { $this.log($text, [ConsoleColor]::DarkYellow, 'Error') }
+    
+    [Void]info($text) { $this.logger.information($text) }
+    [Void]warning($text) { $this.logger.warning($text) }
+    [Void]error($text) { $this.logger.error($text) }
+    [Void]debug($text) { $this.logger.debug($text) }
     
     [Array]getProjects()
     {
@@ -74,6 +86,14 @@ class DynamicConfig {
     
     DynamicConfig()
     {
+        
+        [ILogger]$this.logger = New-Object Logger
+        
+        $this.logger.appenders.add([ColoredConsoleAppender]@{ })
+        
+        
+        # $this.logger.information([Environment]::NewLine + "hello" + [Environment]::NewLine)
+        
         $this.modulesPath = ($Env:psModulePath.split(';') |
             Where-Object { $_ -match $this.modulesPath }) | Select-Object -Unique
     }
@@ -115,19 +135,20 @@ class DynamicConfig {
     
     [AppVeyorManager]appVeyorFactory()
     {
-        $this.appVeyor = switch ([Boolean]$this.ci)
+        if ([Boolean]$this.ci)
         {
-            true{ [AppVeyorManager]@{ devTools = $this } }
-            false{ $null }
+            $this.appVeyor = [AppVeyorManager]@{
+                devTools = $this
+            }
+            $this.logger.appenders.add([AppVeyorAppender]@{ })
         }
-        
         return $this.appVeyor
     }
     
     [ProvisionManager]provisionFactory()
     {
         $this.provision = [ProvisionManager]@{
-            config = $this
+            devTools = $this
             project = $this.projectName
         }
         return $this.provision
@@ -135,7 +156,9 @@ class DynamicConfig {
     
     [VersionManager]versionFactory()
     {
-        $this.version = [VersionManager]@{ config = $this }
+        $this.version = [VersionManager]@{
+            devTools = $this
+        }
         return $this.version
     }
     
@@ -161,7 +184,7 @@ class DynamicConfig {
             modulePath = $this.modulePath
             readmePath = $this.readmePath
             version = $this.version.version
-            requiredModules = $this.moduleSettings.RequiredModules
+            requiredModules = Get-Property $this.moduleSettings RequiredModules
         }
         return $this.badge
     }
@@ -186,11 +209,7 @@ class DynamicConfig {
     
     [Object]dynamicParameters([ref]$boundParameters)
     {
-        #$generateProject = $boundParameters.value['generateProject']
-        
         $dpf = New-Object LibPosh.DynamicParameter
-        
-        $runtimeParameterDictionary = $dpf.runtimeParameterDictionary
         
         # Project
         $projectField = 'Project'

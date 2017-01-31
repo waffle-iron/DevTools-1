@@ -9,6 +9,10 @@
     <Folder>Tests\Unit</Folder>
     <Folder>Examples</Folder>
     <Folder>Src\Manager</Folder>
+    <Folder>Examples\BoilerplateModule\Tests\Unit</Folder>
+    <Folder>Examples\BoilerplateModule</Folder>
+    <Folder>Examples\BoilerplateModule\Tests</Folder>
+    <Folder>Src\Logger</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -31,6 +35,11 @@
     <File Build="2" Shared="False">Tests\Unit\SharedFixtures.ps1</File>
     <File Build="2" Shared="False">Src\ArgumentCompleter.ps1</File>
     <File Build="2">Src\Manager\BadgeManager.psm1</File>
+    <File Build="2" Shared="False">Examples\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
+    <File Build="2" Shared="False">Examples\BoilerplateModule\Tests\Unit\Unit.Tests.ps1</File>
+    <File Build="2">Src\Manager\IManager.psm1</File>
+    <File Build="2">Src\Logger\ILogger.psm1</File>
+    <File Build="2">Src\Logger\Logger.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

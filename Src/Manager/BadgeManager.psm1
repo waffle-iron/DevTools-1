@@ -1,8 +1,11 @@
 using namespace System.Management.Automation
 
-class BadgeManager {
-    
-    [Object]$devTools
+
+using module .\IManager.psm1
+
+
+class BadgeManager: IManager
+{
     [Boolean]$verbose
     
     [String]$projectName
@@ -21,18 +24,19 @@ class BadgeManager {
     
     [void]updateBadgs()
     {
-        $readme = Get-Content $this.readmePath
-        
-        $this.psGalleryURI = '{0}/{1}' -f $this.psGalleryURI, $this.projectName
-        $this.badgesPath = $this.badgesPath -f $this.modulePath
-        
-        $readme = $this.updatePSGalleryDownloadsCountBadge($readme, $this.getPSGalleryDownloadsCount())
-        
-        $readme = $this.updatePSGalleryBadge($readme, $this.getPSGalleryBadge())
-        
-        $readme = $this.updateRequiredModulesBadge($readme, $this.verifyRequiredModules())
-
-        $readme.trim() | Set-Content $this.readmePath
+        Write-Host 11
+#        $readme = Get-Content $this.readmePath
+#        
+#        $this.psGalleryURI = '{0}/{1}' -f $this.psGalleryURI, $this.projectName
+#        $this.badgesPath = $this.badgesPath -f $this.modulePath
+#        
+#        $readme = $this.updatePSGalleryDownloadsCountBadge($readme, $this.getPSGalleryDownloadsCount())
+#        
+#        $readme = $this.updatePSGalleryBadge($readme, $this.getPSGalleryBadge())
+#        
+#        $readme = $this.updateRequiredModulesBadge($readme, $this.verifyRequiredModules())
+#        
+#        $readme.trim() | Set-Content $this.readmePath
     }
     
     [Object]updatePSGalleryDownloadsCountBadge($readme, $downloadsCount)
@@ -76,7 +80,7 @@ class BadgeManager {
             if ($requiredVersion = Get-Property $module RequiredVersion)
             {
                 $latest = (Find-Module -Name $name).version
-
+                
                 $message = '"{0}" required {1}, latest {2}' -f $name, $requiredVersion, $latest
                 
                 $importance = switch ($latest -eq $requiredVersion)
@@ -159,7 +163,7 @@ class BadgeManager {
             $uri = '{0}/Downloads-{1}-green.svg' -f $this.shieldsAPI, $downloads
             
             $this.devTools.warning('Download "Downloads" badge')
-            $page = $this.download($uri, $outFile)
+            $this.download($uri, $outFile)
         }
     }
 }

@@ -9,6 +9,10 @@
 [![Downloads Badge][downloads-badge]][downloads-status]
 [![Requirements Badge][requirements-badge]][requirements-status]
 
+
+## UNDER DEVELOPMENT - lots of new features are coming
+
+
 The main goal of `DevTools` is to streamline the PoweSell modules development, and make it as simple as possible.
 
 ## Features:
@@ -274,8 +278,8 @@ powershell -NoProfile .\{whatever}\{whatever}.ps1 -Action Install
 [discord-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/discord-chat.svg
 [discord-status]: https://discord.gg/qQAmdDK
 
-[downloads-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/downloads132.svg
+[downloads-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/downloads136.svg
 [downloads-status]: https://www.powershellgallery.com/packages/DevTools
 
-[requirements-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/req-true.svg
+[requirements-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/req-false.svg
 [requirements-status]: https://github.com/g8tguy/DevTools/blob/master/DevTools.psd1

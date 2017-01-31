@@ -9,7 +9,10 @@
     PowerShellVersion = '5.0'
     HelpInfoURI = 'https://github.com/g8tguy/DevTools/blob/master/README.md'
     
-    RequiredModules = @(@{ ModuleName = 'LibPosh'; RequiredVersion = '1.0.7' }, 'Debug')
+    RequiredModules = @(
+        @{ ModuleName = 'LibPosh'; RequiredVersion = '1.0.7' },
+        @{ ModuleName = 'Pester'; RequiredVersion = '3.4.3' }
+    )
     
     RequiredAssemblies = @('System.IO.Compression.FileSystem')
     

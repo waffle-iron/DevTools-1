@@ -1,22 +1,29 @@
 using namespace System.Management.Automation
 
+using module LibPosh
+
+
+
+
 using module .\Src\Enums.psm1
 using module .\Src\DynamicConfig.psm1
 
-using module .\Src\Manager\AppVeyorManager.psm1
-using module .\Src\Manager\BadgeManager.psm1
-using module .\Src\Manager\ModuleManager.psm1
-using module .\Src\Manager\ProvisionManager.psm1
-using module .\Src\Manager\VersionManager.psm1
-
+using module .\Src\Manager\IManager.psm1
 
 Set-StrictMode -Version latest
 
-[DynamicConfig]$global:devTools = $null
+
+
+#Param ()
+
+[DynamicConfig]$script:devTools = $null
+
+
 
 function Use-DevTools
 {
     [CmdletBinding()]
+    [System.Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '', Scope = 'Function', Target = 'Use-DevTools')]
     param
     (
         [Switch]$WhatIf,
@@ -26,7 +33,7 @@ function Use-DevTools
     
     DynamicParam
     {
-        $global:devTools = $devTools = New-Object DynamicConfig
+        $script:devTools = $devTools = New-Object DynamicConfig
         
         $devTools.setEnvironment()
         
@@ -36,11 +43,11 @@ function Use-DevTools
     {
         $name, $action = $devTools.setProjectVariables($psBoundParameters)
         
-        [AppVeyorManager]$appVeyor = $devTools.appVeyorFactory()
-        [ProvisionManager]$provision = $devTools.provisionFactory()
-        [VersionManager]$version = $devTools.versionFactory()
-        [ModuleManager]$module = $devTools.moduleFactory()
-        [BadgeManager]$badge = $devTools.badgeFactory()
+        [IManager]$appVeyor = $devTools.appVeyorFactory()
+        [IManager]$provision = $devTools.provisionFactory()
+        [IManager]$version = $devTools.versionFactory()
+        [IManager]$module = $devTools.moduleFactory()
+        [IManager]$badge = $devTools.badgeFactory()
         
         $devTools.info($devTools.getTitle())
         
@@ -49,13 +56,13 @@ function Use-DevTools
             True { $customVersion }
             Default { $version.next($devTools.versionType) }
         }
+        #        $badge.updateBadgs()
+        #return
         
-        $badge.updateBadgs()
-        return
         switch ($action)
         {
             ([Action]::GenerateProject) { $module.create() }
-            ([Action]::Install){ $provision.install() }
+            ([Action]::Install) { $provision.install() }
             ([Action]::Cleanup) { $provision.cleanup() }
             ([Action]::CopyToCurrentUserModules) { $provision.copy() }
             ([Action]::BumpVersion) { $provision.bumpVersion($version, $nextVersion) }
@@ -100,7 +107,8 @@ function Use-DevTools
                     return
                 }
                 
-                Invoke-Expression $provision.entryPoint
+                
+                & $provision.entryPoint #Invoke-Expression
             }
             default { }
         }
@@ -109,6 +117,6 @@ function Use-DevTools
 
 New-Alias -Name dt -Value Use-DevTools
 
-Invoke-Expression $PSScriptRoot\Src\ArgumentCompleter
+& $PSScriptRoot\Src\ArgumentCompleter
 
-Write-Host -ForegroundColor Red 'First Run: Loading DevTools Module And Conole AutoCompleter'
+Microsoft.PowerShell.Utility\Write-Host -ForegroundColor Red 'First Run: Loading DevTools Module And Conole AutoCompleter'
