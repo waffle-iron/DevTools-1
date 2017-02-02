@@ -8,7 +8,13 @@ $appVeyor = $devTools.appVeyor
 $pesterConfig = switch ([Boolean]$appVeyor)
 {
     $true { $appVeyor.getPesterDefaultConfig($version.version) }
-    $false { @{ path = $devTools.testsPath } }
+    $false {
+        @{
+            path = $devTools.testsPath
+            #CodeCoverage = 'D:\User\Development\OpenSource\Current\Powershell\DevTools\Src\*'
+            #CodeCoverage = 'C:\Users\user\Documents\WindowsPowerShell\Modules\DevTools\Src\*\*'
+        }
+    }
 }
 
 # Disable Pester progress output.

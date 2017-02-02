@@ -1,6 +1,4 @@
-﻿
-
-using module LibPosh
+﻿using module LibPosh
 
 using module .\Enums.psm1
 
@@ -11,11 +9,13 @@ using module .\Manager\ProvisionManager.psm1
 using module .\Manager\VersionManager.psm1
 using module .\Manager\ModuleManager.psm1
 
-
 using module .\Logger\ILogger.psm1
+using module .\Logger\Logger.psm1
+Using module .\Logger\LoggerEntryTrimmed.psm1
+Using module .\Logger\Appenders\ColoredConsoleAppender.psm1
+Using module .\Logger\Appenders\AppVeyorAppender.psm1
 
 Set-StrictMode -Version latest
-
 
 class DynamicConfig {
     
@@ -53,21 +53,6 @@ class DynamicConfig {
     $ciProvider = [AppVeyorManager]
     [Boolean]$ci = $env:CI
     
-    [Void]log($text, $color, $category)
-    {
-        $text = $text.trim()
-        if ([String]::IsNullOrEmpty($text)) { return }
-        
-        if ($this.ci) { $this.ciProvider::message($text, $category) }
-        
-        Write-Host $text -ForegroundColor $color
-    }
-    
-    #    [Void]info($text) { $this.log($text, [ConsoleColor]::DarkGreen, 'Information') }
-    #    [Void]warning($text) { $this.log($text, [ConsoleColor]::Yellow, 'Warning') }
-    #    [Void]error($text) { $this.log($text, [ConsoleColor]::Red, 'Error') }
-    #    [Void]debug($text) { $this.log($text, [ConsoleColor]::DarkYellow, 'Error') }
-    
     [Void]info($text) { $this.logger.information($text) }
     [Void]warning($text) { $this.logger.warning($text) }
     [Void]error($text) { $this.logger.error($text) }
@@ -86,13 +71,9 @@ class DynamicConfig {
     
     DynamicConfig()
     {
-        
-        [ILogger]$this.logger = New-Object Logger
-        
+        $this.logger = New-Object Logger
+        $this.logger.logEntryType = [LoggerEntryTrimmed]
         $this.logger.appenders.add([ColoredConsoleAppender]@{ })
-        
-        
-        # $this.logger.information([Environment]::NewLine + "hello" + [Environment]::NewLine)
         
         $this.modulesPath = ($Env:psModulePath.split(';') |
             Where-Object { $_ -match $this.modulesPath }) | Select-Object -Unique

@@ -49,7 +49,7 @@ $pesterShared.mocks = @{
     }
     writeHostAfterAll = { Remove-Item function:Write-Host }
     __writeHost = {
-        Mock -ModuleName ILogger `
+        Mock -ModuleName ColoredConsoleAppender `
              –ParameterFilter { $ForegroundColor –ne [ConsoleColor]::Blue } `
              -CommandName Write-Host -MockWith {
             

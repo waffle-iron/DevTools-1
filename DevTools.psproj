@@ -13,6 +13,8 @@
     <Folder>Examples\BoilerplateModule</Folder>
     <Folder>Examples\BoilerplateModule\Tests</Folder>
     <Folder>Src\Logger</Folder>
+    <Folder>Src\Logger\Tests</Folder>
+    <Folder>Src\Logger\Appenders</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -40,6 +42,11 @@
     <File Build="2">Src\Manager\IManager.psm1</File>
     <File Build="2">Src\Logger\ILogger.psm1</File>
     <File Build="2">Src\Logger\Logger.psm1</File>
+    <File Build="2" Shared="False">Src\Logger\Tests\Logger.Tests.ps1</File>
+    <File Build="2">Src\Logger\Appenders\ColoredConsoleAppender.psm1</File>
+    <File Build="2">Src\Logger\Appenders\AppVeyorAppender.psm1</File>
+    <File Build="2">Src\Logger\LoggerEntry.psm1</File>
+    <File Build="2">Src\Logger\LoggerEntryTrimmed.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

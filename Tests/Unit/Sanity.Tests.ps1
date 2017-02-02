@@ -29,10 +29,9 @@ Describe 'DevTools Sanity Check' {
             
             Function Push-AppveyorArtifact { }
             
-            InModuleScope ILogger {
+            InModuleScope AppVeyorAppender {
                 Function Add-AppveyorMessage { }
-                Mock -ModuleName ILogger Add-AppveyorMessage -MockWith { }
-                
+                Mock Add-AppveyorMessage -MockWith { }
             }
             
             Mock Push-AppveyorArtifact -MockWith { }
@@ -40,11 +39,10 @@ Describe 'DevTools Sanity Check' {
             dt Install
             
             It 'Calls Add-AppveyorMessage' {
-                Assert-MockCalled -ModuleName ILogger Add-AppveyorMessage -Scope Context
+                Assert-MockCalled -ModuleName AppVeyorAppender Add-AppveyorMessage -Scope Context
             }
             
             It 'Action should be "Install"' {
-                
                 $pesterShared.result.nextLine() | Should Match 'Install'
             }
             
@@ -68,59 +66,59 @@ Describe 'DevTools Sanity Check' {
         }
     }
     
-    Context  'Local Environment [Self Test]' {
-        
-        AfterAll { $pesterShared.stateRestore.invoke() }
-        
-        BeforeAll {
-            $env:CI = $null
-            $env:APPVEYOR_BUILD_FOLDER = $null
+        Context  'Local Environment [Self Test]' {
             
-            $content = '@{
-                    projectsPath = "{projectsPath}"
-                    psGalleryApiKey = $null
+            AfterAll { $pesterShared.stateRestore.invoke() }
+            
+            BeforeAll {
+                $env:CI = $null
+                $env:APPVEYOR_BUILD_FOLDER = $null
                 
-                    userInfo = (
-                        @{
-                            gitHubSlug = $null
-                            userName = $null
-                            gitHubAuthToken = $null
-                        }
-                    )
-                }' -replace '{projectsPath}', $devTools.ciProvider::projectsPath
-            
-            [IO.FileInfo]$file = "$env:USERPROFILE\dev_tools_config.psd1"
-            
-            if ($env:APPVEYOR -and $file.exists -eq $false)
-            {
-                It '$appVeyor should be oftype AppVeyorManager' {
-                    $appVeyor | Should Be 'AppVeyorManager'
-                }
+                $content = '@{
+                        projectsPath = "{projectsPath}"
+                        psGalleryApiKey = $null
+                    
+                        userInfo = (
+                            @{
+                                gitHubSlug = $null
+                                userName = $null
+                                gitHubAuthToken = $null
+                            }
+                        )
+                    }' -replace '{projectsPath}', $devTools.ciProvider::projectsPath
                 
-                $content | Set-Content $file
-            } else
-            {
-                It '$appVeyor should be $null' {
-                    $appVeyor | Should Be $null
+                [IO.FileInfo]$file = "$env:USERPROFILE\dev_tools_config.psd1"
+                
+                if ($env:APPVEYOR -and $file.exists -eq $false)
+                {
+                    It '$appVeyor should be oftype AppVeyorManager' {
+                        $appVeyor | Should Be 'AppVeyorManager'
+                    }
+                    
+                    $content | Set-Content $file
+                } else
+                {
+                    It '$appVeyor should be $null' {
+                        $appVeyor | Should Be $null
+                    }
                 }
             }
+            
+            $pesterShared.result.clear()
+            
+            Use-DevTools Install
+            
+            It 'Action should be "Install"' {
+                $pesterShared.result.nextLine() | Should Match 'Install'
+            }
+            
+            It 'Should be already installed' {
+                $pesterShared.result.nextLine() | Should Be 'DevTools already installed.'
+            }
+            
+            It 'Build should throw' {
+                $env:APPVEYOR_REPO_TAG = $true
+                { dt Build } | Should throw
+            }
         }
-        
-        $pesterShared.result.clear()
-        
-        dt Install
-        
-        It 'Action should be "Install"' {
-            $pesterShared.result.nextLine() | Should Match 'Install'
-        }
-        
-        It 'Should be already installed' {
-            $pesterShared.result.nextLine() | Should Be 'DevTools already installed.'
-        }
-        
-        It 'Build should throw' {
-            $env:APPVEYOR_REPO_TAG = $true
-            { dt Build } | Should throw
-        }
-    }
 }
