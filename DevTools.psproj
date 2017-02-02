@@ -3,50 +3,61 @@
   <FileID>886114cd-737d-400c-a827-4073f0bbaefd</FileID>
   <ProjectType>2</ProjectType>
   <Folders>
-    <Folder>Src</Folder>
-    <Folder>Tests\Integration</Folder>
+    <Folder>Old\Src</Folder>
+    <Folder>Old\Tests\Integration</Folder>
+    <Folder>Old\Tests</Folder>
+    <Folder>Old\Tests\Unit</Folder>
+    <Folder>Old\Examples</Folder>
+    <Folder>Old\Src\Manager</Folder>
+    <Folder>Old\Examples\BoilerplateModule\Tests\Unit</Folder>
+    <Folder>Old\Examples\BoilerplateModule</Folder>
+    <Folder>Old\Examples\BoilerplateModule\Tests</Folder>
+    <Folder>Old</Folder>
     <Folder>Tests</Folder>
-    <Folder>Tests\Unit</Folder>
-    <Folder>Examples</Folder>
-    <Folder>Src\Manager</Folder>
-    <Folder>Examples\BoilerplateModule\Tests\Unit</Folder>
-    <Folder>Examples\BoilerplateModule</Folder>
-    <Folder>Examples\BoilerplateModule\Tests</Folder>
-    <Folder>Src\Logger</Folder>
-    <Folder>Src\Logger\Tests</Folder>
-    <Folder>Src\Logger\Appenders</Folder>
+    <Folder>Src\Config</Folder>
+    <Folder>Src</Folder>
+    <Folder>Src\Dispatchers</Folder>
+    <Folder>Src\Helpers</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
-    <File Build="2">DevTools.psm1</File>
-    <File Build="2">Src\Manager\AppVeyorManager.psm1</File>
-    <File Build="2">Src\DynamicConfig.psm1</File>
-    <File Build="2">Src\Manager\ModuleManager.psm1</File>
-    <File Build="2">Src\Manager\ProvisionManager.psm1</File>
-    <File Build="2">Src\Enums.psm1</File>
-    <File Build="2">Src\Manager\VersionManager.psm1</File>
-    <File Build="2" Shared="False">Tests\DebugEntryPoint.ps1</File>
-    <File Build="2" Shared="False">Tests\PesterEntryPoint.ps1</File>
-    <File Build="2" Shared="False">Examples\API.ps1</File>
+    <File Build="2">Old\DevTools.psm1</File>
+    <File Build="2">Old\Src\Manager\AppVeyorManager.psm1</File>
+    <File Build="2">Old\Src\DynamicConfig.psm1</File>
+    <File Build="2">Old\Src\Manager\ModuleManager.psm1</File>
+    <File Build="2">Old\Src\Manager\ProvisionManager.psm1</File>
+    <File Build="2">Src\GenericTypes.psm1</File>
+    <File Build="2">Old\Src\Manager\VersionManager.psm1</File>
+    <File Build="2" Shared="False">Old\Tests\DebugEntryPoint.ps1</File>
+    <File Build="2" Shared="False">Old\Tests\PesterEntryPoint.ps1</File>
+    <File Build="2" Shared="False">Old\Examples\API.ps1</File>
     <File Build="2">appveyor.yml</File>
     <File Build="2">README.md</File>
     <File Build="2">.gitattributes</File>
     <File Build="2">.gitignore</File>
-    <File Build="2" Shared="False">Tests\Unit\Sanity.Tests.ps1</File>
-    <File Build="2" Shared="False">Tests\Unit\Behavioral.Tests.ps1</File>
-    <File Build="2" Shared="False">Tests\Unit\SharedFixtures.ps1</File>
-    <File Build="2" Shared="False">Src\ArgumentCompleter.ps1</File>
-    <File Build="2">Src\Manager\BadgeManager.psm1</File>
-    <File Build="2" Shared="False">Examples\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
-    <File Build="2" Shared="False">Examples\BoilerplateModule\Tests\Unit\Unit.Tests.ps1</File>
-    <File Build="2">Src\Manager\IManager.psm1</File>
-    <File Build="2">Src\Logger\ILogger.psm1</File>
-    <File Build="2">Src\Logger\Logger.psm1</File>
-    <File Build="2" Shared="False">Src\Logger\Tests\Logger.Tests.ps1</File>
-    <File Build="2">Src\Logger\Appenders\ColoredConsoleAppender.psm1</File>
-    <File Build="2">Src\Logger\Appenders\AppVeyorAppender.psm1</File>
-    <File Build="2">Src\Logger\LoggerEntry.psm1</File>
-    <File Build="2">Src\Logger\LoggerEntryTrimmed.psm1</File>
+    <File Build="2" Shared="False">Old\Tests\Unit\Sanity.Tests.ps1</File>
+    <File Build="2" Shared="False">Old\Tests\Unit\Behavioral.Tests.ps1</File>
+    <File Build="2" Shared="False">Old\Tests\Unit\SharedFixtures.ps1</File>
+    <File Build="2" Shared="False">Old\Src\ArgumentCompleter.ps1</File>
+    <File Build="2">Old\Src\Manager\BadgeManager.psm1</File>
+    <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
+    <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\Unit\Unit.Tests.ps1</File>
+    <File Build="2">Old\Src\Manager\IManager.psm1</File>
+    <File Build="2" Shared="False">Old\Tests\Unit\DevTools.Tests.ps1</File>
+    <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\DebugEntryPoint.ps1</File>
+    <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\PesterEntryPoint.ps1</File>
+    <File Build="2" Shared="False">Old\Tests\Coverage.ps1</File>
+    <File Build="2">DevTools.psm1</File>
+    <File Build="2" Shared="False">Tests\PesterMetrics.ps1</File>
+    <File Build="2">Src\Config\DefaultConfig.psm1</File>
+    <File Build="2">Src\Config\IConfig.psm1</File>
+    <File Build="2">Src\Dispatchers\DeploymentRemoteDispatcher.psm1</File>
+    <File Build="2">Src\Dispatchers\IDispatcher.psm1</File>
+    <File Build="2">Src\Dispatchers\DeploymentLocalDispatcher.psm1</File>
+    <File Build="2">Src\Helpers\FileSystemHelper.psm1</File>
+    <File Build="2" Shared="False">Tests\DevTools.Tests.ps1</File>
+    <File Build="2">Src\Helpers\DynamicParametersHelper.psm1</File>
+    <File Build="2">Src\Helpers\AbstactHelper.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

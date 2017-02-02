@@ -5,12 +5,12 @@ enum VersionComponent
     Build
 }
 
-enum Action {
-    GenerateProject
+enum ActionType {
     Install
-    CopyToCurrentUserModules
+    Uninstall
     Test
-    Cleanup
+    GenerateProject
+    CopyToCurrentUserModules
     BumpVersion
     Publish
     Deploy

@@ -1,4 +1,5 @@
-﻿Register-ArgumentCompleter -CommandName ('dt', 'Use-DevTools') -ScriptBlock {
+﻿
+Register-ArgumentCompleter -CommandName ('dt', 'Use-DevTools') -ScriptBlock {
     param (
         $wordToComplete,
         $commandAst,

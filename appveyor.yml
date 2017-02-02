@@ -32,6 +32,7 @@ install:
         }
   
   - ps: Install-Module LibPosh -Scope CurrentUser -Force
+  - ps: Install-Module Logger -Scope CurrentUser -Force
 
 
 before_test:
