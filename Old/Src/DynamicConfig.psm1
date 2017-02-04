@@ -58,10 +58,7 @@ class DynamicConfig {
     [Void]error($text) { $this.logger.error($text) }
     [Void]debug($text) { $this.logger.debug($text) }
     
-    [Array]getProjects()
-    {
-        return (Get-ChildItem -Directory $this.userSettings.projectsPath).forEach{ $_.name }
-    }
+
     
     [Void] remove($object)
     {

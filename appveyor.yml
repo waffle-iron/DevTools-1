@@ -31,6 +31,10 @@ install:
             Install-Module Pester -RequiredVersion 3.4.3 -Scope CurrentUser -Force
         }
   
+  - ps: if (-not (Test-Path $env:UserModules\PSScriptAnalyzer)) {
+            Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+        }  
+        
   - ps: Install-Module LibPosh -Scope CurrentUser -Force
   - ps: Install-Module Logger -Scope CurrentUser -Force
 
@@ -41,11 +45,16 @@ before_test:
   - cmd: IF Not Exist %PS_PROFILE% mklink /J %PS_PROFILE% %APPVEYOR_BUILD_FOLDER%
 
 test_script:
+  - ps: .\Tests\AppVeyor.ps1
+ # - ps: .\Tests\PesterMetrics.ps1
+ # - ps: dt Install
+ # - ps: dt Test
+ # - ps: Import-Module DevTools
   - ps: |
-     #   dt Install
+        dt Install
         dt Test
-     #   dt Build
-     #   dt Cleanup
+        dt Build
+        dt Cleanup
 
 after_test:
   - ps: Remove-Item -Path $env:UserModules\$env:APPVEYOR_PROJECT_NAME -Recurse -Force -Verbose

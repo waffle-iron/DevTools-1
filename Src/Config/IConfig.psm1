@@ -1,17 +1,16 @@
-#using module ..\Logger\ILogger.psm1
-#using module Logger.ILogger
-#[Logger.ILogger]
+using module Logger
 
 class IConfig {
-    $logger
+    [Boolean]$whatIf
+    
+    [ILogger]$logger
     
     [Hashtable]$userSettings
-    
-    [Boolean]$whatIf
     
     [Boolean]$isInProject
     
     [String]$currentDirectoryName
     
     [Void]validateCurrentLocation() { throw }
+    [Array]getProjects() { throw }
 }

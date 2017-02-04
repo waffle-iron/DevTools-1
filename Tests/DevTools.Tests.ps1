@@ -1,3 +1,9 @@
-﻿
-dt ZZZ GenerateProject
-#dt DevTools
+﻿$location = $PWD
+
+dt GenerateProject NewMod
+
+Set-Location ..
+
+dt NewMod GenerateProject
+
+Set-Location $location

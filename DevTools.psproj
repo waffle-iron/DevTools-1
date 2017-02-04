@@ -16,8 +16,9 @@
     <Folder>Tests</Folder>
     <Folder>Src\Config</Folder>
     <Folder>Src</Folder>
-    <Folder>Src\Dispatchers</Folder>
-    <Folder>Src\Helpers</Folder>
+    <Folder>Src\Service</Folder>
+    <Folder>Src\IServiceLocator</Folder>
+    <Folder>Src\Helper</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -51,13 +52,16 @@
     <File Build="2" Shared="False">Tests\PesterMetrics.ps1</File>
     <File Build="2">Src\Config\DefaultConfig.psm1</File>
     <File Build="2">Src\Config\IConfig.psm1</File>
-    <File Build="2">Src\Dispatchers\DeploymentRemoteDispatcher.psm1</File>
-    <File Build="2">Src\Dispatchers\IDispatcher.psm1</File>
-    <File Build="2">Src\Dispatchers\DeploymentLocalDispatcher.psm1</File>
-    <File Build="2">Src\Helpers\FileSystemHelper.psm1</File>
+    <File Build="2">Src\Service\DeploymentRemoteService.psm1</File>
+    <File Build="2">Src\Service\IService.psm1</File>
+    <File Build="2">Src\Service\DeploymentLocalService.psm1</File>
     <File Build="2" Shared="False">Tests\DevTools.Tests.ps1</File>
-    <File Build="2">Src\Helpers\DynamicParametersHelper.psm1</File>
-    <File Build="2">Src\Helpers\AbstactHelper.psm1</File>
+    <File Build="2">Src\ServiceLocator.psm1</File>
+    <File Build="2">Src\IServiceLocator\IServiceLocator.psm1</File>
+    <File Build="2">Src\Helper\IHelper.psm1</File>
+    <File Build="2">Src\Helper\DynamicParametersHelper.psm1</File>
+    <File Build="2">Src\Helper\FileSystemHelper.psm1</File>
+    <File Build="2" Shared="False">Tests\AppVeyor.ps1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>
