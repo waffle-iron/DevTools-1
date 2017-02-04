@@ -1,36 +1,8 @@
-using namespace System.Management.Automation
-using namespace System.Diagnostics.CodeAnalysis
-
-using module LibPosh
-
-using module .\Src\Enums.psm1
-using module .\Src\DynamicConfig.psm1
-
-using module .\Src\Manager\IManager.psm1
-
-Set-StrictMode -Version latest
 
 [DynamicConfig]$script:devTools = $null
 
 function Use-DevTools
 {
-    [CmdletBinding()]
-    [SuppressMessageAttribute('PSUseSingularNouns', '', Scope = 'Function', Target = 'Use-DevTools')]
-    param
-    (
-        [Switch]$WhatIf,
-        [Parameter(ValueFromRemainingArguments = $true)]
-        $CustomVersion = $false
-    )
-    
-    DynamicParam
-    {
-        $script:devTools = $devTools = New-Object DynamicConfig
-        
-        $devTools.setEnvironment()
-        
-        return $devTools.dynamicParameters([ref]$psBoundParameters)
-    }
     process
     {
         $moduleName, $actionType = $devTools.setProjectVariables($psBoundParameters)
@@ -111,8 +83,3 @@ function Use-DevTools
     }
 }
 
-New-Alias -Name dt -Value Use-DevTools
-
-& $PSScriptRoot\Src\ArgumentCompleter
-
-Microsoft.PowerShell.Utility\Write-Host -ForegroundColor Red 'First Run: Loading DevTools Module And Conole AutoCompleter'

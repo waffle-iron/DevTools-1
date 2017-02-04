@@ -29,7 +29,7 @@
     
     FileList = @('Src', 'DevTools.psd1', 'DevTools.psm1')
     
-    FunctionsToExport = 'Use-DevTools'
+    FunctionsToExport = @('Use-DevTools')
     AliasesToExport = 'dt'
     
     PrivateData = @{

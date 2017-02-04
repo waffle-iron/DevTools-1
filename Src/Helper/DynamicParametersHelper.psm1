@@ -1,7 +1,9 @@
 using module LibPosh
 
 using module ..\GenericTypes.psm1
-using module .\IHelper.psm1
+using module ..\CommonInterfaces.psm1
+
+Set-StrictMode -Version latest
 
 class DynamicParametersHelper: IHelper
 {
@@ -12,14 +14,14 @@ class DynamicParametersHelper: IHelper
         $dp = New-Object LibPosh.DynamicParameter
         
         # Project
-        $projectField = 'Project'
+        $moduleField = 'Module'
         $attribute = $dp.getParameterAttribute(@{ position = 1; mandatory = $true })
         
         if ($this.config.isInProject)
         {
             $attribute.position = 2
             $attribute.mandatory = $false
-            $boundParameters.value[$projectField] = $this.config.currentDirectoryName
+            $boundParameters.value[$moduleField] = $this.config.currentDirectoryName
         }
         
         $projects = $this.config.getProjects()
@@ -44,7 +46,7 @@ class DynamicParametersHelper: IHelper
             }
         }
         
-        [Void]$dp.set($attribute, $projects, $projectField)
+        [Void]$dp.set($attribute, $projects, $moduleField)
         
         # Action
         $actionField = 'Action'

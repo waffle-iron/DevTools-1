@@ -17,8 +17,12 @@
     <Folder>Src\Config</Folder>
     <Folder>Src</Folder>
     <Folder>Src\Service</Folder>
-    <Folder>Src\IServiceLocator</Folder>
     <Folder>Src\Helper</Folder>
+    <Folder>Src\Console</Folder>
+    <Folder>Src\Action</Folder>
+    <Folder>Src\DesignPatterns\IObserver</Folder>
+    <Folder>Src\DesignPatterns</Folder>
+    <Folder>Src\DesignPatterns\IServiceLocator</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -39,7 +43,7 @@
     <File Build="2" Shared="False">Old\Tests\Unit\Sanity.Tests.ps1</File>
     <File Build="2" Shared="False">Old\Tests\Unit\Behavioral.Tests.ps1</File>
     <File Build="2" Shared="False">Old\Tests\Unit\SharedFixtures.ps1</File>
-    <File Build="2" Shared="False">Old\Src\ArgumentCompleter.ps1</File>
+    <File Build="2" Shared="False">Src\Console\ArgumentCompleter.ps1</File>
     <File Build="2">Old\Src\Manager\BadgeManager.psm1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\Unit\Unit.Tests.ps1</File>
@@ -52,16 +56,19 @@
     <File Build="2" Shared="False">Tests\PesterMetrics.ps1</File>
     <File Build="2">Src\Config\DefaultConfig.psm1</File>
     <File Build="2">Src\Config\IConfig.psm1</File>
-    <File Build="2">Src\Service\DeploymentRemoteService.psm1</File>
-    <File Build="2">Src\Service\IService.psm1</File>
-    <File Build="2">Src\Service\DeploymentLocalService.psm1</File>
+    <File Build="2">Src\Service\LocalDeploymentService.psm1</File>
     <File Build="2" Shared="False">Tests\DevTools.Tests.ps1</File>
     <File Build="2">Src\ServiceLocator.psm1</File>
-    <File Build="2">Src\IServiceLocator\IServiceLocator.psm1</File>
-    <File Build="2">Src\Helper\IHelper.psm1</File>
     <File Build="2">Src\Helper\DynamicParametersHelper.psm1</File>
     <File Build="2">Src\Helper\FileSystemHelper.psm1</File>
     <File Build="2" Shared="False">Tests\AppVeyor.ps1</File>
+    <File Build="2">Src\Action\ActionFacade.psm1</File>
+    <File Build="2">Src\Action\ActionMapper.psm1</File>
+    <File Build="2">Src\DesignPatterns\IObserver\IObserver.psm1</File>
+    <File Build="2">Src\DesignPatterns\IServiceLocator\IServiceLocator.psm1</File>
+    <File Build="2">Src\Service\RemoteDeploymentService.psm1</File>
+    <File Build="2">Src\LoggerDecorator.psm1</File>
+    <File Build="2">Src\CommonInterfaces.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

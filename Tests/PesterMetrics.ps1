@@ -1,5 +1,9 @@
+Set-StrictMode -Version latest
+
+
 Import-Module DevTools
-dt Test
+dt Install
+
 
 return
 
@@ -22,9 +26,10 @@ $global:ProgressPreference = 'SilentlyContinue'
 $sourceFiles = (
     @{ Path = "$modulesPath\DevTools\DevTools.psm1" },
     @{ Path = "$modulesPath\DevTools\Src\*" },
+    @{ Path = "$modulesPath\DevTools\Src\Action\*" },
     @{ Path = "$modulesPath\DevTools\Src\Config\*" },
+    @{ Path = "$modulesPath\DevTools\Src\DesignPatterns\*" },
     @{ Path = "$modulesPath\DevTools\Src\Helper\*" },
-    @{ Path = "$modulesPath\DevTools\Src\IServiceLocator\*" },
     @{ Path = "$modulesPath\DevTools\Src\Service\*" }
 )
 

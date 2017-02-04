@@ -1,9 +1,6 @@
-# TODO Move to LibPosh
-# TODO Add Lazzy Loading
-
-using namespace System.ComponentModel
-using namespace System.ComponentModel.Design
 using namespace System.Collections.Generic
+using namespace System.ComponentModel.Design
+using namespace System.ComponentModel
 
 Set-StrictMode -Version latest
 
@@ -11,13 +8,18 @@ class IServiceLocator: IServiceProvider
 {
     hidden [HashTable]$callbacks = @{ }
     hidden [HashTable]$types = @{ }
+    
     hidden [IServiceContainer]$services
     
     IServiceLocator() { $this.services = New-Object ServiceContainer }
     
-    hidden [IList[Object]] GetAllServices() { throw }
-    hidden [IList[Type]] GetAllServicedTypes() { throw }
     hidden [Object]GetService([Type]$serviceType) { throw }
+    
+    hidden [IList[Object]] getAllServices() { throw }
+    hidden [IList[Type]] getAllServicedTypes() { throw }
+    
+    hidden [Void]addLazzy($serviceType, $callBack) { throw }
+    hidden [Object]getLazzy([Type]$serviceType) { throw }
     
     [Void]add([Type]$serviceType, [Object]$object)
     {
@@ -33,7 +35,4 @@ class IServiceLocator: IServiceProvider
     {
         return $this.services.getService($this.types[$serviceName])
     }
-    
-    hidden [Void]addLazzy($serviceType, $callBack) { throw }
-    hidden [Object]getLazzy([Type]$serviceType) { throw }
 }

@@ -1,9 +1,13 @@
-﻿$location = $PWD
+﻿Set-StrictMode -Version latest
 
-dt GenerateProject NewMod
+Use-DevTools Install
+
+$location = $PWD
+
+Use-DevTools GenerateProject NewMod
 
 Set-Location ..
 
-dt NewMod GenerateProject
+Use-DevTools NewMod GenerateProject
 
 Set-Location $location

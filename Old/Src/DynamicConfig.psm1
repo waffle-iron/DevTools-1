@@ -20,30 +20,9 @@ Set-StrictMode -Version latest
 class DynamicConfig {
     
     [Boolean]$verbose = $false
+
     
-    [ILogger]$logger
-    
-    [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
-    
-    [Hashtable]$userSettings = @{ file = ('{0}\dev_tools_config.psd1' -f $env:USERPROFILE) }
-    
-    [Boolean]$isInProject
-    [Boolean]$whatIf
-    
-    [String]$currentDirectoryName
-    [String]$stagingPath = $env:temp
-    [String]$modulesPath = 'Documents'
-    [String]$modulePath
-    [String]$testsPath = '{0}\Tests'
-    [String]$readmePath = '{0}\README.md'
-    
-    [IO.FileInfo]$psdFile = '{0}\{1}.psd1'
-    [Hashtable]$moduleSettings
-    
-    [String]$projectName
-    [Action]$action
-    [VersionComponent]$versionType
-    
+
     [IManager]$appVeyor
     [IManager]$provision
     [IManager]$version
@@ -51,64 +30,12 @@ class DynamicConfig {
     [IManager]$badge
     
     $ciProvider = [AppVeyorManager]
-    [Boolean]$ci = $env:CI
-    
-    [Void]info($text) { $this.logger.information($text) }
-    [Void]warning($text) { $this.logger.warning($text) }
-    [Void]error($text) { $this.logger.error($text) }
-    [Void]debug($text) { $this.logger.debug($text) }
-    
 
     
     [Void] remove($object)
     {
         Remove-Item -Path $object -Recurse `
                     -ErrorAction Ignore -Verbose:$this.verbose
-    }
-    
-    DynamicConfig()
-    {
-        $this.logger = New-Object Logger
-        $this.logger.logEntryType = [LoggerEntryTrimmed]
-        $this.logger.appenders.add([ColoredConsoleAppender]@{ })
-        
-        $this.modulesPath = ($Env:psModulePath.split(';') |
-            Where-Object { $_ -match $this.modulesPath }) | Select-Object -Unique
-    }
-    
-    [Void]setEnvironment()
-    {
-        $this.userSettings = switch ([Boolean]$this.ci)
-        {
-            true{ $this.ciProvider::getConfig() }
-            false{ Import-PowerShellDataFile $this.userSettings.file }
-        }
-        
-        [IO.DirectoryInfo]$location = Get-Item -Path $pwd
-        $path = $location.fullName
-        $this.currentDirectoryName = $location.name
-        $this.isInProject = Test-Path ('{0}\{1}.psd1' -f $path, $this.currentDirectoryName)
-    }
-    
-    [Array]setProjectVariables($boundParameters)
-    {
-        
-        $this.projectName = $boundParameters['Project']
-        $this.action = $boundParameters['Action']
-        $this.versionType = $boundParameters['VersionType']
-        $this.whatIf = $boundParameters['WhatIf']
-        
-        $this.modulePath = $this.getProjectPath($this.projectName)
-        
-        $this.testsPath = $this.testsPath -f $this.modulePath
-        
-        $this.readmePath = $this.readmePath -f $this.modulePath
-        
-        $this.psdFile = $this.psdFile -f $this.modulePath, $this.projectName
-        
-        if ($this.psdFile.exists) { $this.moduleSettings = Import-PowerShellDataFile $this.psdFile }
-        
-        return ($this.projectName, $this.action)
     }
     
     [AppVeyorManager]appVeyorFactory()
@@ -167,10 +94,7 @@ class DynamicConfig {
         return $this.badge
     }
     
-    [String]getProjectPath($moduleName)
-    {
-        return '{0}\{1}' -f $this.userSettings.projectsPath, $moduleName
-    }
+
     
     [String]getTitle()
     {

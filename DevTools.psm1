@@ -1,11 +1,11 @@
-using namespace System.Diagnostics.CodeAnalysis
-
 using module Logger
 
 using module .\Src\ServiceLocator.psm1
 using module .\Src\Config\IConfig.psm1
 
 Set-StrictMode -Version latest
+
+
 
 $serviceLocator = New-Object ServiceLocator
 [ILogger]$logger = $serviceLocator.get([ILogger])
@@ -14,7 +14,7 @@ $serviceLocator = New-Object ServiceLocator
 function Use-DevTools
 {
     [CmdletBinding()]
-    [SuppressMessageAttribute('PSUseSingularNouns', '')]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
     param
     (
         [Switch]$WhatIf,
@@ -23,15 +23,18 @@ function Use-DevTools
     )
     DynamicParam
     {
-       return $serviceLocator.get('DynamicParametersHelper').build([ref]$psBoundParameters)
+        return $serviceLocator.get('DynamicParametersHelper').build([ref]$psBoundParameters)
     }
     
     process
     {
-        $config.isInProject
-        $logger.error('logger')
+        $config.bindProperties($psBoundParameters)
+        $serviceLocator.get('ActionMapper').map()
     }
-    
 }
 
 New-Alias -Name dt -Value Use-DevTools
+
+& $PSScriptRoot\Src\Console\ArgumentCompleter
+
+$logger.information('First Run: Loading DevTools Module And Conole AutoCompleter')

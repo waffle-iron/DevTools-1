@@ -18,10 +18,6 @@ class ProvisionManager: IManager
     
     ProvisionManager([HashTable]$data)
     {
-        $this.devTools = $data.devTools
-        $this.projectName = $data.project
-        
-        $this.modulesPath = $this.devTools.modulesPath
         
         $this.project = get-item $this.devTools.getProjectPath($this.projectName)
         
