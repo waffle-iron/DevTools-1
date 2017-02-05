@@ -1,4 +1,5 @@
-using module LibPosh
+#using module LibPosh
+#$dp = New-Object LibPosh.DynamicParameter
 
 using module ..\GenericTypes.psm1
 using module ..\CommonInterfaces.psm1
@@ -10,8 +11,8 @@ class DynamicParametersHelper: IHelper
     [Object]build([ref]$boundParameters)
     {
         $this.config.validateCurrentLocation()
-        
-        $dp = New-Object LibPosh.DynamicParameter
+
+        $dp = New-Instance LibPosh\Src\DynamicParameter
         
         # Project
         $moduleField = 'Module'

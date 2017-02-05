@@ -9,6 +9,7 @@ class DefaultConfig: IConfig
         $this.modulesPath = ($ENV:psModulePath.split(';') |
             Where-Object { $_ -match 'Documents' }) | Select-Object -Unique
         
+        $this.devToolsPath = '{0}\DevTools' -f $this.modulesPath
         $this.userSettings = Import-PowerShellDataFile ('{0}\.devtools' -f $ENV:USERPROFILE)
     }
     
@@ -26,17 +27,17 @@ class DefaultConfig: IConfig
         $this.whatIf = $boundParameters['WhatIf']
         
         $this.modulePath = $this.getProjectPath($this.moduleName)
-        
         $this.testsPath = '{0}\Tests' -f $this.modulePath
-        
         $this.readmeFile = '{0}\README.md' -f $this.modulePath
-        
         $this.manifestFile = '{0}\{1}.psd1' -f $this.modulePath, $this.moduleName
         
         if ($this.manifestFile.exists)
         {
             $this.moduleManifest = Import-PowerShellDataFile $this.manifestFile
         }
+        
+        $this.moduleDependencies = @{ deploy = $true; name = $this.moduleName }
+        $this.moduleDependencies += Get-Property $this.moduleManifest.PrivateData DevTools.Dependencies
     }
     
     [IO.DirectoryInfo]getProjectPath($moduleName)

@@ -1,34 +1,6 @@
-﻿using module LibPosh
-
-using module .\Enums.psm1
-
-using module .\Manager\IManager.psm1
-using module .\Manager\AppVeyorManager.psm1
-using module .\Manager\BadgeManager.psm1
-using module .\Manager\ProvisionManager.psm1
-using module .\Manager\VersionManager.psm1
-using module .\Manager\ModuleManager.psm1
-
-using module .\Logger\ILogger.psm1
-using module .\Logger\Logger.psm1
-Using module .\Logger\LoggerEntryTrimmed.psm1
-Using module .\Logger\Appenders\ColoredConsoleAppender.psm1
-Using module .\Logger\Appenders\AppVeyorAppender.psm1
-
-Set-StrictMode -Version latest
-
-class DynamicConfig {
-    
+﻿   
     [Boolean]$verbose = $false
 
-    
-
-    [IManager]$appVeyor
-    [IManager]$provision
-    [IManager]$version
-    [IManager]$module
-    [IManager]$badge
-    
     $ciProvider = [AppVeyorManager]
 
     
@@ -50,23 +22,7 @@ class DynamicConfig {
         return $this.appVeyor
     }
     
-    [ProvisionManager]provisionFactory()
-    {
-        $this.provision = [ProvisionManager]@{
-            devTools = $this
-            project = $this.projectName
-        }
-        return $this.provision
-    }
-    
-    [VersionManager]versionFactory()
-    {
-        $this.version = [VersionManager]@{
-            devTools = $this
-        }
-        return $this.version
-    }
-    
+
     [ModuleManager]moduleFactory()
     {
         $this.module = [ModuleManager]@{
@@ -93,21 +49,5 @@ class DynamicConfig {
         }
         return $this.badge
     }
-    
-
-    
-    [String]getTitle()
-    {
-        $cpu_architecture = switch ([Boolean]$env:PLATFORM)
-        {
-            true { 'CI {0}' -f $env:PLATFORM }
-            false { $env:PROCESSOR_ARCHITECTURE }
-        }
-        
-        $title = '{5}{0} {1} {2} [{3} {4}]{5}' -f $this.projectName, $this.version.version, `
-        $this.action, $cpu_architecture, $env:COMPUTERNAME, [Environment]::NewLine
-        return $title
-    }
-    
 
 }

@@ -5,8 +5,6 @@ using module .\Src\Config\IConfig.psm1
 
 Set-StrictMode -Version latest
 
-
-
 $serviceLocator = New-Object ServiceLocator
 [ILogger]$logger = $serviceLocator.get([ILogger])
 [IConfig]$config = $serviceLocator.get([IConfig])
@@ -25,7 +23,6 @@ function Use-DevTools
     {
         return $serviceLocator.get('DynamicParametersHelper').build([ref]$psBoundParameters)
     }
-    
     process
     {
         $config.bindProperties($psBoundParameters)
@@ -37,4 +34,4 @@ New-Alias -Name dt -Value Use-DevTools
 
 & $PSScriptRoot\Src\Console\ArgumentCompleter
 
-$logger.information('First Run: Loading DevTools Module And Conole AutoCompleter')
+$logger.debug($config.locale.Loading)

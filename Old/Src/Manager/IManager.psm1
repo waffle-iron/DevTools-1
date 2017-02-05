@@ -1,5 +1,0 @@
-class IManager
-{
-    [Object]$devTools
-    
-}

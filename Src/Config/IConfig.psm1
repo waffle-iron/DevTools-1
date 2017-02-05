@@ -8,7 +8,10 @@ class IConfig {
     
     hidden [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
     
+    [Collections.ICollection]$locale
+    
     [String]$stagingPath = $ENV:TEMP
+    
     [Boolean]$ci = $ENV:CI
     
     [Boolean]$whatIf
@@ -18,6 +21,8 @@ class IConfig {
     [Hashtable]$userSettings
     [Hashtable]$moduleManifest
     
+    [Array]$moduleDependencies
+    
     [Boolean]$isInProject
     
     [String]$currentDirectoryName
@@ -26,6 +31,7 @@ class IConfig {
     [ActionType]$action
     [VersionComponent]$versionType
     
+    [IO.DirectoryInfo]$devToolsPath
     [IO.DirectoryInfo]$modulesPath
     [IO.DirectoryInfo]$modulePath
     [IO.DirectoryInfo]$testsPath
@@ -34,7 +40,9 @@ class IConfig {
     [IO.FileInfo]$manifestFile
     
     [Void]validateCurrentLocation() { throw }
-    [Array]getProjects() { throw }
-    [IO.DirectoryInfo]getProjectPath($moduleName){ throw }
     [Void]bindProperties([HashTable]$boundParameters) { throw }
+    
+    [Array]getProjects() { throw }
+    
+    [IO.DirectoryInfo]getProjectPath($moduleName) { throw }
 }

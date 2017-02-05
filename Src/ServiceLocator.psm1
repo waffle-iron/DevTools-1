@@ -15,6 +15,8 @@ using module .\Action\ActionFacade.psm1
 
 using module .\Service\LocalDeploymentService.psm1
 
+using module .\Console\Localized\LocaleRepository.psm1
+
 Set-StrictMode -Version latest
 
 class ServiceLocator: IServiceLocator
@@ -36,6 +38,12 @@ class ServiceLocator: IServiceLocator
             config = $defaultConfig
         }
         
+        #LocaleRepository
+        $this.add([LocaleRepository]$defaultDataSet)
+
+        # Inject LocaleRepository into module config
+        $this.get([IConfig]).locale = $this.get([LocaleRepository])
+        
         #DynamicParametersHelper
         $this.add([DynamicParametersHelper]$defaultDataSet)
         
@@ -55,6 +63,9 @@ class ServiceLocator: IServiceLocator
         
         #ActionFacade
         $this.add([ActionFacade]($defaultDataSet + $services))
+        
+        #Subscribe LocaleRepository to ActionMapper
+        $this.get([ActionMapper]).attach($this.get([LocaleRepository]))
         
         #Subscribe ActionFacade to ActionMapper
         $this.get([ActionMapper]).attach($this.get([ActionFacade]))

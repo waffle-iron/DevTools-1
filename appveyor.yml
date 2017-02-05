@@ -53,8 +53,8 @@ test_script:
   - ps: |
         dt Install
         dt Test
-        dt Build
-        dt Uninstall
+        #dt Build
+        #dt Uninstall
 
 after_test:
   - ps: Remove-Item -Path $env:UserModules\$env:APPVEYOR_PROJECT_NAME -Recurse -Force -Verbose

@@ -1,6 +1,8 @@
 ﻿Set-StrictMode -Version latest
 
-Use-DevTools Install
+Use-DevTools Install NewModule
+Use-DevTools CopyToCurrentUserModules NewModule
+Use-DevTools Uninstall NewModule
 
 $location = $PWD
 

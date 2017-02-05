@@ -1,100 +1,11 @@
-﻿using module .\IManager.psm1
+﻿    [String]$entryPoint = '{0}\{1}\Tests\PesterEntryPoint'
 
-
-Set-StrictMode -Version latest
-
-
-class ProvisionManager: IManager
-{
-    [IO.DirectoryInfo]$project
-
-    [String]$entryPoint = '{0}\{1}\Tests\PesterEntryPoint'
-    [String]$modulesPath
-    [String]$repository
-    [String]$projectName
-    [Array]$dependencies
-    
-    [String]$readme = '{0}\README.md'
-    
-    ProvisionManager([HashTable]$data)
-    {
-        
-        $this.project = get-item $this.devTools.getProjectPath($this.projectName)
-        
-        if (!$this.project) { return }
-        
         $this.repository = $this.project.parent.fullName
         
         $this.entryPoint = $this.entryPoint -f $this.repository, $this.projectName
-        
-        $this.readme = $this.readme -f $this.project.FullName
-        
-        $this.loadDependencies()
-    }
-    
-    
-    [Void]loadDependencies()
-    {
-        $this.dependencies = (@{ deploy = $true; name = $this.projectName })
-        
-        $this.dependencies += Get-Property $this.devTools.moduleSettings.PrivateData `
-                                           DevTools.Dependencies
-    }
-    
-    [Void]processDependencies([Scriptblock]$callback)
-    {
-        $this.dependencies.where({ $_ -ne $null }).forEach{ if ($_.deploy) { $callback.invoke() } }
-    }
-    
 
     
-    [Void]cleanup()
-    {
-        $this.processDependencies({
-                $this.devTools.info('Cleaning : {0}\{1}' -f ($this.modulesPath, $_.name))
-                Try
-                {
-                    remove-item -ErrorAction Continue -Recurse -Force `
-                    ('{0}\{1}' -f $this.modulesPath, $_.name)
-                } Catch
-                {
-                    $this.devTools.warning($_.Exception.Message)
-                }
-                
-            })
-        break
-    }
-    
-    [Void]install()
-    {
-        $mask = '"{0}\{1}"'
-        
-        $this.processDependencies({
-                $destination = $mask -f $this.modulesPath, $_.name
-                $source = $mask -f $this.repository, $_.name
-                $output = cmd /C mklink /J $destination $source
-                if ([String]$output -eq $null)
-                {
-                    $this.devTools.warning("$($_.name) already installed.")
-                    return
-                }
-                $this.devTools.warning($output)
-            })
-    }
-    
-    [Void]copy()
-    {
-        $mask = '"{0}\{1}"'
-        
-        $this.processDependencies({
-                $destination = $mask -f $this.modulesPath, $_.name
-                $source = $mask -f $this.repository, $_.name
-                
-                $output = xcopy $source $destination /Isdy
-                $this.devTools.warning(($output | Out-String))
-            })
-    }
-    
+
     [Void]bumpVersion($version, $nextVersion)
     {
         $message = '{0}Updating version to : {1}' -f ([Environment]::NewLine, $nextVersion)

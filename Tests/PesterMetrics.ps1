@@ -1,10 +1,17 @@
+Using module LibPosh
 Set-StrictMode -Version latest
 
+$ErrorActionPreference = "Stop"
 
-Import-Module DevTools
-dt Install
+#Import-Module DevTools
+##dt Uninstall NewModule
+##dt Uninstall NewModule
+##dt Uninstall NewModule
+##dt Install NewModule
+##dt CopyToCurrentUserModules NewModule
 
-
+dt Test
+#
 return
 
 $modulePath = 'D:\User\Development\OpenSource\Current\Powershell\DevTools'

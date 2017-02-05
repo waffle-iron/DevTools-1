@@ -43,7 +43,11 @@ Check out the project site for more information:
 https://github.com/g8tguy/DevTools'
         }
         DevTools = @{
-            Dependencies = @(@{ deploy = $false; name = 'LibPosh' })
+            PSGalleryDeployLocally = $true
+            Dependencies = @(
+                @{ deploy = $false; name = 'LibPosh'; github = 'https://github.com/g8tguy/LibPosh' }
+                @{ deploy = $false; name = 'Logger'; github = 'https://github.com/g8tguy/Logger' }
+            )
         }
     }
 }

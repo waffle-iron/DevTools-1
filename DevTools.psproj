@@ -23,6 +23,8 @@
     <Folder>Src\DesignPatterns\IObserver</Folder>
     <Folder>Src\DesignPatterns</Folder>
     <Folder>Src\DesignPatterns\IServiceLocator</Folder>
+    <Folder>Src\Console\Localized\en-US</Folder>
+    <Folder>Src\Console\Localized</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -47,7 +49,6 @@
     <File Build="2">Old\Src\Manager\BadgeManager.psm1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\Unit\Unit.Tests.ps1</File>
-    <File Build="2">Old\Src\Manager\IManager.psm1</File>
     <File Build="2" Shared="False">Old\Tests\Unit\DevTools.Tests.ps1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\DebugEntryPoint.ps1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\PesterEntryPoint.ps1</File>
@@ -69,6 +70,9 @@
     <File Build="2">Src\Service\RemoteDeploymentService.psm1</File>
     <File Build="2">Src\LoggerDecorator.psm1</File>
     <File Build="2">Src\CommonInterfaces.psm1</File>
+    <File Build="2">Src\Console\Localized\en-US\locale.psd1</File>
+    <File Build="2">Src\Console\Localized\LocaleRepository.psm1</File>
+    <File Build="2">Src\Console\Localized\ILocaleRepository.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>
