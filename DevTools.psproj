@@ -25,6 +25,7 @@
     <Folder>Src\DesignPatterns\IServiceLocator</Folder>
     <Folder>Src\Console\Localized\en-US</Folder>
     <Folder>Src\Console\Localized</Folder>
+    <Folder>Tests\Unit</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -44,7 +45,7 @@
     <File Build="2">.gitignore</File>
     <File Build="2" Shared="False">Old\Tests\Unit\Sanity.Tests.ps1</File>
     <File Build="2" Shared="False">Old\Tests\Unit\Behavioral.Tests.ps1</File>
-    <File Build="2" Shared="False">Old\Tests\Unit\SharedFixtures.ps1</File>
+    <File Build="2" Shared="False">Tests\Unit\SharedFixtures.ps1</File>
     <File Build="2" Shared="False">Src\Console\ArgumentCompleter.ps1</File>
     <File Build="2">Old\Src\Manager\BadgeManager.psm1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
@@ -52,13 +53,12 @@
     <File Build="2" Shared="False">Old\Tests\Unit\DevTools.Tests.ps1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\DebugEntryPoint.ps1</File>
     <File Build="2" Shared="False">Old\Examples\BoilerplateModule\Tests\PesterEntryPoint.ps1</File>
-    <File Build="2" Shared="False">Old\Tests\Coverage.ps1</File>
     <File Build="2">DevTools.psm1</File>
     <File Build="2" Shared="False">Tests\PesterMetrics.ps1</File>
     <File Build="2">Src\Config\DefaultConfig.psm1</File>
     <File Build="2">Src\Config\IConfig.psm1</File>
     <File Build="2">Src\Service\LocalDeploymentService.psm1</File>
-    <File Build="2" Shared="False">Tests\DevTools.Tests.ps1</File>
+    <File Build="2" Shared="False">Tests\Unit\Generic.Tests.ps1</File>
     <File Build="2">Src\ServiceLocator.psm1</File>
     <File Build="2">Src\Helper\DynamicParametersHelper.psm1</File>
     <File Build="2">Src\Helper\FileSystemHelper.psm1</File>

@@ -1,16 +1,4 @@
-﻿Set-StrictMode -Version latest
-
-. ('{0}\Unit\SharedFixtures' -f $devTools.testsPath)
-
-Describe 'DevTools Sanity Check' {
-    
-    BeforeAll {
-        $pesterShared.mocks.__writeHost.invoke()
-        Set-Location $devTools.modulePath
-    }
-    
-    AfterAll { Set-Location $pesterShared.state.PWD }
-    
+﻿
     Context 'AppVeyor Environment [Self Test]' {
         
         BeforeAll {
@@ -42,16 +30,6 @@ Describe 'DevTools Sanity Check' {
                 Assert-MockCalled -ModuleName AppVeyorAppender Add-AppveyorMessage -Scope Context
             }
             
-            It 'Action should be "Install"' {
-                $pesterShared.result.nextLine() | Should Match 'Install'
-            }
-            
-            It 'Should be already installed' {
-                $pesterShared.result.nextLine() | Should Be 'DevTools already installed.'
-            }
-            
-            $pesterShared.result.clear()
-            
             It 'Calls Push-AppveyorArtifact on a "Tag" branch' {
                 $env:APPVEYOR_REPO_TAG = $true
                 dt Build
@@ -72,20 +50,7 @@ Describe 'DevTools Sanity Check' {
             
             BeforeAll {
                 $env:CI = $null
-                $env:APPVEYOR_BUILD_FOLDER = $null
-                
-                $content = '@{
-                        projectsPath = "{projectsPath}"
-                        psGalleryApiKey = $null
-                    
-                        userInfo = (
-                            @{
-                                gitHubSlug = $null
-                                userName = $null
-                                gitHubAuthToken = $null
-                            }
-                        )
-                    }' -replace '{projectsPath}', $devTools.ciProvider::projectsPath
+
                 
                 [IO.FileInfo]$file = "$env:USERPROFILE\dev_tools_config.psd1"
                 

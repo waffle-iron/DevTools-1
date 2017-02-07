@@ -46,15 +46,15 @@ before_test:
 
 test_script:
   - ps: .\Tests\AppVeyor.ps1
- # - ps: .\Tests\PesterMetrics.ps1
+  - ps: .\Tests\PesterMetrics.ps1
  # - ps: dt Install
  # - ps: dt Test
  # - ps: Import-Module DevTools
-  - ps: |
-        dt Install
-        dt Test
-        #dt Build
-        #dt Uninstall
+ # - ps: |
+ #       dt Install
+ #       dt Test
+ #       #dt Build
+ #       #dt Uninstall
 
 after_test:
   - ps: Remove-Item -Path $env:UserModules\$env:APPVEYOR_PROJECT_NAME -Recurse -Force -Verbose

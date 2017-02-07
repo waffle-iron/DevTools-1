@@ -1,20 +1,17 @@
 ﻿using namespace System.Collections
 
-using module DevTools
-using namespace DevTools
-
+Set-StrictMode -Version latest
 
 class Text: ArrayList
 {
     [Int]$current = -1
     [Void]clear() { $this.current = -1; ([ArrayList]$this).clear() }
+    [String]getLine([Int]$lineNumber) { return $this[--$lineNumber] }
     [String]nextLine() { return $this[++$this.current] }
     [String]previousLine() { return $this[--$this.current] }
 }
 
-
 Set-Variable pesterShared @{ } -Scope Global
-
 
 $pesterShared.verbose = $true
 
@@ -54,6 +51,9 @@ $pesterShared.mocks = @{
              -CommandName Write-Host -MockWith {
             
             param ([String]$object)
+            
+            # Smart GC
+            if ($pesterShared.result.current -ge $false) { $pesterShared.result.clear() }
             
             if ($pesterShared.verbose)
             {

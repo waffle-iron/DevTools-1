@@ -1,48 +1,43 @@
-Using module LibPosh
+using module ..\Src\Config\DefaultConfig.psm1
+
 Set-StrictMode -Version latest
 
-$ErrorActionPreference = "Stop"
+$global:ErrorActionPreference = "Stop"
+$global:progressPreference = 'SilentlyContinue'
 
-#Import-Module DevTools
-##dt Uninstall NewModule
-##dt Uninstall NewModule
-##dt Uninstall NewModule
-##dt Install NewModule
-##dt CopyToCurrentUserModules NewModule
+$config = New-Object DefaultConfig
 
-dt Test
-#
-return
+Set-Variable MODULE_NAME DevTools -Option constant
 
-$modulePath = 'D:\User\Development\OpenSource\Current\Powershell\DevTools'
-$modulesPath = 'C:\Users\user\Documents\WindowsPowerShell\Modules'
+$COVERAGE = $true
+$SCRIPTANALYZER = $true
+
+$modulesPath = $config.modulesPath
+
+$modulePath = '{0}\{1}' -f $modulesPath, $MODULE_NAME
+
 $testsPath = "$modulePath\Tests"
 
-if ($ENV:CI)
+if ($SCRIPTANALYZER)
 {
-    $modulePath = 'C:\Projects\DevTools'
-    $modulesPath = 'C:\Users\appveyor\Documents\WindowsPowerShell\Modules'
-    $testsPath = "$modulePath\Tests"
+    Invoke-ScriptAnalyzer $modulePath\$MODULE_NAME.psm1
+    Invoke-ScriptAnalyzer $modulePath\Src -Recurse
 }
 
-Invoke-ScriptAnalyzer $modulePath\DevTools.psm1
-Invoke-ScriptAnalyzer $modulePath\Src
-
-$global:ProgressPreference = 'SilentlyContinue'
-
 $sourceFiles = (
-    @{ Path = "$modulesPath\DevTools\DevTools.psm1" },
-    @{ Path = "$modulesPath\DevTools\Src\*" },
-    @{ Path = "$modulesPath\DevTools\Src\Action\*" },
-    @{ Path = "$modulesPath\DevTools\Src\Config\*" },
-    @{ Path = "$modulesPath\DevTools\Src\DesignPatterns\*" },
-    @{ Path = "$modulesPath\DevTools\Src\Helper\*" },
-    @{ Path = "$modulesPath\DevTools\Src\Service\*" }
+    @{ Path = "$modulePath\$MODULE_NAME.psm1" },
+    @{ Path = "$modulePath\Src\*" },
+    @{ Path = "$modulePath\Src\Action\*" },
+    @{ Path = "$modulePath\Src\Config\*" },
+    @{ Path = "$modulePath\Src\DesignPatterns\*" },
+    @{ Path = "$modulePath\Src\Helper\*" },
+    @{ Path = "$modulePath\Src\Service\*" }
 )
 
 $pesterConfig = @{
-    path = $testsPath + '\DevTools.Tests.ps1'
-    CodeCoverage = $sourceFiles
+    path = $testsPath + '\Unit\Generic.Tests.ps1'
 }
+
+if ($COVERAGE) { $pesterConfig.add('CodeCoverage', $sourceFiles) }
 
 $test = Invoke-Pester @pesterConfig

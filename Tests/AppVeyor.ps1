@@ -1,7 +1,22 @@
-$projectsPath = 'C:\projects'
+#$content = '@{
+#    projectsPath = "c:\projects"
+#    psGalleryApiKey = $null
+#
+#    userInfo = (
+#        @{
+#            gitHubSlug = $null
+#            userName = $null
+#            gitHubAuthToken = $null
+#        }
+#    )
+#}'
+#
+#[IO.FileInfo]$file = '{0}\.devtools' -f $ENV:USERPROFILE
+#$content | Set-Content $file
 
-$content = '@{
-    projectsPath = "{projectsPath}"
+
+'@{
+    projectsPath = "c:\projects"
     psGalleryApiKey = $null
 
     userInfo = (
@@ -11,10 +26,4 @@ $content = '@{
             gitHubAuthToken = $null
         }
     )
-}' -replace '{projectsPath}', $projectsPath
-
-[IO.FileInfo]$file = '{0}\.devtools' -f $ENV:USERPROFILE
-$content | Set-Content $file
-
-Write-Host $file
-Write-Host $projectsPath
+}' | Set-Content $ENV:USERPROFILE\.devtools

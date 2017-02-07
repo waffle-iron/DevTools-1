@@ -17,7 +17,7 @@ class LocalDeploymentService: IService
                 $source = $this.getSource($_.name)
                 $destination = $this.getDestination($_.name)
                 
-                $callback.invoke()
+                $callback.invoke($source, $destination)
             }
         }
     }

@@ -10,7 +10,7 @@
     HelpInfoURI = 'https://github.com/g8tguy/DevTools/blob/master/README.md'
     
 #    RequiredModules = @(
-#        @{ ModuleName = 'LibPosh'; RequiredVersion = '1.0.7' },
+#        @{ ModuleName = 'LibPosh'; RequiredVersion = '1.0.10' },
 #        @{ ModuleName = 'Pester'; RequiredVersion = '3.4.3' }
 #        @{ ModuleName = 'Logger'; RequiredVersion = '1.0.3' }
 #    )

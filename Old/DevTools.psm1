@@ -1,5 +1,5 @@
 
-[DynamicConfig]$script:devTools = $null
+
 
 function Use-DevTools
 {
