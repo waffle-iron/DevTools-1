@@ -73,6 +73,7 @@
     <File Build="2">Src\Console\Localized\en-US\locale.psd1</File>
     <File Build="2">Src\Console\Localized\LocaleRepository.psm1</File>
     <File Build="2">Src\Console\Localized\ILocaleRepository.psm1</File>
+    <File Build="2">Src\Service\AppVeyorService.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

@@ -10,6 +10,8 @@ class IService
 {
     [ILogger]$logger
     [IConfig]$config
+    
+    [IService]getInstance() { throw }
 }
 
 class IHelper

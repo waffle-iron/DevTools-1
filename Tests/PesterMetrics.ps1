@@ -5,12 +5,16 @@ Set-StrictMode -Version latest
 $global:ErrorActionPreference = "Stop"
 $global:progressPreference = 'SilentlyContinue'
 
+
+#dt test
+#return 
+
 $config = New-Object DefaultConfig
 
 Set-Variable MODULE_NAME DevTools -Option constant
 
-$COVERAGE = $true
-$SCRIPTANALYZER = $true
+$COVERAGE = $false
+$SCRIPTANALYZER = $false
 
 $modulesPath = $config.modulesPath
 

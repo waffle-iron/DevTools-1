@@ -46,10 +46,10 @@ before_test:
 
 test_script:
   - ps: .\Tests\AppVeyor.ps1
+ # - ps: Import-Module DevTools
   - ps: .\Tests\PesterMetrics.ps1
  # - ps: dt Install
  # - ps: dt Test
- # - ps: Import-Module DevTools
  # - ps: |
  #       dt Install
  #       dt Test

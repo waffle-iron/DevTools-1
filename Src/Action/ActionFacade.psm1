@@ -2,6 +2,7 @@
 using module ..\Helper\FileSystemHelper.psm1
 using module ..\Service\LocalDeploymentService.psm1
 using module ..\Service\RemoteDeploymentService.psm1
+using module ..\Service\AppVeyorService.psm1
 
 Set-StrictMode -Version latest
 
@@ -9,6 +10,7 @@ class ActionFacade: IHelperObserver
 {
     [LocalDeploymentService]$localDeploymentService
     [RemoteDeploymentService]$remoteDeploymentService
+    [AppVeyorService]$appVeyorService
     [FileSystemHelper]$fileSystemHelper
     
     [Void]update([Object]$sender, [EventArgs]$event) { $this.($event.action)() }

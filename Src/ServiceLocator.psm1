@@ -14,6 +14,7 @@ using module .\Action\ActionMapper.psm1
 using module .\Action\ActionFacade.psm1
 
 using module .\Service\LocalDeploymentService.psm1
+using module .\Service\AppVeyorService.psm1
 
 using module .\Console\Localized\LocaleRepository.psm1
 
@@ -40,7 +41,7 @@ class ServiceLocator: IServiceLocator
         
         #LocaleRepository
         $this.add([LocaleRepository]$defaultDataSet)
-
+        
         # Inject LocaleRepository into module config
         $this.get([IConfig]).locale = $this.get([LocaleRepository])
         
@@ -50,6 +51,9 @@ class ServiceLocator: IServiceLocator
         #LocalDeploymentService
         $this.add([LocalDeploymentService]$defaultDataSet)
         
+        #AppVeyorService
+        if ($ENV:APPVEYOR) { $this.add(([AppVeyorService]$defaultDataSet).getInstance()) }
+        
         #FileSystemHelper
         $this.add([FileSystemHelper]$defaultDataSet)
         
@@ -58,11 +62,11 @@ class ServiceLocator: IServiceLocator
             fileSystemHelper = $this.get([FileSystemHelper])
         }
         
-        #ActionMapper
-        $this.add([ActionMapper]$defaultDataSet)
-        
         #ActionFacade
         $this.add([ActionFacade]($defaultDataSet + $services))
+        
+        #ActionMapper
+        $this.add([ActionMapper]$defaultDataSet)
         
         #Subscribe LocaleRepository to ActionMapper
         $this.get([ActionMapper]).attach($this.get([LocaleRepository]))

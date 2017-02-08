@@ -6,14 +6,14 @@ class Text: ArrayList
 {
     [Int]$current = -1
     [Void]clear() { $this.current = -1; ([ArrayList]$this).clear() }
-    [String]getLine([Int]$lineNumber) { return $this[--$lineNumber] }
+    [String]getLine([Int]$lineNumber) { return $this[($this.current = --$lineNumber)] }
     [String]nextLine() { return $this[++$this.current] }
     [String]previousLine() { return $this[--$this.current] }
 }
 
 Set-Variable pesterShared @{ } -Scope Global
 
-$pesterShared.verbose = $true
+$pesterShared.verbose = $false
 
 $pesterShared.result = New-Object Text
 $pesterShared.resulta = @()
