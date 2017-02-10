@@ -2,7 +2,9 @@ using module ..\Src\ServiceLocator.psm1
 
 Set-StrictMode -Version latest
 
-$global:ErrorActionPreference = "Stop"
+#$ENV:APPVEYOR = $true
+
+$global:ErrorActionPreference = 'Stop'
 $global:progressPreference = 'SilentlyContinue'
 
 $serviceLocator = New-Object ServiceLocator

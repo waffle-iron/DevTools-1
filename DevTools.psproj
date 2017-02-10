@@ -50,6 +50,7 @@
     <File Build="2" Shared="False">Tests\PesterEntryPoint.ps1</File>
     <File Build="2" Shared="False">Tests\Unit\Dummy.Tests.ps1</File>
     <File Build="2" Shared="False">Tests\StandAloneRunner.ps1</File>
+    <File Build="2">Src\Service\VersionService.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

@@ -1,9 +1,12 @@
 using module ..\CommonInterfaces.psm1
+using module ..\Service\AppVeyorService.psm1
 
 class TestSuiteHelper: IHelper
 {
     [Boolean]$coverage = $true
     [Boolean]$analyze = $true
+    
+    [AppVeyorService]$appVeyorService
     
     [Object]AnalyzeScript([Array]$scripts)
     {
@@ -46,8 +49,13 @@ class TestSuiteHelper: IHelper
     [Void]invokePester([HashTable]$pesterConfig)
     {
         if (-not $this.coverage) { $pesterConfig.Remove('codeCoverage') }
+        
         $pester = Invoke-Pester @pesterConfig
         
+        if ($this.appVeyorService)
+        {
+            $this.appVeyorService.processPesterResults($pester, $pesterConfig)
+        }
     }
     
     
@@ -58,7 +66,7 @@ class TestSuiteHelper: IHelper
         
         $defaultCoveragePaths = (
             @{ path = '{0}\{1}.psm1' -f $MODULE_PATH, $MODULE_NAME },
-            @{ path = '{0}\Src\*' -f $MODULE_PATH  }
+            @{ path = '{0}\Src\*' -f $MODULE_PATH }
         )
         
         foreach ($coveragePath in $coveragePaths)
@@ -67,6 +75,9 @@ class TestSuiteHelper: IHelper
         }
         
         return @{
+            outputFile = '{0}\Pester.NUnit.xml' -f $this.config.stagingPath
+            outputFormat = 'NUnitXml'
+            passThru = $true
             codeCoverage = $defaultCoveragePaths
             script = '{0}\Tests\Unit\Generic.Tests.ps1' -f $this.config.modulePath
         }

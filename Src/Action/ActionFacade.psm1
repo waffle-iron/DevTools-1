@@ -17,36 +17,37 @@ class ActionFacade: IHelperObserver
     
     [Void]update([Object]$sender, [EventArgs]$event) { $this.($event.action)() }
     
-    [Void]GenerateProject() { }
-    
-    [Void]copyToCurrentUserModules()
+    [Void]generateProject()
     {
-        $this.localDeploymentService.copyDependencies($this.fileSystemHelper)
     }
     
-    [Void]install()
-    {
-        $this.localDeploymentService.symlinkDependencies($this.fileSystemHelper)
-    }
+    [Void]copyToCurrentUserModules() { $this.localDeploymentService.copyDependencies() }
     
-    [Void]uninstall()
-    {
-        $this.localDeploymentService.removeDependencies($this.fileSystemHelper)
-    }
+    [Void]install() { $this.localDeploymentService.symlinkDependencies() }
+    
+    [Void]uninstall() { $this.localDeploymentService.removeDependencies() }
     
     [Void]test()
     {
         # Exposed test scope variables
         $config = $this.config
-        #$logger = $this.logger
+        $logger = $this.logger
         
-        $this.logger.warning('Before test')
+        $logger.debug('Execute PesterEntryPoint at {0}' -f $config.testsPath)
         
         . ('{0}\PesterEntryPoint' -f $config.testsPath)
+    }
+    
+    [Void]build()
+    {
+        $bundle = $this.localDeploymentService.bundle()
         
-        #if (!$appVeyor) { return }
-        #$appVeyor.uploadTestsFile($pesterConfig)
-        #$appVeyor.throwOnFail($test.failedCount)
-        $this.logger.warning('After test')
+        $archive = $this.localDeploymentService.archiveBundle($bundle)
+        
+        if ($this.config.ci) { $this.appVeyorService.pushArtifact($archive) }
+        
+        $this.logger.warning('Bundle GC {0}' -f $bundle.parent.name)
+        
+        $this.localDeploymentService.gc(($bundle.parent.fullName, $archive))
     }
 }

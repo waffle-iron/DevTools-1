@@ -34,4 +34,4 @@ New-Alias -Name dt -Value Use-DevTools
 
 & $PSScriptRoot\Src\Console\ArgumentCompleter
 
-$logger.debug($config.locale.Loading)
+$logger.debug((locale module_loading))

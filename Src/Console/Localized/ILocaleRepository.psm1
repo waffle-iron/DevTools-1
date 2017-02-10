@@ -21,9 +21,11 @@ class ILocaleRepository: HashTable, IObserver[Object]
         ).getEnumerator().forEach{ $this.add($_.key, $_.value) }
     }
     
-    [Void] OnCompleted() { throw }
-    [Void] OnError([Exception]$exception) { throw }
-    [Void] OnNext([Object]$value) { throw }
+    [Void]OnCompleted() { throw }
+    [Void]OnError([Exception]$exception) { throw }
+    [Void]OnNext([Object]$value) { throw }
     
-    [Void]update([Object]$sender, [EventArgs]$event) { $this.renderTitle($event.action) }
+    [Void]Update([Object]$sender, [EventArgs]$event) { $this.renderTitle($event.action) }
+    
+    [Void]Expose() { & { $script:locale = $this; function global:locale { $locale[$args] } } }
 }

@@ -41,6 +41,8 @@ class DefaultConfig: IConfig
         
         $this.moduleDependencies = @{ deploy = $true; name = $this.moduleName }
         $this.moduleDependencies += Get-Property $this.moduleManifest.PrivateData DevTools.Dependencies
+        
+        $this.version.version = $this.moduleManifest.ModuleVersion
     }
     
     [IO.DirectoryInfo]getProjectPath($moduleName)

@@ -55,13 +55,18 @@ Describe 'Console Parameters' {
         }
         
         It 'Should uninstall module' {
-            Use-DevTools uninstall
+            Use-DevTools Uninstall
             $pesterShared.result.nextLine() | Should Match 'Uninstall'
         }
         
         It 'Should create junction link' {
-            Use-DevTools install
+            Use-DevTools Install
             $pesterShared.result.getLine(2) | Should Match 'Junction created'
+        }
+        
+        It 'Should build the module' {
+            Use-DevTools Build
+            $pesterShared.result.nextLine() | Should Match 'Build'
         }
     }
     

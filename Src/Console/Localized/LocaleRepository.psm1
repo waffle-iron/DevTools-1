@@ -12,7 +12,7 @@ class LocaleRepository: ILocaleRepository
             false { $ENV:PROCESSOR_ARCHITECTURE }
         }
         
-        $title = '{0} {1} {2} [{3} {4}]' -f $this.config.moduleName, '1.2.2', `
+        $title = '{0} {1} {2} [{3} {4}]' -f $this.config.moduleName, $this.config.version, `
         $action, $cpu_architecture, $ENV:COMPUTERNAME
         
         $this.logger.information($title)

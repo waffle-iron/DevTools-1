@@ -13,7 +13,7 @@ class Text: ArrayList
 
 Set-Variable pesterShared @{ } -Scope Global
 
-$pesterShared.verbose = $false
+$pesterShared.verbose = $true
 
 $pesterShared.result = New-Object Text
 $pesterShared.resulta = @()

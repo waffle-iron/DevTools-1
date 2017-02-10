@@ -14,7 +14,11 @@ class IConfig {
     
     [Boolean]$ci = $ENV:CI
     
+    [Object]$version
+    
     [Boolean]$whatIf
+    [Boolean]$verbose = $false
+    [Boolean]$debug = $false
     
     [ILogger]$logger
     
