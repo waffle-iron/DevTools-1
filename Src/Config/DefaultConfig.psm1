@@ -1,4 +1,5 @@
 using module .\IConfig.psm1
+using module ..\GenericTypes.psm1
 
 Set-StrictMode -Version latest
 
@@ -22,9 +23,11 @@ class DefaultConfig: IConfig
     [Void]bindProperties([HashTable]$boundParameters)
     {
         $this.moduleName = $boundParameters['Module']
-        $this.action = $boundParameters['Action']
-        $this.versionType = $boundParameters['VersionType']
-        $this.whatIf = $boundParameters['WhatIf']
+        $this.action = Get-Property $boundParameters Action ([ActionType]::Test)
+        $this.versionType = Get-Property $boundParameters VersionType ([VersionComponent]::Build)
+        $this.whatIf = Get-Property $boundParameters  WhatIf
+        
+        $this.currentUserModulePath = '{0}\{1}' -f $this.modulesPath, $this.moduleName
         
         $this.modulePath = $this.getProjectPath($this.moduleName)
         $this.testsPath = '{0}\Tests' -f $this.modulePath

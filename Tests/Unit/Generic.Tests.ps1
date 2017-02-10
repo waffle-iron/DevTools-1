@@ -25,7 +25,6 @@ Describe 'Console Parameters' {
         }
     }
     
-    
     BeforeAll {
         $pesterShared.mocks.__writeHost.invoke()
     }
@@ -64,7 +63,6 @@ Describe 'Console Parameters' {
             Use-DevTools install
             $pesterShared.result.getLine(2) | Should Match 'Junction created'
         }
-        
     }
     
     Context 'Common Workflow' {

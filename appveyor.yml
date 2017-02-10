@@ -38,7 +38,6 @@ install:
   - ps: Install-Module LibPosh -Scope CurrentUser -Force
   - ps: Install-Module Logger -Scope CurrentUser -Force
 
-
 before_test:
   - ps: Get-InstalledModule  | Format-Table -HideTableHeaders -Property Name, Version
   - cmd: set PS_PROFILE=%userprofile%\Documents\WindowsPowerShell\Modules\%APPVEYOR_PROJECT_NAME%
@@ -47,7 +46,7 @@ before_test:
 test_script:
   - ps: .\Tests\AppVeyor.ps1
  # - ps: Import-Module DevTools
-  - ps: .\Tests\PesterMetrics.ps1
+  - ps: .\Tests\StandAloneRunner.ps1
  # - ps: dt Install
  # - ps: dt Test
  # - ps: |

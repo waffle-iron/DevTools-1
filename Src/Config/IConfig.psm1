@@ -34,6 +34,7 @@ class IConfig {
     [IO.DirectoryInfo]$devToolsPath
     [IO.DirectoryInfo]$modulesPath
     [IO.DirectoryInfo]$modulePath
+    [IO.DirectoryInfo]$currentUserModulePath
     [IO.DirectoryInfo]$testsPath
     
     [IO.FileInfo]$readmeFile

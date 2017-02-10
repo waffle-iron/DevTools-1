@@ -8,6 +8,7 @@ using module .\Config\DefaultConfig.psm1
 
 using module .\Helper\DynamicParametersHelper.psm1
 using module .\Helper\FileSystemHelper.psm1
+using module .\Helper\TestSuiteHelper.psm1
 
 
 using module .\Action\ActionMapper.psm1
@@ -56,6 +57,9 @@ class ServiceLocator: IServiceLocator
         
         #FileSystemHelper
         $this.add([FileSystemHelper]$defaultDataSet)
+        
+        #TestSuiteHelper
+        $this.add([TestSuiteHelper]$defaultDataSet)
         
         $services = @{
             localDeploymentService = $this.get([LocalDeploymentService])

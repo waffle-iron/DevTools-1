@@ -4,6 +4,8 @@ using module ..\Service\LocalDeploymentService.psm1
 using module ..\Service\RemoteDeploymentService.psm1
 using module ..\Service\AppVeyorService.psm1
 
+using module ..\Helper\TestSuiteHelper.psm1
+
 Set-StrictMode -Version latest
 
 class ActionFacade: IHelperObserver
@@ -34,6 +36,17 @@ class ActionFacade: IHelperObserver
     
     [Void]test()
     {
-        $this.logger.warning('test')
+        # Exposed test scope variables
+        $config = $this.config
+        #$logger = $this.logger
+        
+        $this.logger.warning('Before test')
+        
+        . ('{0}\PesterEntryPoint' -f $config.testsPath)
+        
+        #if (!$appVeyor) { return }
+        #$appVeyor.uploadTestsFile($pesterConfig)
+        #$appVeyor.throwOnFail($test.failedCount)
+        $this.logger.warning('After test')
     }
 }
