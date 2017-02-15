@@ -16,6 +16,8 @@
     <Folder>Src\Console\Localized\en-US</Folder>
     <Folder>Src\Console\Localized</Folder>
     <Folder>Tests\Unit</Folder>
+    <Folder>Assets\BoilerplateModule</Folder>
+    <Folder>Assets</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -51,6 +53,9 @@
     <File Build="2" Shared="False">Tests\Unit\Dummy.Tests.ps1</File>
     <File Build="2" Shared="False">Tests\StandAloneRunner.ps1</File>
     <File Build="2">Src\Service\VersionService.psm1</File>
+    <File Build="2">Src\Service\ModuleGeneratorService.psm1</File>
+    <File Build="2">Assets\BoilerplateModule\Module.psd1</File>
+    <File Build="2">Assets\BoilerplateModule\Module.psm1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

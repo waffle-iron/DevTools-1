@@ -28,11 +28,11 @@ class DynamicParametersHelper: IHelper
         
         $rawParameters = -split (Get-PSCallStack)[2].Position.Text
         
-        [Boolean]$generateProject = $rawParameters -contains 'GenerateProject'
+        [Boolean]$generateModule = $rawParameters -contains 'GenerateModule'
         
-        if ($generateProject)
+        if ($generateModule)
         {
-            $newProject = switch ($rawParameters[$true] -eq 'GenerateProject')
+            $newProject = switch ($rawParameters[$true] -eq 'GenerateModule')
             {
                 true { $rawParameters[2] }
                 false { $rawParameters[1] }

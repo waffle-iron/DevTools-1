@@ -16,6 +16,7 @@ using module .\Action\ActionFacade.psm1
 using module .\Service\VersionService.psm1
 using module .\Service\LocalDeploymentService.psm1
 using module .\Service\AppVeyorService.psm1
+using module .\Service\ModuleGeneratorService.psm1
 
 
 using module .\Console\Localized\LocaleRepository.psm1
@@ -67,6 +68,11 @@ class ServiceLocator: IServiceLocator
                 $defaultProperties + @{ fileSystemHelper = $this.get([FileSystemHelper]) })
         )
         
+        #ModuleGeneratorService
+        $this.add([ModuleGeneratorService](
+                $defaultProperties + @{ fileSystemHelper = $this.get([FileSystemHelper]) })
+        )
+        
         #AppVeyorService
         if ($ENV:APPVEYOR) { $this.add(([AppVeyorService]$defaultProperties).getInstance()) }
         
@@ -79,6 +85,7 @@ class ServiceLocator: IServiceLocator
             localDeploymentService = $this.get([LocalDeploymentService])
             fileSystemHelper = $this.get([FileSystemHelper])
             appVeyorService = $this.get([AppVeyorService])
+            moduleGeneratorService = $this.get([ModuleGeneratorService])
         }
         
         #ActionFacade

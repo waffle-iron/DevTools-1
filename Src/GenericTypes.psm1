@@ -9,7 +9,7 @@ enum ActionType {
     Install
     Uninstall
     Test
-    GenerateProject
+    GenerateModule
     CopyToCurrentUserModules
     BumpVersion
     Publish

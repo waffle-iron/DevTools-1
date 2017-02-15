@@ -15,7 +15,7 @@ class ActionMapper: IHelperObservable
         
         switch ($this.config.action)
         {
-            ([ActionType]::GenerateProject) { }
+            ([ActionType]::GenerateModule) { }
             ([ActionType]::Install) { }
             ([ActionType]::Uninstall) { }
             ([ActionType]::CopyToCurrentUserModules) { }

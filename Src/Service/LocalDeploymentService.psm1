@@ -4,7 +4,6 @@ Set-StrictMode -Version latest
 
 class LocalDeploymentService: IService
 {
-    
     [Object]$fileSystemHelper
     
     [String]getSource($module) { return $this.config.getProjectPath($module) }

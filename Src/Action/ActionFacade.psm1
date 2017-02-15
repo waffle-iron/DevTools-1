@@ -3,6 +3,7 @@ using module ..\Helper\FileSystemHelper.psm1
 using module ..\Service\LocalDeploymentService.psm1
 using module ..\Service\RemoteDeploymentService.psm1
 using module ..\Service\AppVeyorService.psm1
+using module ..\Service\ModuleGeneratorService.psm1
 
 using module ..\Helper\TestSuiteHelper.psm1
 
@@ -14,12 +15,11 @@ class ActionFacade: IHelperObserver
     [RemoteDeploymentService]$remoteDeploymentService
     [AppVeyorService]$appVeyorService
     [FileSystemHelper]$fileSystemHelper
+    [ModuleGeneratorService]$moduleGeneratorService
     
     [Void]update([Object]$sender, [EventArgs]$event) { $this.($event.action)() }
     
-    [Void]generateProject()
-    {
-    }
+    [Void]GenerateModule() { $this.moduleGeneratorService.generate() }
     
     [Void]copyToCurrentUserModules() { $this.localDeploymentService.copyDependencies() }
     

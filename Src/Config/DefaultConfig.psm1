@@ -34,15 +34,16 @@ class DefaultConfig: IConfig
         $this.readmeFile = '{0}\README.md' -f $this.modulePath
         $this.manifestFile = '{0}\{1}.psd1' -f $this.modulePath, $this.moduleName
         
+        $this.moduleDependencies = @{ deploy = $true; name = $this.moduleName }
+        
         if ($this.manifestFile.exists)
         {
             $this.moduleManifest = Import-PowerShellDataFile $this.manifestFile
+            
+            $this.moduleDependencies += Get-Property $this.moduleManifest PrivateData.DevTools.Dependencies
+            
+            $this.version.version = $this.moduleManifest.ModuleVersion
         }
-        
-        $this.moduleDependencies = @{ deploy = $true; name = $this.moduleName }
-        $this.moduleDependencies += Get-Property $this.moduleManifest.PrivateData DevTools.Dependencies
-        
-        $this.version.version = $this.moduleManifest.ModuleVersion
     }
     
     [IO.DirectoryInfo]getProjectPath($moduleName)
