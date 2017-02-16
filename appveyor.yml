@@ -28,7 +28,7 @@ install:
         }
   
   - ps: if (-not (Test-Path $env:UserModules\Pester)) {
-            Install-Module Pester -RequiredVersion 3.4.3 -Scope CurrentUser -Force
+            Install-Module Pester -RequiredVersion 3.4.6 -Scope CurrentUser -Force
         }
   
   - ps: if (-not (Test-Path $env:UserModules\PSScriptAnalyzer)) {

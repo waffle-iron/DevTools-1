@@ -43,6 +43,9 @@ class DefaultConfig: IConfig
             $this.moduleDependencies += Get-Property $this.moduleManifest PrivateData.DevTools.Dependencies
             
             $this.version.version = $this.moduleManifest.ModuleVersion
+        } else
+        {
+            $this.version.version = $this.version.defaultVersion
         }
     }
     

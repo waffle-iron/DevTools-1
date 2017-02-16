@@ -18,6 +18,9 @@
     <Folder>Tests\Unit</Folder>
     <Folder>Assets\BoilerplateModule</Folder>
     <Folder>Assets</Folder>
+    <Folder>Assets\BoilerplateModule\Tests</Folder>
+    <Folder>Assets\BoilerplateModule\Tests\Unit</Folder>
+    <Folder>Assets\BoilerplateModule\Src</Folder>
   </Folders>
   <Files>
     <File Build="2">DevTools.psd1</File>
@@ -56,6 +59,13 @@
     <File Build="2">Src\Service\ModuleGeneratorService.psm1</File>
     <File Build="2">Assets\BoilerplateModule\Module.psd1</File>
     <File Build="2">Assets\BoilerplateModule\Module.psm1</File>
+    <File Build="2">Assets\BoilerplateModule\README.md</File>
+    <File Build="2">Assets\BoilerplateModule\appveyor.yml</File>
+    <File Build="2" Shared="False">Assets\BoilerplateModule\Tests\DebugEntryPoint.ps1</File>
+    <File Build="2" Shared="False">Assets\BoilerplateModule\Tests\PesterEntryPoint.ps1</File>
+    <File Build="2" Shared="False">Assets\BoilerplateModule\Tests\Unit\Generic.Tests.ps1</File>
+    <File Build="2">Assets\BoilerplateModule\Src\Poppy.psm1</File>
+    <File Build="2" Shared="False">Assets\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

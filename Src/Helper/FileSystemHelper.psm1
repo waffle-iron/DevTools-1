@@ -27,6 +27,11 @@ class FileSystemHelper: IHelper
         return $this.result($result, $default)
     }
     
+    [Object]safeCopy([String]$source, [String]$destination)
+    {
+        return robocopy $source $destination /xc /xn /xo /E /NJS /NS /NC /NP /NJH
+    }
+    
     [Object]synchronizeDirectory([String]$source, [String]$destination)
     {
         return xcopy $this.escapePath($source) $this.escapePath($destination) /Isdy

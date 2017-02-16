@@ -50,14 +50,17 @@ class TestSuiteHelper: IHelper
     {
         if (-not $this.coverage) { $pesterConfig.Remove('codeCoverage') }
         
-        $pester = Invoke-Pester @pesterConfig
+        $pester = switch ($this.config.whatIf)
+        {
+            true { @{ failedCount = 0 } }
+            false { Invoke-Pester @pesterConfig }
+        }
         
         if ($this.appVeyorService)
         {
             $this.appVeyorService.processPesterResults($pester, $pesterConfig)
         }
     }
-    
     
     [HashTable]getPesterDefaultConfig($coveragePaths)
     {
@@ -76,7 +79,7 @@ class TestSuiteHelper: IHelper
         
         return @{
             outputFile = '{0}\Pester.NUnit.xml' -f $this.config.stagingPath
-            outputFormat = 'NUnitXml'
+            outputFormat = 'LegacyNUnitXml'
             passThru = $true
             codeCoverage = $defaultCoveragePaths
             script = '{0}\Tests\Unit\Generic.Tests.ps1' -f $this.config.modulePath

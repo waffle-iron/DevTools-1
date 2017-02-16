@@ -1,11 +1,12 @@
 ﻿using module ..\CommonInterfaces.psm1
+
 using module ..\Helper\FileSystemHelper.psm1
+using module ..\Helper\TestSuiteHelper.psm1
+
 using module ..\Service\LocalDeploymentService.psm1
 using module ..\Service\RemoteDeploymentService.psm1
 using module ..\Service\AppVeyorService.psm1
 using module ..\Service\ModuleGeneratorService.psm1
-
-using module ..\Helper\TestSuiteHelper.psm1
 
 Set-StrictMode -Version latest
 
@@ -16,6 +17,7 @@ class ActionFacade: IHelperObserver
     [AppVeyorService]$appVeyorService
     [FileSystemHelper]$fileSystemHelper
     [ModuleGeneratorService]$moduleGeneratorService
+    [TestSuiteHelper]$testSuiteHelper
     
     [Void]update([Object]$sender, [EventArgs]$event) { $this.($event.action)() }
     
@@ -29,13 +31,8 @@ class ActionFacade: IHelperObserver
     
     [Void]test()
     {
-        # Exposed test scope variables
-        $config = $this.config
-        $logger = $this.logger
-        
-        $logger.debug('Execute PesterEntryPoint at {0}' -f $config.testsPath)
-        
-        . ('{0}\PesterEntryPoint' -f $config.testsPath)
+        $this.logger.information('Execute PesterEntryPoint at {0}' -f $this.config.testsPath)
+        . ('{0}\PesterEntryPoint' -f $this.config.testsPath)
     }
     
     [Void]build()

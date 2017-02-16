@@ -5,8 +5,9 @@ Set-StrictMode -Version latest
 
 class VersionService: IService
 {
-
-    [Version]$version = '0.0.0'
+    
+    [Version]$defaultVersion = '1.0.0'
+    [Version]$version = $this.defaultVersion
     [String]$regex = "ModuleVersion\s=\s'(?<version>.+)'"
 
     [String]next() { return $this.next($this.config.versionType) }

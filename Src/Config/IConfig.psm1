@@ -1,10 +1,13 @@
 using module Logger
 
 using module ..\GenericTypes.psm1
+using module ..\DesignPatterns\IServiceLocator
 
 Set-StrictMode -Version latest
 
 class IConfig {
+    
+    [IServiceLocator]$serviceLocator
     
     hidden [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
     

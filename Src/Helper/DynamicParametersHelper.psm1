@@ -27,7 +27,7 @@ class DynamicParametersHelper: IHelper
         $projects = $this.config.getProjects()
         
         $rawParameters = -split (Get-PSCallStack)[2].Position.Text
-        
+
         [Boolean]$generateModule = $rawParameters -contains 'GenerateModule'
         
         if ($generateModule)

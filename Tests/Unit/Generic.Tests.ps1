@@ -40,7 +40,7 @@ Describe 'Console Parameters' {
             }
         }
         
-        Use-DevTools
+        Use-DevTools -Whatif
         
         It 'Should call Add-AppveyorMessage' {
             Assert-MockCalled -ModuleName AppVeyorAppender Add-AppveyorMessage -Scope Context
@@ -70,11 +70,38 @@ Describe 'Console Parameters' {
         }
     }
     
-    Context 'Common Workflow' {
+    Context 'SuperModule Workflow' {
         
-        It 'Should generate project' {
-            Use-DevTools GenerateProject TestModule
-            $pesterShared.result.getLine(1) | Should Match 'GenerateProject'
+        It 'Should generate SuperModule' {
+            Use-DevTools GenerateModule SuperModule
+            $pesterShared.result.nextLine() | Should Match "SuperModule 1.0.0 GenerateModule"
         }
+        
+        It 'Should run SuperModule tests' {
+            Use-DevTools Test SuperModule -WhatIf
+            
+            $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 Test'
+        }
+        
+        It 'Should not throw on SuperModule Install' {
+            { Use-DevTools Install SuperModule } | Should Not Throw
+            $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 Install'
+        }
+        
+        It 'Should copyToCurrentUserModules' {
+            Set-Location ..
+            { Use-DevTools SuperModule copyToCurrentUserModules } | Should Not Throw
+            $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 CopyToCurrentUserModules'
+            Set-Location .\SuperModule
+        }
+        
+        AfterAll {
+            It 'Should uninstall SuperModule' {
+                { Use-DevTools Uninstall SuperModule } | Should Not Throw
+                $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 Uninstall'
+            }
+        }
+        
+        
     }
 }

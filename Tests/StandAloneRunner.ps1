@@ -14,7 +14,7 @@ $config.bindProperties(@{ module = 'DevTools' })
 
 $testSuiteHelper = $serviceLocator.get('TestSuiteHelper')
 
-$testSuiteHelper.coverage = $false
+$testSuiteHelper.coverage = $true
 $testSuiteHelper.analyze = $false
 
 [Void]$testSuiteHelper.AnalyzeScript($null)

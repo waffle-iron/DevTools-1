@@ -16,7 +16,7 @@ Set-Variable pesterShared @{ } -Scope Global
 $pesterShared.verbose = $true
 
 $pesterShared.result = New-Object Text
-$pesterShared.resulta = @()
+
 
 $pesterShared.state = @{
     CI = $env:CI

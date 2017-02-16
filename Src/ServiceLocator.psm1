@@ -18,7 +18,6 @@ using module .\Service\LocalDeploymentService.psm1
 using module .\Service\AppVeyorService.psm1
 using module .\Service\ModuleGeneratorService.psm1
 
-
 using module .\Console\Localized\LocaleRepository.psm1
 
 Set-StrictMode -Version latest
@@ -34,7 +33,7 @@ class ServiceLocator: IServiceLocator
         $this.add([ILogger], $logger)
         
         #DefaultConfig
-        $defaultConfig = [DefaultConfig]@{ logger = $logger }
+        $defaultConfig = [DefaultConfig]@{ logger = $logger; serviceLocator = $this }
         $this.add([IConfig], $defaultConfig)
         
         $defaultProperties = @{
@@ -82,10 +81,11 @@ class ServiceLocator: IServiceLocator
         )
         
         $services = @{
-            localDeploymentService = $this.get([LocalDeploymentService])
-            fileSystemHelper = $this.get([FileSystemHelper])
             appVeyorService = $this.get([AppVeyorService])
+            localDeploymentService = $this.get([LocalDeploymentService])
             moduleGeneratorService = $this.get([ModuleGeneratorService])
+            fileSystemHelper = $this.get([FileSystemHelper])
+            testSuiteHelper = $this.get([TestSuiteHelper])
         }
         
         #ActionFacade

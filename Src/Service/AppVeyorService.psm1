@@ -37,6 +37,7 @@ class AppVeyorService: IService
         
         $this.logger.warning($message)
         
+        if ($this.config.whatIf) { return }
         (New-Object Net.WebClient).uploadFile($target, $outputFile)
     }
     
