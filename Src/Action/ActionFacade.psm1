@@ -1,8 +1,5 @@
 ﻿using module ..\CommonInterfaces.psm1
 
-using module ..\Helper\FileSystemHelper.psm1
-using module ..\Helper\TestSuiteHelper.psm1
-
 using module ..\Service\LocalDeploymentService.psm1
 using module ..\Service\RemoteDeploymentService.psm1
 using module ..\Service\AppVeyorService.psm1
@@ -12,16 +9,14 @@ Set-StrictMode -Version latest
 
 class ActionFacade: IHelperObserver
 {
+    [AppVeyorService]$appVeyorService
+    [ModuleGeneratorService]$moduleGeneratorService
     [LocalDeploymentService]$localDeploymentService
     [RemoteDeploymentService]$remoteDeploymentService
-    [AppVeyorService]$appVeyorService
-    [FileSystemHelper]$fileSystemHelper
-    [ModuleGeneratorService]$moduleGeneratorService
-    [TestSuiteHelper]$testSuiteHelper
     
-    [Void]update([Object]$sender, [EventArgs]$event) { $this.($event.action)() }
+    [Void]update([IHelperObservable]$sender, [EventArgs]$event) { $this.($event.action)() }
     
-    [Void]GenerateModule() { $this.moduleGeneratorService.generate() }
+    [Void]generateModule() { $this.moduleGeneratorService.generate() }
     
     [Void]copyToCurrentUserModules() { $this.localDeploymentService.copyDependencies() }
     
@@ -29,8 +24,23 @@ class ActionFacade: IHelperObserver
     
     [Void]uninstall() { $this.localDeploymentService.removeDependencies() }
     
+    [Void]bumpVersion() { $this.config.version.applyNext() }
+    
+    [Void]publish() { $this.publish($null) }
+    
+    [Void]publish($bundle) { $this.remoteDeploymentService.publishToPSGallery($bundle) }
+    
+    [Void]deploy()
+    {
+        $this.bumpVersion()
+        $bundle = $this.localDeploymentService.bundle()
+        $this.publish($bundle)
+    }
+    
     [Void]test()
     {
+        $testSuite = $this.config.serviceLocator.get('TestSuiteHelper')
+        
         $this.logger.information('Execute PesterEntryPoint at {0}' -f $this.config.testsPath)
         . ('{0}\PesterEntryPoint' -f $this.config.testsPath)
     }

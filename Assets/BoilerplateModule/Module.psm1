@@ -2,8 +2,6 @@ using module .\Src\Poppy.psm1
 
 Set-StrictMode -Version latest
 
-$global:codeSmells = $true
-
 function Test-MODULE_NAME
 {
     param

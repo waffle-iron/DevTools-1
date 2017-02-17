@@ -47,14 +47,14 @@ class FileSystemHelper: IHelper
     {
         Try
         {
-            $result = Copy-Item $fileInfo $destination -Recurse `
+            $result = Copy-Item $fileInfo $destination -Recurse -Container -Force `
                                 -Verbose:$this.config.verbose -ErrorAction Stop 4>&1
         } Catch
         {
             $result = $_.exception.message
         }
         
-        $default = 'Copy {0}{2}===> {1}' -f $fileInfo, $destination, [Environment]::NewLine
+        $default = 'Copy {0}{2}==> {1}' -f $fileInfo, $destination, [Environment]::NewLine
         
         return $this.result($result, $default)
     }

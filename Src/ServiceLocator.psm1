@@ -15,6 +15,7 @@ using module .\Action\ActionFacade.psm1
 
 using module .\Service\VersionService.psm1
 using module .\Service\LocalDeploymentService.psm1
+using module .\Service\RemoteDeploymentService.psm1
 using module .\Service\AppVeyorService.psm1
 using module .\Service\ModuleGeneratorService.psm1
 
@@ -28,7 +29,7 @@ class ServiceLocator: IServiceLocator
     {
         #Logger
         $logger = New-Object LoggerDecorator
-        $logger.logEntryType = [Logger.LoggerEntryTrimmed]
+        $logger.logEntryType = [CuteEntry]
         $logger.appenders.add([Logger.ColoredConsoleAppender]@{ })
         $this.add([ILogger], $logger)
         
@@ -67,6 +68,9 @@ class ServiceLocator: IServiceLocator
                 $defaultProperties + @{ fileSystemHelper = $this.get([FileSystemHelper]) })
         )
         
+        #RemoteDeploymentService
+        $this.add([RemoteDeploymentService]$defaultProperties)
+        
         #ModuleGeneratorService
         $this.add([ModuleGeneratorService](
                 $defaultProperties + @{ fileSystemHelper = $this.get([FileSystemHelper]) })
@@ -83,9 +87,8 @@ class ServiceLocator: IServiceLocator
         $services = @{
             appVeyorService = $this.get([AppVeyorService])
             localDeploymentService = $this.get([LocalDeploymentService])
+            remoteDeploymentService = $this.get([RemoteDeploymentService])
             moduleGeneratorService = $this.get([ModuleGeneratorService])
-            fileSystemHelper = $this.get([FileSystemHelper])
-            testSuiteHelper = $this.get([TestSuiteHelper])
         }
         
         #ActionFacade

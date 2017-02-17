@@ -6,12 +6,20 @@ Set-StrictMode -Version latest
 
 class IServiceLocator: IServiceProvider
 {
+    # It could be used as a singleton, though doesn't have to!
+    static hidden [IServiceLocator]$INSTANCE
+    static [IServiceLocator]getInstance() { return [IServiceLocator]::INSTANCE }
+    
     hidden [HashTable]$callbacks = @{ }
     hidden [HashTable]$types = @{ }
     
     hidden [IServiceContainer]$services
     
-    IServiceLocator() { $this.services = New-Object ServiceContainer }
+    IServiceLocator()
+    {
+        [IServiceLocator]::INSTANCE = $this
+        $this.services = New-Object ServiceContainer
+    }
     
     hidden [Object]GetService([Type]$serviceType) { throw }
     

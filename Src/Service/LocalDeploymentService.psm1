@@ -52,16 +52,18 @@ class LocalDeploymentService: IService
     {
         $bundleId = [guid]::newGuid()
         
-        $this.logger.warning('Staging bundle {0}' -f $bundleId)
+        $this.logger.warning('Stage bundle {0}' -f $bundleId)
         
         $basePath = '{0}\{1}\{2}' -f $this.config.stagingPath, $bundleId, $this.config.moduleName
+        
+        Get-ChildItem $this.config.modulePath -Recurse | ForEach-Object { $_.Attributes = '' }
         
         foreach ($file in -split $this.config.moduleManifest.fileList)
         {
             [IO.FileInfo]$fileInfo = '{0}\{1}' -f $this.config.modulePath, $file
             
             $destination = '{0}\{1}' -f $basePath, $file
-            
+
             if ($fileInfo.exists -or $fileInfo.Attributes -eq [IO.FileAttributes]::Directory)
             {
                 $this.logger.list($this.fileSystemHelper.copyItem($fileInfo, $destination))
@@ -79,7 +81,7 @@ class LocalDeploymentService: IService
             $this.config.version
         )
         
-        $this.logger.warning('Compressing bundle {0}' -f $destination)
+        $this.logger.warning('Compress bundle {0}' -f $destination)
         $this.logger.list($this.fileSystemHelper.archive($bundle, $destination))
         
         return $destination

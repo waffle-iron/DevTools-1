@@ -19,7 +19,7 @@ class TestSuiteHelper: IHelper
         
         if (-not $this.analyze)
         {
-            $this.logger.warning('[?] ScriptAnalyzer disabled.')
+            $this.logger.warning('[?] Skip ScriptAnalyzer')
             return $null
         }
         
@@ -33,7 +33,7 @@ class TestSuiteHelper: IHelper
         
         if ($scriptAnalyzer)
         {
-            $this.logger.error('[-] ScriptAnalyzer faild.')
+            $this.logger.error('[-] Execute ScriptAnalyzer')
             
             $this.logger.table($scriptAnalyzer)
             
@@ -41,7 +41,7 @@ class TestSuiteHelper: IHelper
             
         } else
         {
-            $this.logger.information('[+] ScriptAnalyzer should pass.')
+            $this.logger.information('[+] Execute ScriptAnalyzer')
         }
         return $null
     }
@@ -79,10 +79,20 @@ class TestSuiteHelper: IHelper
         
         return @{
             outputFile = '{0}\Pester.NUnit.xml' -f $this.config.stagingPath
-            outputFormat = 'LegacyNUnitXml'
+            outputFormat = 'NUnitXml'
             passThru = $true
             codeCoverage = $defaultCoveragePaths
-            script = '{0}\Tests\Unit\Generic.Tests.ps1' -f $this.config.modulePath
+            script = '{0}\Tests' -f $this.config.modulePath
+        }
+    }
+    
+    [Void]reloadModule()
+    {
+        $moduleName = $this.config.moduleName
+        if (Get-Module $moduleName)
+        {
+            Remove-Module $moduleName -Force
+            $this.logger.warning(('[+] Reload {0}' -f $moduleName))
         }
     }
 }

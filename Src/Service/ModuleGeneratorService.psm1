@@ -73,9 +73,7 @@ class ModuleGeneratorService: IService
         
         $src = '{0}\Assets\BoilerplateModule' -f $this.config.devToolsPath
         
-        Write-Host $src
-        
-        $boilerplateDirectory = 'C:\TEMP\BoilerplateModule'
+        $boilerplateDirectory = '{0}\BoilerplateModule' -f $this.config.stagingPath
         
         $this.logger.list($fs.deleteItem($modulePath))
         

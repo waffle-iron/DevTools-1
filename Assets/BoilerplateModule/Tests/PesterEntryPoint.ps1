@@ -9,7 +9,7 @@ Set-StrictMode -Version latest
 $global:ErrorActionPreference = 'Stop'
 $global:progressPreference = 'SilentlyContinue'
 
-$testSuite = $this.testSuiteHelper
+$testSuite.reloadModule()
 
 $testSuite.coverage = $true
 $testSuite.analyze = $true
@@ -17,3 +17,5 @@ $testSuite.analyze = $true
 [Void]$testSuite.AnalyzeScript($null)
 
 $testSuite.invokePester($testSuite.getPesterDefaultConfig(@()))
+
+

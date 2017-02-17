@@ -1,15 +1,17 @@
 #requires -Version 5.0
 
-using module ..\ModuleName.psm1
+using module ..\MODULE_NAME.psm1
+
+$global:codeSmell = $true
 
 # You can set breakpoints in an IDE (ISE, Powershell Studio, VSCode)
 # Or just use powershell native debugging (set-psbreakpoint)
 #
-# powershell -noprofile .\ModuleName\Tests\DebugEntryPoint.ps1
+# powershell -noprofile .\MODULE_NAME\Tests\DebugEntryPoint.ps1
 
 if ($host.name -notmatch 'PrimalScriptHostImplementation')
 {
-    set-psbreakpoint -variable variable >$null
+    set-psbreakpoint -variable me >$null
 }
 
-Get-ModuleName Test
+Test-MODULE_NAME Bobby

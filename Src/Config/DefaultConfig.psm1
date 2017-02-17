@@ -24,7 +24,6 @@ class DefaultConfig: IConfig
     {
         $this.moduleName = $boundParameters['Module']
         $this.action = Get-Property $boundParameters Action ([ActionType]::Test)
-        $this.versionType = Get-Property $boundParameters VersionType ([VersionComponent]::Build)
         $this.whatIf = Get-Property $boundParameters  WhatIf
         
         $this.currentUserModulePath = '{0}\{1}' -f $this.modulesPath, $this.moduleName
@@ -36,17 +35,15 @@ class DefaultConfig: IConfig
         
         $this.moduleDependencies = @{ deploy = $true; name = $this.moduleName }
         
-        if ($this.manifestFile.exists)
-        {
-            $this.moduleManifest = Import-PowerShellDataFile $this.manifestFile
-            
-            $this.moduleDependencies += Get-Property $this.moduleManifest PrivateData.DevTools.Dependencies
-            
-            $this.version.version = $this.moduleManifest.ModuleVersion
-        } else
-        {
-            $this.version.version = $this.version.defaultVersion
-        }
+        $this.version.bind($boundParameters)
+        
+        if (-not $this.manifestFile.exists) { return }
+        
+        $this.moduleManifest = Import-PowerShellDataFile $this.manifestFile
+        
+        $this.moduleDependencies += Get-Property $this.moduleManifest PrivateData.DevTools.Dependencies
+        # TODO: Factor out to $this.version.bind
+        $this.version.version = $this.moduleManifest.ModuleVersion
     }
     
     [IO.DirectoryInfo]getProjectPath($moduleName)

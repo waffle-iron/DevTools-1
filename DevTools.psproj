@@ -53,7 +53,6 @@
     <File Build="2">Src\Service\AppVeyorService.psm1</File>
     <File Build="2">Src\Helper\TestSuiteHelper.psm1</File>
     <File Build="2" Shared="False">Tests\PesterEntryPoint.ps1</File>
-    <File Build="2" Shared="False">Tests\Unit\Dummy.Tests.ps1</File>
     <File Build="2" Shared="False">Tests\StandAloneRunner.ps1</File>
     <File Build="2">Src\Service\VersionService.psm1</File>
     <File Build="2">Src\Service\ModuleGeneratorService.psm1</File>
@@ -66,6 +65,7 @@
     <File Build="2" Shared="False">Assets\BoilerplateModule\Tests\Unit\Generic.Tests.ps1</File>
     <File Build="2">Assets\BoilerplateModule\Src\Poppy.psm1</File>
     <File Build="2" Shared="False">Assets\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
+    <File Build="2" Shared="False">Tests\Unit\BasicAPI.Tests.ps1</File>
   </Files>
   <DeployMode>Project</DeployMode>
   <PrimaryFile>

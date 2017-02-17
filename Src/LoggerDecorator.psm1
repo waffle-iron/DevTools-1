@@ -11,3 +11,18 @@ class LoggerDecorator: Logger
     [void] list($message) { $this.debug($this.format($message)) }
     [void] table($message) { $this.debug($this.format($message)) }
 }
+
+class CuteEntry: Logger.ILoggerEntry
+{
+    static [Logger.ILoggerEntry]yield([String]$text)
+    {
+        $marks = ('?', '*', '+', '!', '!')
+        
+        [Logger.LoggingEventType]$eventType = (Get-PSCallStack)[$true].functionName
+
+        return [Logger.ILoggerEntry]@{
+            severity = $eventType
+            message = '[{0}] {1}' -f $marks[([Int]$eventType)], $text.trim()
+        }
+    }
+}

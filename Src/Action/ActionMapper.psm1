@@ -20,11 +20,12 @@ class ActionMapper: IHelperObservable
             ([ActionType]::Uninstall) { }
             ([ActionType]::CopyToCurrentUserModules) { }
             ([ActionType]::BumpVersion) { }
+            ([ActionType]::Test) { }
+            ([ActionType]::Build) { }
             ([ActionType]::Publish) { }
             ([ActionType]::Deploy) { }
             ([ActionType]::Release) { }
-            ([ActionType]::Test) { }
-            ([ActionType]::Build) { }
+
         }
         
         $this.onCompleted()

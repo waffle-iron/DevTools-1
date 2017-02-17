@@ -8,6 +8,7 @@ Set-StrictMode -Version latest
 class IConfig {
     
     [IServiceLocator]$serviceLocator
+    [ILogger]$logger
     
     hidden [Hashtable]$storage = [Hashtable]::Synchronized(@{ })
     
@@ -17,13 +18,11 @@ class IConfig {
     
     [Boolean]$ci = $ENV:CI
     
-    [Object]$version
+    [PSObject]$version
     
     [Boolean]$whatIf
     [Boolean]$verbose = $false
     [Boolean]$debug = $false
-    
-    [ILogger]$logger
     
     [Hashtable]$userSettings
     [Hashtable]$moduleManifest
@@ -36,7 +35,6 @@ class IConfig {
     [String]$moduleName
     
     [ActionType]$action
-    [VersionComponent]$versionType
     
     [IO.DirectoryInfo]$devToolsPath
     [IO.DirectoryInfo]$modulesPath

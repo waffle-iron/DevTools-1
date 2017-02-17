@@ -8,6 +8,11 @@
     <Folder>Tests\Unit</Folder>
   </Folders>
   <Files>
+    <File Build="2">Tests\PesterEntryPoint.ps1</File>
+    <File Build="2">Tests\DebugEntryPoint.ps1</File>
+    <File Build="2">Tests\Unit\Generic.Tests.ps1</File>
+    <File Build="2">Tests\Unit\SharedFixtures.ps1</File>
+    <File Build="2">Src\Poppy.psm1</File>
     <File Build="2">.gitattributes</File>
     <File Build="2">.gitignore</File>
     <File Build="2">appveyor.yml</File>

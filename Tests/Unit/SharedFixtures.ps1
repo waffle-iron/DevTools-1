@@ -13,7 +13,7 @@ class Text: ArrayList
 
 Set-Variable pesterShared @{ } -Scope Global
 
-$pesterShared.verbose = $true
+$pesterShared.verbose = $false
 
 $pesterShared.result = New-Object Text
 
@@ -36,6 +36,26 @@ $pesterShared.stateRestore = {
 }
 
 $pesterShared.mocks = @{
+    addAppveyorMessage = {
+        InModuleScope AppVeyorAppender {
+            if (-not $ENV:CI)
+            {
+                Function Add-AppveyorMessage
+                {
+                    param (
+                        $Message,
+                        $Category
+                    )
+                }
+            }
+            
+            Mock -CommandName Add-AppveyorMessage `
+                 –ParameterFilter { $Message -notmatch 'InnerTest' } `
+                 -MockWith {
+                # Add-AppveyorMessage -Message InnerTest -Category Information
+            }
+        }
+    }
     writeHost = {
         function global:Write-Host
         {

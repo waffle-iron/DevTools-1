@@ -2,8 +2,6 @@ using module ..\Src\ServiceLocator.psm1
 
 Set-StrictMode -Version latest
 
-#$ENV:APPVEYOR = $true
-
 $global:ErrorActionPreference = 'Stop'
 $global:progressPreference = 'SilentlyContinue'
 
@@ -27,4 +25,11 @@ $coverageSourceCode = (
     @{ path = 'Src\Service\*' }
 )
 
-$testSuiteHelper.invokePester($testSuiteHelper.getPesterDefaultConfig($coverageSourceCode))
+$pesterDefaultConfig = $testSuiteHelper.getPesterDefaultConfig($coverageSourceCode)
+
+$pesterDefaultConfig.script = (
+    @{ Path = ("{0}\Unit\Generic.Tests.ps1" -f $config.testsPath) },
+    @{ Path = ("{0}\Unit\BasicAPI.Tests.ps1" -f $config.testsPath) }
+)
+
+$testSuiteHelper.invokePester($pesterDefaultConfig)
