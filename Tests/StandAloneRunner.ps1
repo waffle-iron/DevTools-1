@@ -33,3 +33,6 @@ $pesterDefaultConfig.script = (
 )
 
 $testSuiteHelper.invokePester($pesterDefaultConfig)
+
+
+#Get-ChildItem -Filter "*.ps*" -Recurse | Get-Content | Measure-Object -Line -Word -Character

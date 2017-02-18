@@ -14,7 +14,7 @@ class IConfig {
     
     [Collections.ICollection]$locale
     
-    [String]$stagingPath = $ENV:TEMP
+    [String]$stagingPath = "$ENV:TEMP\DevTools"
     
     [Boolean]$ci = $ENV:CI
     

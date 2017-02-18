@@ -66,8 +66,10 @@
     <File Build="2">Assets\BoilerplateModule\Src\Poppy.psm1</File>
     <File Build="2" Shared="False">Assets\BoilerplateModule\Tests\Unit\SharedFixtures.ps1</File>
     <File Build="2" Shared="False">Tests\Unit\BasicAPI.Tests.ps1</File>
+    <File Build="2">Src\Helper\GitHelper.psm1</File>
+    <File Build="2">Src\Service\BadgeService.psm1</File>
   </Files>
-  <DeployMode>Project</DeployMode>
+  <DeployMode>File</DeployMode>
   <PrimaryFile>
   </PrimaryFile>
 </Project>

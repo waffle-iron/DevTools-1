@@ -6,14 +6,19 @@ enum VersionComponent
 }
 
 enum ActionType {
+    GenerateModule
+    CopyToCurrentUserModules
     Install
     Uninstall
     Test
-    GenerateModule
-    CopyToCurrentUserModules
     BumpVersion
     Publish
-    Deploy
+    Bundle
+    Cleanup
     Build
+    Deploy
+    UpdateBadges
+    CreateReleaseTag
     Release
+    RollBack
 }

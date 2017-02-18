@@ -17,6 +17,7 @@ using module .\Service\VersionService.psm1
 using module .\Service\LocalDeploymentService.psm1
 using module .\Service\RemoteDeploymentService.psm1
 using module .\Service\AppVeyorService.psm1
+using module .\Service\BadgeService.psm1
 using module .\Service\ModuleGeneratorService.psm1
 
 using module .\Console\Localized\LocaleRepository.psm1
@@ -71,6 +72,9 @@ class ServiceLocator: IServiceLocator
         #RemoteDeploymentService
         $this.add([RemoteDeploymentService]$defaultProperties)
         
+        #BadgeService
+        $this.add([BadgeService]$defaultProperties)
+        
         #ModuleGeneratorService
         $this.add([ModuleGeneratorService](
                 $defaultProperties + @{ fileSystemHelper = $this.get([FileSystemHelper]) })
@@ -89,6 +93,7 @@ class ServiceLocator: IServiceLocator
             localDeploymentService = $this.get([LocalDeploymentService])
             remoteDeploymentService = $this.get([RemoteDeploymentService])
             moduleGeneratorService = $this.get([ModuleGeneratorService])
+            badgeService = $this.get([BadgeService])
         }
         
         #ActionFacade

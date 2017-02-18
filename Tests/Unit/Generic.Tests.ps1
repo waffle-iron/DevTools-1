@@ -2,23 +2,11 @@
 
 . ('{0}\SharedFixtures' -f ([IO.FileInfo]$PSCommandPath).Directory)
 
-
-#        Mock -ModuleName RemoteDeploymentService `
-#             -CommandName Publish-Module -MockWith { }
-
-#InModuleScope RemoteDeploymentService {
-#    
-#}
-
-
 Describe 'Console Parameters' {
     
     BeforeAll {
         
         if (-not $ENV:APPVEYOR) { $ENV:APPVEYOR = $true }
-        
-        #        Mock -ModuleName RemoteDeploymentService `
-        #                     -CommandName Publish-Module -MockWith { }
         
         $pesterShared.mocks.addAppveyorMessage.invoke()
         $pesterShared.mocks.__writeHost.invoke()
@@ -66,17 +54,22 @@ Describe 'Console Parameters' {
             Use-DevTools Build
             $pesterShared.result.nextLine() | Should Match 'Build'
         }
+        
+        It 'Should Clear the staging path' {
+            Use-DevTools Cleanup
+            $pesterShared.result.nextLine() | Should Match 'Cleanup'
+        }
     }
     
     Context 'SuperModule Workflow' {
         
-        if (Get-Module SuperModule)
-        {
-            It 'Should cleanup if previous run failed' {
-                Use-DevTools Uninstall SuperModule
-                $pesterShared.result.nextLine() | Should Match "SuperModule 1.0.0 Uninstall"
-            }
+        BeforeAll {
+            $fs = $this.config.serviceLocator.get('FileSystemHelper')
+            
+            $fs.deleteItem('{0}\SuperModule' -f $this.config.modulesPath)
+            $fs.deleteItem($this.config.getProjectPath('SuperModule'))
         }
+        
         It 'Should generate SuperModule' {
             Use-DevTools GenerateModule SuperModule
             $pesterShared.result.nextLine() | Should Match "SuperModule 1.0.0 GenerateModule"
@@ -119,32 +112,39 @@ Describe 'Console Parameters' {
             $pesterShared.result.getLine(2) | Should Match 'Update version to 1.0.0'
         }
         
-        
+        function global:Publish-Module { }
         
         It 'Should publish to PS Gallery' {
-            function global:Publish-Module { }
-            
             Use-DevTools Publish SuperModule
             $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 Publish'
             $pesterShared.result.nextLine() | Should Match 'Publish the module to Powershell Gallery'
-            
-            Remove-Item function:Publish-Module
         }
+        
+        It 'Should deploy to PS Gallery' {
+            Use-DevTools Deploy SuperModule -WhatIf
+            $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 Deploy'
+            $pesterShared.result.nextLine() | Should Match 'Update version to 1.0.1'
+            $pesterShared.result.nextLine() | Should Match 'Stage bundle'
+            $pesterShared.result.getLine(7) | Should Match 'Publish the module to Powershell Gallery'
+            $pesterShared.result.getLine(8) | Should Match 'Using bundle'
+            $pesterShared.result.getLine(9) | Should Match 'This could take some time!'
+        }
+        
+        Remove-Item function:Publish-Module
+        
         
         It 'Should copyToCurrentUserModules' {
             Set-Location ..
             Use-DevTools SuperModule copyToCurrentUserModules
-            $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 CopyToCurrentUserModules'
+            $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.1 CopyToCurrentUserModules'
             Set-Location .\SuperModule
         }
         
         AfterAll {
             It 'Should uninstall SuperModule' {
                 Use-DevTools Uninstall SuperModule
-                $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.0 Uninstall'
+                $pesterShared.result.nextLine() | Should Match 'SuperModule 1.0.1 Uninstall'
             }
         }
-        
-        
     }
 }

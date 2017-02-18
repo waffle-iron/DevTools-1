@@ -4,6 +4,7 @@ Set-StrictMode -Version latest
 
 class RemoteDeploymentService: IService
 {
+    
     [Void]publishToPSGallery($bandle)
     {
         $this.logger.warning('Publish the module to Powershell Gallery')
@@ -15,6 +16,7 @@ class RemoteDeploymentService: IService
         Publish-Module -Path $bandle `
                        -NuGetApiKey $this.config.userSettings.psGalleryApiKey `
                        -WhatIf:$this.config.whatIf `
-                       -Verbose:$this.config.verbose
+                       -Verbose:$this.config.verbose `
+                       -Confirm
     }
 }

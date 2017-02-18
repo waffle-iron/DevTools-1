@@ -22,6 +22,7 @@ class ActionMapper: IHelperObservable
             ([ActionType]::BumpVersion) { }
             ([ActionType]::Test) { }
             ([ActionType]::Build) { }
+            ([ActionType]::Bundle) { }
             ([ActionType]::Publish) { }
             ([ActionType]::Deploy) { }
             ([ActionType]::Release) { }

@@ -63,7 +63,7 @@ class LocalDeploymentService: IService
             [IO.FileInfo]$fileInfo = '{0}\{1}' -f $this.config.modulePath, $file
             
             $destination = '{0}\{1}' -f $basePath, $file
-
+            
             if ($fileInfo.exists -or $fileInfo.Attributes -eq [IO.FileAttributes]::Directory)
             {
                 $this.logger.list($this.fileSystemHelper.copyItem($fileInfo, $destination))
@@ -93,7 +93,40 @@ class LocalDeploymentService: IService
         {
             $this.logger.list($this.fileSystemHelper.deleteItem($item))
         }
-
+        
+    }
+    
+    [Void]executeEntryPoint()
+    {
+        if ($env:APPVEYOR_REPO_TAG -eq $true)
+        {
+            $this.config.error('Task [Test] is not allowed on Tag branches!')
+            return
+        }
+        
+        $testSuite = $this.config.serviceLocator.get('TestSuiteHelper')
+        
+        $this.logger.information('Execute PesterEntryPoint at {0}' -f $this.config.testsPath)
+        
+        . ('{0}\PesterEntryPoint' -f $this.config.testsPath)
+    }
+    
+    [Void]build($appVeyorService)
+    {
+        # if (-not $this.localDeploymentService.authorizedToBuild()) { return }
+        
+        if ($false -eq $env:APPVEYOR_REPO_TAG)
+        {
+            $this.config.error('Task [Build] is not allowed on {0}!' -f $env:APPVEYOR_REPO_BRANCH)
+            return
+        }
+        
+        $bundle = $this.bundle()
+        $archive = $this.archiveBundle($bundle)
+        
+        if ($this.config.ci) { $appVeyorService.pushArtifact($archive) }
+        
+        $this.gc(($bundle.parent.fullName, $archive))
     }
     
 }
