@@ -25,7 +25,6 @@ class ActionMapper: IHelperObservable
             ([ActionType]::Publish) { }
             ([ActionType]::Deploy) { }
             ([ActionType]::Release) { }
-
         }
         
         $this.onCompleted()
