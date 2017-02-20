@@ -9,6 +9,7 @@ using module .\Config\DefaultConfig.psm1
 using module .\Helper\DynamicParametersHelper.psm1
 using module .\Helper\FileSystemHelper.psm1
 using module .\Helper\TestSuiteHelper.psm1
+using module .\Helper\CacheHelper.psm1
 
 using module .\Action\ActionMapper.psm1
 using module .\Action\ActionFacade.psm1
@@ -26,6 +27,11 @@ Set-StrictMode -Version latest
 
 class ServiceLocator: IServiceLocator
 {
+    [void]configIsReady()
+    {
+        $this.get([CacheHelper]).setState()
+    }
+    
     ServiceLocator (): base ()
     {
         #Logger
@@ -48,6 +54,10 @@ class ServiceLocator: IServiceLocator
         
         #FileSystemHelper
         $this.add([FileSystemHelper]$defaultProperties)
+        $fileSystemHelper = @{ fileSystemHelper = $this.get([FileSystemHelper]) }
+        
+        #CacheHelper
+        $this.add([CacheHelper]($defaultProperties + $fileSystemHelper))
         
         #LocaleRepository
         $this.add([LocaleRepository]$defaultProperties)
@@ -65,9 +75,7 @@ class ServiceLocator: IServiceLocator
         $this.get([IConfig]).version = $this.get([VersionService])
         
         #LocalDeploymentService
-        $this.add([LocalDeploymentService](
-                $defaultProperties + @{ fileSystemHelper = $this.get([FileSystemHelper]) })
-        )
+        $this.add([LocalDeploymentService]($defaultProperties + $fileSystemHelper))
         
         #RemoteDeploymentService
         $this.add([RemoteDeploymentService]$defaultProperties)
@@ -76,9 +84,7 @@ class ServiceLocator: IServiceLocator
         $this.add([BadgeService]$defaultProperties)
         
         #ModuleGeneratorService
-        $this.add([ModuleGeneratorService](
-                $defaultProperties + @{ fileSystemHelper = $this.get([FileSystemHelper]) })
-        )
+        $this.add([ModuleGeneratorService]($defaultProperties + $fileSystemHelper))
         
         #AppVeyorService
         if ($ENV:APPVEYOR) { $this.add(([AppVeyorService]$defaultProperties).getInstance()) }

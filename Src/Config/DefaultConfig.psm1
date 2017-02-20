@@ -44,6 +44,8 @@ class DefaultConfig: IConfig
         $this.moduleDependencies += Get-Property $this.moduleManifest PrivateData.DevTools.Dependencies
         # TODO: Factor out to $this.version.bind
         $this.version.version = $this.moduleManifest.ModuleVersion
+        
+        $this.serviceLocator.configIsReady()
     }
     
     [IO.DirectoryInfo]getProjectPath($moduleName)

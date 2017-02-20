@@ -1,6 +1,8 @@
 using module ..\CommonInterfaces.psm1
 using module ..\Service\AppVeyorService.psm1
 
+Set-StrictMode -Version latest
+
 class TestSuiteHelper: IHelper
 {
     [Boolean]$coverage = $true
@@ -19,7 +21,7 @@ class TestSuiteHelper: IHelper
         
         if (-not $this.analyze)
         {
-            $this.logger.warning('[?] Skip ScriptAnalyzer')
+            $this.logger.warning('Skip ScriptAnalyzer')
             return $null
         }
         
@@ -33,7 +35,7 @@ class TestSuiteHelper: IHelper
         
         if ($scriptAnalyzer)
         {
-            $this.logger.error('[-] Execute ScriptAnalyzer')
+            $this.logger.error('Execute ScriptAnalyzer')
             
             $this.logger.table($scriptAnalyzer)
             
@@ -41,7 +43,7 @@ class TestSuiteHelper: IHelper
             
         } else
         {
-            $this.logger.information('[+] Execute ScriptAnalyzer')
+            $this.logger.information('Execute ScriptAnalyzer')
         }
         return $null
     }
@@ -55,6 +57,8 @@ class TestSuiteHelper: IHelper
             true { @{ failedCount = 0 } }
             false { Invoke-Pester @pesterConfig }
         }
+        
+        $this.config.serviceLocator.get('CacheHelper').persist('pester', $pester)
         
         if ($this.appVeyorService)
         {
@@ -92,7 +96,7 @@ class TestSuiteHelper: IHelper
         if (Get-Module $moduleName)
         {
             Remove-Module $moduleName -Force
-            $this.logger.warning(('[+] Reload {0}' -f $moduleName))
+            $this.logger.warning(('Reload {0}' -f $moduleName))
         }
     }
 }

@@ -68,6 +68,7 @@
     <File Build="2" Shared="False">Tests\Unit\BasicAPI.Tests.ps1</File>
     <File Build="2">Src\Helper\GitHelper.psm1</File>
     <File Build="2">Src\Service\BadgeService.psm1</File>
+    <File Build="2">Src\Helper\CacheHelper.psm1</File>
   </Files>
   <DeployMode>File</DeployMode>
   <PrimaryFile>

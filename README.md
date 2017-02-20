@@ -2,6 +2,7 @@
 
 [![Appveyor Badge][appveyor-badge]][appveyor-status]
 [![Powershellgallery Badge][psgallery-badge]][psgallery-status]
+[![Coverage Badge][coverage-badge]][coverage-status]
 [![GitHub Release Badge][release-badge]][release-status]
 [![WMF Badge][wmf-badge]][wmf-status]
 [![StrictMode Badge][strictmode-badge]][strictmode-status]
@@ -16,8 +17,11 @@
 [appveyor-badge]: https://ci.appveyor.com/api/projects/status/github/g8tguy/DevTools?svg=true
 [appveyor-status]: https://ci.appveyor.com/project/g8tguy/devtools
 
-[psgallery-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/ps-gallery-1.1.8.svg
+[psgallery-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/PSGallery/1.1.8.svg
 [psgallery-status]: https://www.powershellgallery.com/packages/DevTools/1.1.8
+
+[coverage-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/Coverage/78.svg
+[coverage-status]: https://ci.appveyor.com/project/g8tguy/devtools
 
 [release-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/release.svg
 [release-status]: https://github.com/g8tguy/DevTools/releases/latest
@@ -31,7 +35,7 @@
 [discord-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/discord-chat.svg
 [discord-status]: https://discord.gg/qQAmdDK
 
-[downloads-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/downloads136.svg
+[downloads-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/Downloads/155.svg
 [downloads-status]: https://www.powershellgallery.com/packages/DevTools
 
 [requirements-badge]: https://cdn.rawgit.com/g8tguy/DevTools/master/Docs/Badges/req-false.svg
